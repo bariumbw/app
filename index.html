@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bespoke Mall | Expo Master</title>
+    <title>Bespoke Mall | 展場下單系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -27,7 +27,7 @@
 
     <div class="admin-controls bg-zinc-900 text-white text-[10px] px-4 py-2 flex justify-between items-center z-[60]">
         <span class="tracking-widest font-bold"><i class="fa-solid fa-screwdriver-wrench mr-2"></i>員工管理模式</span>
-        <button onclick="openAdmin()" class="bg-white text-black px-3 py-1 rounded font-black text-[9px] uppercase">開啟編輯器</button>
+        <button onclick="openAdmin()" class="bg-white text-black px-3 py-1 rounded font-black text-[9px] uppercase">開啟後台編輯器</button>
     </div>
 
     <header class="bg-white border-b sticky top-0 z-40">
@@ -39,8 +39,8 @@
             <button onclick="adminLogin()" class="text-stone-100"><i class="fa-solid fa-user-gear text-2xl"></i></button>
         </div>
         <div class="flex text-sm">
-            <button onclick="switchTab('v')" id="tab-v" class="flex-1 py-3 border-b-2 border-gold font-bold">禮券 (Voucher)</button>
-            <button onclick="switchTab('g')" id="tab-g" class="flex-1 py-3 border-b-2 border-transparent text-stone-300">回禮 (Gift)</button>
+            <button onclick="switchTab('v')" id="tab-v" class="flex-1 py-3 border-b-2 border-gold font-bold">禮券</button>
+            <button onclick="switchTab('g')" id="tab-g" class="flex-1 py-3 border-b-2 border-transparent text-stone-300">回禮</button>
         </div>
     </header>
 
@@ -85,49 +85,21 @@
                 </div>
             </div>
             <div class="flex items-center justify-between mb-8">
-                <span class="text-stone-400 text-xs italic">展場限定價</span>
                 <span id="det-total" class="text-2xl font-black text-orange-600 font-mono">HK$ 0</span>
             </div>
             <button onclick="addToCart()" class="w-full py-4 bg-stone-900 text-white rounded-full font-bold">加入購買清單</button>
         </div>
     </div>
 
-    <div id="sheet-confirm" class="bottom-sheet" onclick="closeSheet('sheet-confirm')">
-        <div class="sheet-content min-h-[85vh]" onclick="event.stopPropagation()">
-            <div class="p-4 border-b flex justify-between items-center sticky top-0 bg-white z-10">
-                <button onclick="closeSheet('sheet-confirm')" class="text-stone-300"><i class="fa-solid fa-chevron-down"></i></button>
-                <span class="font-bold">確認下單內容</span>
-                <div class="w-4"></div>
-            </div>
-            <div class="p-6 space-y-4">
-                <div class="bg-blue-50 p-3 rounded-lg text-[10px] text-blue-600 text-center font-bold">
-                    已為您保留產品位置，請填寫以下資訊完成下單
-                </div>
-                <div class="p-4 bg-white border rounded-xl flex justify-between items-center">
-                    <span class="text-sm font-bold">聯絡電話</span>
-                    <input type="tel" id="user-phone" placeholder="輸入 8 位電話號碼" class="text-right text-sm outline-none">
-                </div>
-                <div id="confirm-list" class="pt-4 border-t border-dashed"></div>
-                <div class="p-4 bg-red-50 text-[10px] text-red-400 leading-relaxed rounded-xl">
-                    * 下單後請前往取單處付款<br>
-                    * 禮券類產品一經售出恕不退換
-                </div>
-            </div>
-            <div class="p-6 border-t bg-white sticky bottom-0">
-                <button onclick="submitOrder()" class="w-full py-4 bg-stone-900 text-white rounded-full font-bold">正式下單</button>
-            </div>
-        </div>
-    </div>
-
     <div id="sheet-admin" class="bottom-sheet" onclick="closeSheet('sheet-admin')">
         <div class="sheet-content p-6 max-h-[92vh]" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-black">Expo 內容管理系統</h2>
+                <h2 class="text-xl font-black">後台內容管理</h2>
                 <button onclick="closeSheet('sheet-admin')" class="text-stone-300 text-2xl">&times;</button>
             </div>
             <div class="flex gap-6 border-b mb-6 text-sm">
-                <button onclick="adminTab('b')" id="ad-btn-b" class="pb-2 border-b-2 border-black font-bold">1. 品牌設定</button>
-                <button onclick="adminTab('p')" id="ad-btn-p" class="pb-2 text-stone-300">2. 產品發佈</button>
+                <button onclick="adminTab('b')" id="ad-btn-b" class="pb-2 border-b-2 border-black font-bold">品牌設定</button>
+                <button onclick="adminTab('p')" id="ad-btn-p" class="pb-2 text-stone-300">產品發佈</button>
             </div>
 
             <div id="admin-b" class="space-y-4">
@@ -136,27 +108,23 @@
                     <option value="v">分類：禮券</option>
                     <option value="g">分類：回禮</option>
                 </select>
-                <div class="img-preview" id="logo-preview" onclick="document.getElementById('file-logo').click()">
-                    點擊上傳品牌 Logo (1:1 推薦)
-                </div>
+                <div class="img-preview" id="logo-preview" onclick="document.getElementById('file-logo').click()">點擊上傳品牌 Logo</div>
                 <input type="file" id="file-logo" class="hidden" accept="image/*" onchange="handleFile(this, 'logo-preview')">
-                <button onclick="saveBrand()" class="w-full py-4 bg-stone-900 text-white rounded-xl font-bold">儲存品牌資料</button>
+                <button onclick="saveBrand()" class="w-full py-4 bg-stone-900 text-white rounded-xl font-bold">儲存品牌</button>
                 <div id="admin-brand-list" class="grid grid-cols-4 gap-2 pt-4 border-t"></div>
             </div>
 
             <div id="admin-p" class="hidden space-y-4 pb-20">
                 <input type="text" id="new-p-name" placeholder="產品標題" class="w-full p-4 bg-stone-50 rounded-xl outline-none border">
                 <select id="new-p-brand" class="w-full p-4 bg-stone-50 rounded-xl outline-none border"></select>
-                <div class="img-preview" id="p-img-preview" onclick="document.getElementById('file-p').click()">
-                    點擊上傳產品宣傳圖
-                </div>
+                <div class="img-preview" id="p-img-preview" onclick="document.getElementById('file-p').click()">點擊上傳產品圖片</div>
                 <input type="file" id="file-p" class="hidden" accept="image/*" onchange="handleFile(this, 'p-img-preview')">
                 <div class="grid grid-cols-2 gap-2">
                     <input type="number" id="new-p-price" placeholder="基本單價" class="w-full p-4 bg-stone-50 rounded-xl border">
-                    <input type="number" id="new-p-min" placeholder="最少起訂數量" class="w-full p-4 bg-stone-50 rounded-xl border">
+                    <input type="number" id="new-p-min" placeholder="起訂量" class="w-full p-4 bg-stone-50 rounded-xl border">
                 </div>
-                <textarea id="new-p-tiers" placeholder="階梯價格格式 (數量-價格)，每行一筆。例如：&#10;50-18&#10;100-15" class="w-full p-4 bg-stone-50 rounded-xl border h-28 text-xs"></textarea>
-                <button onclick="saveProduct()" class="w-full py-4 bg-stone-900 text-white rounded-xl font-bold">確認發佈產品</button>
+                <textarea id="new-p-tiers" placeholder="階梯價格 (數量-價格)，每行一筆" class="w-full p-4 bg-stone-50 rounded-xl border h-24 text-xs"></textarea>
+                <button onclick="saveProduct()" class="w-full py-4 bg-stone-900 text-white rounded-xl font-bold">發佈產品</button>
             </div>
         </div>
     </div>
@@ -171,19 +139,18 @@
             updateNavUI('shop');
         }
 
-        // --- 密碼驗證 ---
+        // 員工登入驗證
         function adminLogin() {
             const pass = prompt("請輸入員工後台管理密碼：");
             if (pass === "5963") {
                 document.body.classList.add('admin-mode');
-                alert("已解鎖後台管理權限");
+                alert("已切換至員工管理模式");
                 refreshAdminLists();
             } else if (pass !== null) {
-                alert("密碼錯誤，拒絕存取。");
+                alert("密碼錯誤");
             }
         }
 
-        // --- 核心邏輯 ---
         function handleFile(input, previewId) {
             const file = input.files[0];
             if (!file) return;
@@ -213,7 +180,7 @@
             const container = document.getElementById('product-list');
             const filtered = db.products.filter(p => p.cat === currentTab && (currentBrand === 'all' || p.brandId == currentBrand));
             if (!filtered.length) {
-                container.innerHTML = `<div class="py-20 text-center text-stone-300 text-xs italic">當前無供應產品</div>`;
+                container.innerHTML = `<div class="py-20 text-center text-stone-300 text-xs italic">目前暫無產品</div>`;
                 return;
             }
             container.innerHTML = filtered.map(p => `
@@ -221,11 +188,8 @@
                     <div class="w-24 h-24 bg-stone-50 rounded-xl bg-center bg-contain bg-no-repeat border" style="background-image:url(${p.img})"></div>
                     <div class="flex-1">
                         <h4 class="text-xs font-bold text-stone-800 leading-tight mb-1">${p.name}</h4>
-                        <div class="flex items-baseline gap-2 mt-2">
-                            <span class="text-orange-600 font-black text-sm">HK$ ${p.price}</span>
-                            <span class="text-[9px] text-stone-300 line-through">HK$ ${(p.price * 1.3).toFixed(0)}</span>
-                        </div>
-                        <div class="text-[8px] text-stone-400 mt-1">最少起訂: ${p.min}</div>
+                        <div class="text-orange-600 font-black text-sm mt-2">HK$ ${p.price}</div>
+                        <div class="text-[8px] text-stone-400">起訂: ${p.min}</div>
                     </div>
                     <button onclick="openDetail(${p.id})" class="w-10 h-10 bg-orange-100 text-orange-900 rounded-full flex items-center justify-center font-bold mr-2"><i class="fa-solid fa-plus text-xs"></i></button>
                 </div>
@@ -238,15 +202,8 @@
             document.getElementById('det-name').innerText = p.name;
             document.getElementById('det-img').style.backgroundImage = `url(${p.img})`;
             document.getElementById('det-qty').innerText = cart.qty;
-            
-            let tierHtml = (p.tiers || []).map(t => `
-                <div class="flex justify-between border-b border-stone-100 pb-1">
-                    <span class="text-stone-400">${t.q} 張或以上</span>
-                    <span class="font-bold text-cyan-700">HK$ ${t.p} / 張</span>
-                </div>
-            `).join('');
-            document.getElementById('det-tiers').innerHTML = tierHtml || "展場單一優惠價格";
-            
+            let tierHtml = (p.tiers || []).map(t => `<div class="flex justify-between border-b pb-1"><span>${t.q} 張或以上</span><span class="font-bold">HK$ ${t.p}</span></div>`).join('');
+            document.getElementById('det-tiers').innerHTML = tierHtml || "展場單一優惠價";
             calculateTotal();
             openSheet('sheet-detail');
         }
@@ -273,65 +230,16 @@
             closeSheet('sheet-detail');
         }
 
-        function openConfirmSheet() {
-            document.getElementById('confirm-list').innerHTML = `
-                <div class="bg-white p-4 rounded-xl border flex gap-4">
-                    <img src="${cart.img}" class="w-16 h-16 object-contain rounded-lg">
-                    <div class="flex-1">
-                        <div class="text-[10px] font-bold">${cart.name}</div>
-                        <div class="flex justify-between mt-4">
-                            <span class="text-[10px] text-stone-400">數量: ${cart.qty}</span>
-                            <span class="font-black text-xs text-orange-600">HK$ ${cart.currentPrice}</span>
-                        </div>
-                    </div>
-                </div>`;
-            openSheet('sheet-confirm');
-        }
-
-        function submitOrder() {
-            const orderId = 'EX' + Math.floor(1000 + Math.random()*9000);
-            db.orders.unshift({ id: orderId, items: [cart], total: cart.currentPrice * cart.qty, status: '準備中', time: new Date().toLocaleTimeString() });
-            saveDB();
-            alert("訂單已提交！單號為: " + orderId);
-            closeSheet('sheet-confirm');
-            document.getElementById('cart-float').classList.add('hidden');
-            showPage('orders');
-        }
-
-        function renderOrders() {
-            const container = document.getElementById('order-container');
-            if (!db.orders.length) {
-                container.innerHTML = `<div class="text-center py-20 text-stone-300 text-sm">尚未有下單紀錄</div>`;
-                return;
-            }
-            container.innerHTML = db.orders.map(o => `
-                <div class="bg-white rounded-3xl p-6 border shadow-sm">
-                    <div class="text-center mb-6">
-                        <div class="text-[10px] text-stone-300 font-bold uppercase tracking-widest">${o.status}</div>
-                        <div class="text-4xl font-black text-stone-800">${o.id}</div>
-                        <div class="text-[9px] text-stone-400 mt-2">下單時間: ${o.time}</div>
-                    </div>
-                    <div class="flex justify-between items-center px-4 mb-6 relative">
-                        <div class="absolute top-1/2 left-8 right-8 h-px bg-stone-100 -translate-y-1/2 -z-10"></div>
-                        <div class="flex flex-col items-center gap-1"><div class="status-dot active"></div><span class="text-[8px]">下單</span></div>
-                        <div class="flex flex-col items-center gap-1"><div class="status-dot"></div><span class="text-[8px]">付款</span></div>
-                        <div class="flex flex-col items-center gap-1"><div class="status-dot active"></div><span class="text-[8px] font-bold">準備</span></div>
-                        <div class="flex flex-col items-center gap-1"><div class="status-dot"></div><span class="text-[8px]">取單</span></div>
-                    </div>
-                    <div class="border-t pt-4 text-xs space-y-1">
-                        ${o.items.map(i => `<div class="flex justify-between"><span>${i.name}</span><span>x${i.qty}</span></div>`).join('')}
-                        <div class="text-right font-black text-sm pt-2">總額: HK$ ${o.total.toLocaleString()}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
         function showPage(p) {
             document.getElementById('view-shop').classList.toggle('hidden', p !== 'shop');
             document.getElementById('view-orders').classList.toggle('hidden', p !== 'orders');
-            document.getElementById('nav-s').className = p==='shop' ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
-            document.getElementById('nav-r').className = p!=='shop' ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
-            if (p === 'orders') renderOrders();
+            updateNavUI(p);
+        }
+
+        function updateNavUI(p) {
+            const isShop = p === 'shop';
+            document.getElementById('nav-s').className = isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
+            document.getElementById('nav-r').className = !isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
         }
 
         function switchTab(t) { currentTab = t; currentBrand = 'all'; init(); }
@@ -350,7 +258,7 @@
         function saveBrand() {
             const name = document.getElementById('new-b-name').value;
             const cat = document.getElementById('new-b-cat').value;
-            if (!name) return alert("請輸入名稱");
+            if (!name) return alert("名稱必填");
             db.brands.push({ id: Date.now(), name, cat, img: tempImg });
             saveDB();
             refreshAdminLists();
@@ -372,7 +280,7 @@
             db.products.push({ id: Date.now(), name, brandId, cat: brand.cat, price, min, img: tempImg, tiers });
             saveDB();
             refreshAdminLists();
-            alert("產品已發佈");
+            alert("已發佈");
         }
 
         function refreshAdminLists() {
