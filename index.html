@@ -3,284 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WePlay Style | Bespoke Mall</title>
+    <title>Bespoke Mall | 婚展限定點單</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, system-ui, BlinkMacSystemFont; background-color: #f7f7f7; }
-        .we-shadow { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .tab-active { color: #07c160; position: relative; }
-        .tab-active::after { content: ''; position: absolute; bottom: 0; left: 25%; width: 50%; height: 3px; background: #07c160; border-radius: 2px; }
-        .we-btn-primary { background-color: #07c160; color: white; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; }
+        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto; background-color: #fff; }
+        .active-category { color: #b08d57; border-bottom: 2px solid #b08d57; font-weight: bold; }
+        .sidebar-item.active { background-color: #fff; border-left: 4px solid #b08d57; font-weight: bold; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: flex-end; }
         .modal.active { display: flex; }
-        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        .bg-bespoke-gold { background-color: #b08d57; }
+        .text-bespoke-gold { color: #b08d57; }
+        ::-webkit-scrollbar { width: 0px; } /* 隱藏滾動條 */
     </style>
 </head>
-<body class="pb-24">
+<body class="h-screen flex flex-col overflow-hidden">
 
-    <header id="front-header" class="bg-white px-4 py-3 sticky top-0 z-40 flex items-center justify-between border-b">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center text-white text-xs font-bold">B</div>
-            <span class="font-bold text-gray-800">Bespoke Mall 婚展店</span>
+    <header id="front-header" class="flex-none bg-white">
+        <div class="text-[10px] text-center py-2 px-4 bg-gray-50 text-gray-600 border-b leading-tight">
+            此網站只適用於展場下單,非展場的客戶請到我們的官方網站下單<br>
+            <span class="text-blue-500 underline">https://www.bespoke-mall.com/</span><br>
+            官方網站下單所需時間 最少 7-14 個工作天
         </div>
-        <button onclick="toggleApp('admin')" class="text-xs text-gray-400 border px-2 py-1 rounded">管理員登入</button>
+        <div class="flex justify-between items-center px-4 py-3">
+            <h1 class="text-lg font-light tracking-widest text-cyan-700">☆ BESPOKE MALL</h1>
+            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+        </div>
+        <div class="flex border-b text-sm">
+            <div class="flex-1 text-center py-3 active-category">禮券</div>
+            <div class="flex-1 text-center py-3 text-gray-400">回禮</div>
+        </div>
     </header>
 
-    <main id="front-main">
-        <div class="flex bg-white text-sm font-medium border-b sticky top-[53px] z-30">
-            <div class="flex-1 py-3 text-center tab-active">展場限定禮券</div>
-            <div class="flex-1 py-3 text-center text-gray-400">精選回禮</div>
-        </div>
+    <main id="front-main" class="flex-1 flex overflow-hidden">
+        <aside class="w-24 bg-gray-50 overflow-y-auto border-r text-[12px] text-gray-500">
+            <div class="sidebar-item active p-4 text-center py-6">agnès b.</div>
+            <div class="sidebar-item p-4 text-center py-6 leading-tight">聖安娜餅屋</div>
+            <div class="sidebar-item p-4 text-center py-6">華御結</div>
+            <div class="sidebar-item p-4 text-center py-6 leading-tight font-serif italic text-black font-bold border-b">GODIVA</div>
+            <div class="sidebar-item p-4 text-center py-6">東海堂</div>
+            <div class="sidebar-item p-4 text-center py-6">アローム</div>
+        </aside>
 
-        <div class="p-3 space-y-3">
-            <div class="bg-white rounded-xl p-3 flex gap-3 we-shadow">
-                <img src="https://via.placeholder.com/100x100?text=GODIVA" class="w-24 h-24 rounded-lg object-cover">
-                <div class="flex-1 flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-bold text-sm text-gray-800">GODIVA HK$50 禮券</h3>
-                        <p class="text-[11px] text-gray-400 mt-1 line-clamp-1">粉紅色婚展限定封套，有效期長</p>
+        <section class="flex-1 overflow-y-auto p-3 space-y-4 pb-32">
+            <img src="https://via.placeholder.com/400x120?text=限時快閃優惠" class="w-full rounded shadow-sm mb-4">
+            
+            <div class="flex gap-3 items-start border-b pb-4">
+                <img src="https://via.placeholder.com/80x120?text=GODIVA+Pink" class="w-20 h-28 object-cover rounded shadow-sm">
+                <div class="flex-1">
+                    <h3 class="text-[13px] font-bold leading-tight">【婚展限定優惠】GODIVA HK$50 禮券 (粉紅色封套版)</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">有效期至: 31/3/2027</p>
+                    <p class="text-[10px] text-gray-400">最少需訂購: 10張</p>
+                    <div class="mt-2 flex items-baseline gap-1">
+                        <span class="text-red-600 font-bold text-base">HK$ 41.00</span>
+                        <span class="text-gray-300 text-[10px] line-through">HK$50.00</span>
                     </div>
-                    <div class="flex justify-between items-end">
-                        <span class="text-orange-500 font-bold">HK$ 41</span>
-                        <button onclick="openSpec('GODIVA 禮券', 41, 10)" class="we-btn-primary w-8 h-8 rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-plus text-sm"></i>
-                        </button>
+                    <div class="flex justify-end">
+                        <button onclick="openSpec('GODIVA 禮券', 41, 10)" class="bg-bespoke-gold text-white px-4 py-1 rounded-full text-xs">購買</button>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl p-3 flex gap-3 we-shadow">
-                <img src="https://via.placeholder.com/100x100?text=AgnesB" class="w-24 h-24 rounded-lg object-cover">
-                <div class="flex-1 flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-bold text-sm text-gray-800">agnès b. 幸運曲奇禮盒</h3>
-                        <p class="text-[11px] text-gray-400 mt-1">混合顏色（玫瑰粉+啞金色）</p>
-                    </div>
-                    <div class="flex justify-between items-end">
-                        <span class="text-orange-500 font-bold">HK$ 32</span>
-                        <button onclick="openSpec('曲奇禮盒', 32, 50)" class="we-btn-primary w-8 h-8 rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-plus text-sm"></i>
-                        </button>
+            <div class="flex gap-3 items-start border-b pb-4">
+                <img src="https://via.placeholder.com/80x120?text=Agnès+b" class="w-20 h-28 object-cover rounded shadow-sm">
+                <div class="flex-1">
+                    <h3 class="text-[13px] font-bold leading-tight">【婚展限定】agnès b. CAFÉ 婚禮回禮禮盒 - 幸運曲奇</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">最少需訂購: 50盒</p>
+                    <div class="mt-2 text-red-600 font-bold text-base">HK$ 32.00</div>
+                    <div class="flex justify-end">
+                        <button onclick="openSpec('曲奇禮盒', 32, 50)" class="bg-bespoke-gold text-white px-4 py-1 rounded-full text-xs">購買</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 
-    <main id="admin-main" class="hidden min-h-screen bg-gray-100">
-        <div class="bg-[#07c160] text-white p-6 pt-10">
-            <div class="flex justify-between items-center">
-                <h1 class="text-xl font-bold">商戶訂單管理</h1>
-                <button onclick="toggleApp('front')" class="bg-white/20 px-3 py-1 rounded-full text-xs">退出</button>
+    <div id="cart-bar" class="fixed bottom-20 left-4 right-4 h-14 bg-black/70 backdrop-blur rounded-full flex items-center justify-between px-2 text-white z-40 hidden">
+        <div class="flex items-center gap-3 ml-2">
+            <div class="relative bg-white/20 p-2 rounded-full">
+                <i class="fa-solid fa-shopping-bag text-lg"></i>
+                <span id="cart-qty" class="absolute -top-1 -right-1 bg-bespoke-gold text-[10px] rounded-full w-4 h-4 flex items-center justify-center">1</span>
             </div>
-            <div class="flex gap-4 mt-6 text-sm">
-                <div class="flex-1 bg-white/10 p-3 rounded-lg">
-                    <p class="opacity-70">今日訂單</p>
-                    <p id="stat-count" class="text-2xl font-bold">0</p>
-                </div>
-                <div class="flex-1 bg-white/10 p-3 rounded-lg">
-                    <p class="opacity-70">待處理</p>
-                    <p id="stat-pending" class="text-2xl font-bold">0</p>
-                </div>
-            </div>
+            <span id="cart-total" class="font-bold text-lg">HK$28</span>
         </div>
-        
-        <div class="p-4 space-y-4" id="admin-order-list">
-            </div>
-    </main>
-
-    <div id="cart-bar" class="fixed bottom-4 left-4 right-4 h-14 bg-[#333] rounded-full flex items-center px-4 justify-between z-50 we-shadow hidden">
-        <div class="flex items-center gap-3">
-            <div class="relative">
-                <div class="w-10 h-10 bg-[#07c160] rounded-full flex items-center justify-center -mt-6 border-4 border-[#333]">
-                    <i class="fa-solid fa-shopping-bag text-white"></i>
-                </div>
-                <div id="cart-qty" class="absolute -top-7 -right-1 bg-red-500 text-white text-[10px] rounded-full px-1 min-w-[16px] text-center">1</div>
-            </div>
-            <div class="text-white">
-                <p class="text-xs opacity-60">合計</p>
-                <p class="font-bold" id="cart-total">HK$ 0</p>
-            </div>
-        </div>
-        <button onclick="openCheckout()" class="bg-[#07c160] text-white px-6 py-2 rounded-full text-sm font-bold">去結算</button>
+        <button onclick="openCheckout()" class="bg-bespoke-gold px-8 py-3 rounded-full text-sm font-bold">結帳</button>
     </div>
 
+    <main id="backoffice-main" class="hidden flex-1 bg-gray-50 overflow-y-auto p-4">
+        <h2 class="text-center font-bold text-gray-800 mb-4">我的訂單</h2>
+        <div class="flex bg-white rounded-lg p-1 text-sm mb-4 shadow-sm">
+            <div class="flex-1 text-center py-2 font-bold text-bespoke-gold border-b-2 border-bespoke-gold">今日訂單</div>
+            <div class="flex-1 text-center py-2 text-gray-400">歷史訂單</div>
+        </div>
+        
+        <div id="order-list" class="space-y-4">
+            </div>
+    </main>
+
+    <nav class="flex-none bg-white border-t flex justify-around py-2 safe-area-bottom z-50">
+        <button onclick="switchTab('front')" id="nav-point" class="flex flex-col items-center gap-1 text-bespoke-gold">
+            <i class="fa-solid fa-file-invoice text-xl"></i>
+            <span class="text-[10px]">點單</span>
+        </button>
+        <button onclick="switchTab('back')" id="nav-receipt" class="flex flex-col items-center gap-1 text-gray-300">
+            <i class="fa-solid fa-receipt text-xl"></i>
+            <span class="text-[10px]">取單</span>
+        </button>
+    </nav>
+
     <div id="spec-modal" class="modal">
-        <div class="bg-white w-full rounded-t-3xl p-6 animate-slide-up">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h2 id="spec-name" class="text-lg font-bold">產品名稱</h2>
-                    <p id="spec-price" class="text-orange-500 font-bold">HK$ 0</p>
-                </div>
-                <button onclick="closeModal('spec-modal')" class="text-gray-300 text-xl"><i class="fa-solid fa-times"></i></button>
+        <div class="bg-white w-full rounded-t-3xl p-6 shadow-2xl">
+            <div class="flex justify-between items-start mb-4">
+                <h2 id="modal-title" class="font-bold text-gray-800">產品名稱</h2>
+                <button onclick="closeModal('spec-modal')" class="text-gray-300"><i class="fa-solid fa-times text-xl"></i></button>
             </div>
-            <div class="flex items-center justify-between mb-8">
-                <span class="text-sm text-gray-500 font-medium">購買數量 (起訂量 <span id="min-qty-text"></span>)</span>
+            <div class="flex items-center justify-between bg-gray-50 p-4 rounded-xl mb-6">
+                <span class="text-sm">訂購數量</span>
                 <div class="flex items-center gap-4">
-                    <button onclick="updateSpecQty(-1)" class="w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center text-gray-400">-</button>
-                    <span id="current-spec-qty" class="font-bold w-8 text-center">10</span>
-                    <button onclick="updateSpecQty(1)" class="w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center text-gray-600">+</button>
+                    <button onclick="changeQty(-1)" class="w-8 h-8 border rounded-lg flex items-center justify-center text-gray-400">-</button>
+                    <span id="modal-qty" class="font-bold">10</span>
+                    <button onclick="changeQty(1)" class="w-8 h-8 border rounded-lg flex items-center justify-center text-bespoke-gold">+</button>
                 </div>
             </div>
-            <button onclick="confirmToCart()" class="w-full we-btn-primary py-4 rounded-xl font-bold text-lg mb-2">確認加入購物車</button>
-            <div class="safe-area-bottom"></div>
+            <button onclick="addToCart()" class="w-full bg-bespoke-gold text-white py-4 rounded-xl font-bold">加入購物車</button>
         </div>
     </div>
 
     <div id="status-modal" class="modal">
-        <div class="bg-white w-full rounded-t-3xl p-8 flex flex-col items-center">
-            <div class="w-12 h-1 px-1 bg-gray-200 rounded-full mb-6"></div>
-            <p id="order-status-text" class="text-sm text-gray-400 mb-1">正在為您準備中...</p>
-            <h3 id="order-code-display" class="text-5xl font-black text-gray-800 mb-6 font-mono tracking-tighter">T0000</h3>
-            
-            <div class="w-full space-y-4 mb-8">
-                <div class="flex items-center gap-3">
-                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <p class="text-sm text-gray-600">訂單已成功提交</p>
-                </div>
-                <div class="flex items-center gap-3 opacity-30" id="step-ready">
-                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
-                    <p class="text-sm text-gray-600">商品已備齊，可前往櫃檯領取</p>
+        <div class="bg-white w-full rounded-t-3xl p-8 flex flex-col items-center shadow-2xl">
+            <div class="w-10 h-1 bg-gray-100 rounded-full mb-6"></div>
+            <span class="text-bespoke-gold font-bold text-sm mb-2">準備中</span>
+            <h2 id="final-code" class="text-5xl font-black mb-4 font-mono">T0104</h2>
+            <p class="text-[11px] text-center text-gray-400 leading-relaxed mb-6">
+                訂單需在展場自取(回禮產品除外)<br>顯示請取單時方可到取單處<br>並提供此頁面給工作人員取單
+            </p>
+            <div class="w-full border-t border-dashed pt-6 mb-6">
+                <div class="flex justify-between text-xs text-gray-500">
+                    <span id="final-product">GODIVA 禮券 x10</span>
+                    <span id="final-price">HK$410</span>
                 </div>
             </div>
-
-            <button onclick="closeModal('status-modal')" class="w-full py-4 bg-gray-100 text-gray-500 rounded-xl font-medium">返回菜單</button>
-            <div class="safe-area-bottom"></div>
+            <button onclick="closeModal('status-modal'); switchTab('back');" class="w-full py-4 bg-gray-100 text-gray-600 rounded-xl font-bold">查看我的訂單</button>
         </div>
     </div>
 
     <script>
-        // 資料狀態
-        let orders = JSON.parse(localStorage.getItem('wewe_orders')) || [];
-        let tempCart = null;
+        let cart = null;
+        let orders = JSON.parse(localStorage.getItem('bespoke_mall_orders')) || [];
         let currentProduct = null;
 
-        // 初始化統計
-        function updateStats() {
-            document.getElementById('stat-count').innerText = orders.length;
-            document.getElementById('stat-pending').innerText = orders.filter(o => o.status === 'pending').length;
-        }
+        // 切換點單/取單
+        function switchTab(tab) {
+            const frontHeader = document.getElementById('front-header');
+            const frontMain = document.getElementById('front-main');
+            const backMain = document.getElementById('backoffice-main');
+            const navPoint = document.getElementById('nav-point');
+            const navReceipt = document.getElementById('nav-receipt');
 
-        // 切換前後台
-        function toggleApp(mode) {
-            const front = document.getElementById('front-main');
-            const admin = document.getElementById('admin-main');
-            const header = document.getElementById('front-header');
-            
-            if (mode === 'admin') {
-                front.classList.add('hidden');
-                header.classList.add('hidden');
-                admin.classList.remove('hidden');
-                document.getElementById('cart-bar').classList.add('hidden');
-                renderAdminOrders();
-                updateStats();
+            if (tab === 'front') {
+                frontHeader.classList.remove('hidden');
+                frontMain.classList.remove('hidden');
+                backMain.classList.add('hidden');
+                navPoint.classList.add('text-bespoke-gold');
+                navPoint.classList.remove('text-gray-300');
+                navReceipt.classList.add('text-gray-300');
+                navReceipt.classList.remove('text-bespoke-gold');
             } else {
-                front.classList.remove('hidden');
-                header.classList.remove('hidden');
-                admin.classList.add('hidden');
-                if(tempCart) document.getElementById('cart-bar').classList.remove('hidden');
+                frontHeader.classList.add('hidden');
+                frontMain.classList.add('hidden');
+                backMain.classList.remove('hidden');
+                navReceipt.classList.add('text-bespoke-gold');
+                navReceipt.classList.remove('text-gray-300');
+                navPoint.classList.add('text-gray-300');
+                navPoint.classList.remove('text-bespoke-gold');
+                renderOrders();
             }
         }
 
-        // 開啟規格彈窗
+        // 購買邏輯
         function openSpec(name, price, min) {
             currentProduct = { name, price, min, qty: min };
-            document.getElementById('spec-name').innerText = name;
-            document.getElementById('spec-price').innerText = `HK$ ${price}`;
-            document.getElementById('min-qty-text').innerText = min;
-            document.getElementById('current-spec-qty').innerText = min;
+            document.getElementById('modal-title').innerText = name;
+            document.getElementById('modal-qty').innerText = min;
             document.getElementById('spec-modal').classList.add('active');
         }
 
-        function updateSpecQty(val) {
+        function changeQty(val) {
             let next = currentProduct.qty + val;
             if (next < currentProduct.min) return;
             currentProduct.qty = next;
-            document.getElementById('current-spec-qty').innerText = next;
+            document.getElementById('modal-qty').innerText = next;
         }
 
-        function confirmToCart() {
-            tempCart = { ...currentProduct };
+        function addToCart() {
+            cart = { ...currentProduct };
             document.getElementById('cart-qty').innerText = "1";
-            document.getElementById('cart-total').innerText = `HK$ ${tempCart.price * tempCart.qty}`;
+            document.getElementById('cart-total').innerText = `HK$${cart.price * cart.qty}`;
             document.getElementById('cart-bar').classList.remove('hidden');
             closeModal('spec-modal');
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        // 模擬結算與生成取號
         function openCheckout() {
-            const phone = prompt("WeWePlay 提示：請輸入您的聯絡電話以接收通知", "9583");
-            if(!phone) return;
+            const phone = prompt("請輸入聯絡電話以獲取號碼 (必要填寫)");
+            if (!phone) return;
 
-            const orderID = 'T' + Math.floor(1000 + Math.random() * 8999);
+            const code = 'T' + Math.floor(1000 + Math.random() * 9000);
             const newOrder = {
-                id: orderID,
-                product: tempCart.name,
-                qty: tempCart.qty,
-                total: tempCart.price * tempCart.qty,
-                phone: phone,
-                status: 'pending',
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                id: code,
+                product: cart.name,
+                qty: cart.qty,
+                total: cart.price * cart.qty,
+                status: 'preparing',
+                time: new Date().toLocaleString()
             };
 
             orders.unshift(newOrder);
-            localStorage.setItem('wewe_orders', JSON.stringify(orders));
+            localStorage.setItem('bespoke_mall_orders', JSON.stringify(orders));
 
-            // 重置購物車
-            tempCart = null;
-            document.getElementById('cart-bar').classList.add('hidden');
-
-            // 顯示取貨碼彈窗
-            document.getElementById('order-code-display').innerText = orderID;
-            document.getElementById('order-status-text').innerText = "正在為您準備中...";
-            document.getElementById('step-ready').classList.add('opacity-30');
+            // 顯示成功頁
+            document.getElementById('final-code').innerText = code;
+            document.getElementById('final-product').innerText = `${cart.name} x${cart.qty}`;
+            document.getElementById('final-price').innerText = `HK$${cart.price * cart.qty}`;
             document.getElementById('status-modal').classList.add('active');
+            
+            // 清空購物車
+            cart = null;
+            document.getElementById('cart-bar').classList.add('hidden');
         }
 
-        // 後台渲染
-        function renderAdminOrders() {
-            const list = document.getElementById('admin-order-list');
+        function renderOrders() {
+            const container = document.getElementById('order-list');
             if (orders.length === 0) {
-                list.innerHTML = '<div class="text-center py-20 text-gray-300">暫無新訂單</div>';
+                container.innerHTML = `<div class="text-center py-20 text-gray-300 text-sm">目前沒有訂單</div>`;
                 return;
             }
 
-            list.innerHTML = orders.map(order => `
-                <div class="bg-white p-4 rounded-2xl we-shadow">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-2xl font-black font-mono tracking-tighter">${order.id}</span>
-                        <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-1 rounded-full">${order.time}</span>
+            container.innerHTML = orders.map(order => `
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xs px-3 py-1 bg-bespoke-gold/10 text-bespoke-gold rounded-full font-bold">
+                            ${order.status === 'preparing' ? '準備中' : '可取貨'}
+                        </span>
+                        <span class="text-[10px] text-gray-300 font-mono">${order.time}</span>
                     </div>
-                    <div class="text-sm font-bold text-gray-700">${order.product} × ${order.qty}</div>
-                    <div class="text-xs text-gray-400 mt-1">電話：${order.phone}</div>
-                    <div class="mt-4 flex gap-2">
-                        ${order.status === 'pending' ? 
-                            `<button onclick="setReady('${order.id}')" class="flex-1 bg-[#07c160] text-white py-2 rounded-lg text-xs font-bold">準備完成 (通知顧客)</button>` : 
-                            `<button onclick="finishOrder('${order.id}')" class="flex-1 bg-gray-800 text-white py-2 rounded-lg text-xs font-bold">已領取並核銷</button>`
-                        }
+                    <div class="text-center py-2">
+                        <h3 class="text-4xl font-black tracking-tighter text-gray-800">${order.id}</h3>
+                        <p class="text-[10px] text-gray-400 mt-2 italic">前方 XX 張訂單準備中</p>
+                    </div>
+                    <div class="mt-4 flex gap-3 pt-4 border-t border-gray-50 items-center">
+                        <div class="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center text-xs text-gray-300">圖示</div>
+                        <div class="flex-1">
+                            <p class="text-[12px] font-bold text-gray-700">${order.product}</p>
+                            <p class="text-[10px] text-gray-400">數量: x${order.qty}</p>
+                        </div>
+                        <div class="text-sm font-bold">HK$${order.total}</div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t flex gap-2">
+                        <button onclick="adminFinish('${order.id}')" class="flex-1 py-2 bg-gray-800 text-white text-[10px] rounded-lg">核銷訂單 (管理員用)</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function setReady(id) {
-            orders = orders.map(o => o.id === id ? {...o, status: 'ready'} : o);
-            localStorage.setItem('wewe_orders', JSON.stringify(orders));
-            renderAdminOrders();
-            updateStats();
-            alert('顧客已收到「可取貨」通知 (模擬)');
+        function adminFinish(id) {
+            orders = orders.filter(o => o.id !== id);
+            localStorage.setItem('bespoke_mall_orders', JSON.stringify(orders));
+            renderOrders();
         }
 
-        function finishOrder(id) {
-            orders = orders.filter(o => o.id !== id);
-            localStorage.setItem('wewe_orders', JSON.stringify(orders));
-            renderAdminOrders();
-            updateStats();
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
         }
     </script>
 </body>
