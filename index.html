@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bespoke Mall | Expo Order System 2026</title>
+    <title>Bespoke Mall | Expo Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,22 +12,25 @@
         .sidebar-item.active { background: #fff; border-left: 4px solid var(--gold); color: #000; font-weight: bold; }
         .bottom-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: flex-end; }
         .bottom-sheet.active { display: flex; }
-        .sheet-content { background: white; width: 100%; border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom); }
+        .sheet-content { background: white; width: 100%; border-radius: 24px 24px 0 0; max-height: 94vh; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom); }
         .active-tab { color: var(--gold); border-bottom: 2px solid var(--gold); font-weight: bold; }
         .admin-only { display: none; }
         body.admin-mode .admin-only { display: flex; }
-        .price-red { color: #d63031; }
+        input, textarea, select { -webkit-appearance: none; outline: none; }
     </style>
 </head>
 <body class="h-screen flex flex-col">
 
-    <div class="admin-only bg-black text-white text-[10px] py-2 px-6 justify-between items-center z-50">
-        <span class="tracking-widest">ADMINISTRATOR MODE</span>
-        <button onclick="openAdminEditor()" class="bg-white text-black px-3 py-1 rounded font-bold uppercase">進入後台管理</button>
+    <div class="admin-only bg-stone-900 text-white text-[10px] py-2 px-6 justify-between items-center z-50">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-gear animate-spin-slow"></i>
+            <span class="tracking-widest">系統管理員模式</span>
+        </div>
+        <button onclick="openAdminEditor()" class="bg-white text-stone-900 px-3 py-1 rounded font-black uppercase text-[9px]">開啟產品後台</button>
     </div>
 
     <header class="bg-white border-b z-10 shadow-sm">
-        <div class="text-[10px] text-center py-2 bg-stone-50 text-stone-400">婚展訂單只限現場取貨及預約送貨</div>
+        <div class="text-[10px] text-center py-2 bg-stone-50 text-stone-400">2026 婚展訂單管理系統</div>
         <div class="flex justify-between items-center px-6 py-4">
             <div class="flex flex-col">
                 <span class="text-sm font-bold tracking-[0.2em]">BESPOKE MALL</span>
@@ -43,18 +46,14 @@
 
     <main class="flex-1 flex overflow-hidden">
         <aside id="brand-menu" class="w-24 bg-stone-50 overflow-y-auto border-r text-[11px] text-stone-500"></aside>
-        
         <section id="product-list" class="flex-1 overflow-y-auto p-4 space-y-4 pb-40"></section>
-        
         <section id="record-page" class="hidden flex-1 overflow-y-auto bg-stone-50 p-6 pb-40">
             <h2 class="text-xl font-bold mb-6">我的取單紀錄</h2>
-            <div id="order-flow" class="space-y-4">
-                <p class="text-center text-stone-300 py-20 italic">暫無下單紀錄</p>
-            </div>
+            <div id="order-flow" class="space-y-4"></div>
         </section>
     </main>
 
-    <nav class="bg-white border-t flex justify-around py-3 safe-area-bottom z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+    <nav class="bg-white border-t flex justify-around py-3 safe-area-bottom z-50">
         <button onclick="showMainPage('shop')" id="nav-s" class="flex flex-col items-center gap-1 text-gold">
             <i class="fa-solid fa-store text-xl"></i><span class="text-[10px] font-bold">產品目錄</span>
         </button>
@@ -65,199 +64,185 @@
 
     <div id="cart-bar" class="fixed bottom-24 left-4 right-4 h-16 bg-white border rounded-2xl flex items-center justify-between px-4 shadow-2xl z-40 hidden">
         <div class="flex flex-col">
-            <span class="text-[9px] text-stone-400 uppercase tracking-widest">Total Total</span>
-            <span id="cart-total" class="text-lg font-black tracking-tighter">HK$0</span>
+            <span class="text-[9px] text-stone-400">總金額預算</span>
+            <span id="cart-total" class="text-lg font-black">HK$0</span>
         </div>
-        <button onclick="openSheet('sheet-confirm')" class="bg-[#b08d57] text-white px-8 py-3 rounded-xl text-sm font-bold shadow-lg">確認下單</button>
-    </div>
-
-    <div id="sheet-detail" class="bottom-sheet" onclick="closeSheet(this)">
-        <div class="sheet-content" onclick="event.stopPropagation()">
-            <div class="w-12 h-1 bg-stone-100 rounded-full mx-auto my-4"></div>
-            <div id="p-img" class="w-full h-64 bg-center bg-contain bg-no-repeat bg-stone-50"></div>
-            <div class="p-8">
-                <div class="flex justify-between items-start mb-1">
-                    <h2 id="p-name" class="text-2xl font-bold text-stone-800">產品名稱</h2>
-                    <span id="p-price" class="text-gold font-bold text-xl"></span>
-                </div>
-                <div id="p-expiry" class="text-[10px] text-red-500 font-bold mb-4"></div>
-                <div class="text-[10px] text-stone-400 uppercase mb-2">產品說明</div>
-                <p id="p-desc" class="text-xs text-stone-500 mb-6 leading-relaxed"></p>
-                <div class="text-[10px] text-stone-400 uppercase mb-2">條款及細則 (T&C)</div>
-                <p id="p-tc" class="text-[10px] text-stone-300 mb-8 italic"></p>
-                
-                <div class="flex justify-between items-center p-5 bg-stone-50 rounded-2xl mb-8 border border-stone-100">
-                    <span class="font-bold text-sm">訂購數量</span>
-                    <div class="flex items-center gap-6">
-                        <button onclick="adjQty(-10)" class="w-10 h-10 bg-white border rounded-xl shadow-sm text-stone-300">-</button>
-                        <span id="p-qty" class="font-black text-xl w-10 text-center"></span>
-                        <button onclick="adjQty(10)" class="w-10 h-10 bg-white border rounded-xl shadow-sm text-gold font-bold">+</button>
-                    </div>
-                </div>
-                <div id="p-payment" class="text-center text-[9px] text-stone-300 mb-4"></div>
-                <button onclick="addToCartFinal()" class="w-full py-5 bg-[#b08d57] text-white rounded-2xl font-bold text-lg shadow-xl">加入我的訂單</button>
-            </div>
-        </div>
+        <button onclick="openSheet('sheet-confirm')" class="bg-[#b08d57] text-white px-8 py-3 rounded-xl text-sm font-bold">確認下單</button>
     </div>
 
     <div id="admin-editor-sheet" class="bottom-sheet" onclick="closeSheet(this)">
-        <div class="sheet-content p-6" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h3 class="font-bold text-lg">Bespoke Mall 產品後台</h3>
-                <button onclick="closeSheet(document.getElementById('admin-editor-sheet'))" class="text-stone-400 text-2xl">&times;</button>
+        <div class="sheet-content" onclick="event.stopPropagation()">
+            <div class="sticky top-0 bg-white z-20 border-b px-6 py-5 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-black tracking-tight">後台管理中心</h2>
+                    <p class="text-[9px] text-stone-400 uppercase tracking-widest">Product & Inventory Control</p>
+                </div>
+                <button onclick="closeSheet(document.getElementById('admin-editor-sheet'))" class="w-10 h-10 flex items-center justify-center bg-stone-50 rounded-full text-stone-400">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
-            <div class="space-y-6 pb-24">
-                <div id="admin-p-list" class="flex gap-2 overflow-x-auto pb-2">
-                    </div>
+            <div class="p-6 space-y-8 pb-32">
+                <div>
+                    <label class="text-[10px] font-bold text-stone-400 uppercase mb-3 block">快速選擇產品</label>
+                    <div id="admin-p-list" class="flex gap-3 overflow-x-auto pb-4 scrollbar-hide"></div>
+                </div>
                 
-                <div id="edit-form" class="bg-stone-50 p-5 rounded-3xl space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-stone-400 uppercase">產品詳細資訊</span>
+                <div class="bg-stone-50 p-6 rounded-[32px] space-y-5 border border-stone-100">
+                    <div class="flex justify-between items-center border-b border-stone-200 pb-4">
+                        <span class="text-xs font-bold">編輯產品細節</span>
                         <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold">啟用中</span>
-                            <input type="checkbox" id="e-active" class="w-5 h-5 accent-green-600">
+                            <span class="text-[10px] font-bold">啟用產品</span>
+                            <input type="checkbox" id="e-active" class="w-6 h-6 accent-stone-900">
                         </div>
                     </div>
 
-                    <div class="space-y-3">
-                        <input type="text" id="e-name" placeholder="產品名稱" class="w-full p-4 rounded-xl border-none shadow-sm text-sm">
+                    <div class="space-y-4">
+                        <div class="group">
+                            <label class="text-[9px] text-stone-400 ml-2">產品名稱</label>
+                            <input type="text" id="e-name" class="w-full p-4 rounded-2xl border-none shadow-sm text-sm font-bold">
+                        </div>
                         
-                        <div class="grid grid-cols-2 gap-3">
-                            <select id="e-cat" class="p-4 rounded-xl border-none shadow-sm text-sm bg-white">
-                                <option value="v">禮券</option>
-                                <option value="g">回禮</option>
-                            </select>
-                            <input type="text" id="e-brand" placeholder="品牌名稱" class="p-4 rounded-xl border-none shadow-sm text-sm">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[9px] text-stone-400 ml-2">主分類</label>
+                                <select id="e-cat" class="w-full p-4 rounded-2xl border-none shadow-sm text-sm bg-white">
+                                    <option value="v">禮券 (Voucher)</option>
+                                    <option value="g">回禮 (Gift)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-stone-400 ml-2">品牌</label>
+                                <input type="text" id="e-brand" class="w-full p-4 rounded-2xl border-none shadow-sm text-sm">
+                            </div>
                         </div>
 
-                        <input type="text" id="e-img" placeholder="圖片網址 URL" class="w-full p-4 rounded-xl border-none shadow-sm text-sm">
+                        <div>
+                            <label class="text-[9px] text-stone-400 ml-2">圖片網址 (URL)</label>
+                            <input type="text" id="e-img" class="w-full p-4 rounded-2xl border-none shadow-sm text-sm font-mono">
+                        </div>
                         
-                        <textarea id="e-desc" placeholder="產品說明內容" class="w-full p-4 rounded-xl border-none shadow-sm text-sm h-20"></textarea>
+                        <div>
+                            <label class="text-[9px] text-stone-400 ml-2">產品說明</label>
+                            <textarea id="e-desc" class="w-full p-4 rounded-2xl border-none shadow-sm text-sm h-24"></textarea>
+                        </div>
                         
-                        <textarea id="e-tc" placeholder="條款及細則 (T&C)" class="w-full p-4 rounded-xl border-none shadow-sm text-[10px] h-20"></textarea>
-
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="text" id="e-expiry" placeholder="有效日期 (YYYY-MM-DD)" class="p-4 rounded-xl border-none shadow-sm text-sm">
-                            <input type="number" id="e-price" placeholder="展場價 (HK$)" class="p-4 rounded-xl border-none shadow-sm text-sm">
+                        <div>
+                            <label class="text-[9px] text-stone-400 ml-2">條款及細則 (T&C)</label>
+                            <textarea id="e-tc" class="w-full p-4 rounded-2xl border-none shadow-sm text-[10px] h-20 text-stone-500"></textarea>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="number" id="e-min" placeholder="最少起訂量" class="p-4 rounded-xl border-none shadow-sm text-sm">
-                            <input type="text" id="e-payment" placeholder="接受付款方式" class="p-4 rounded-xl border-none shadow-sm text-sm">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[9px] text-stone-400 ml-2">有效日期</label>
+                                <input type="text" id="e-expiry" placeholder="YYYY-MM-DD" class="w-full p-4 rounded-2xl border-none shadow-sm text-sm">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-stone-400 ml-2">展場特惠價</label>
+                                <input type="number" id="e-price" class="w-full p-4 rounded-2xl border-none shadow-sm text-sm font-bold text-gold">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[9px] text-stone-400 ml-2">最低起訂量</label>
+                                <input type="number" id="e-min" class="w-full p-4 rounded-2xl border-none shadow-sm text-sm">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-stone-400 ml-2">支付方式</label>
+                                <input type="text" id="e-payment" placeholder="Visa, PayMe..." class="w-full p-4 rounded-2xl border-none shadow-sm text-sm">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="flex gap-2 pt-4">
-                        <button onclick="saveProductData()" class="flex-1 bg-black text-white py-4 rounded-2xl font-bold">儲存更新</button>
-                        <button onclick="createNewProduct()" class="px-4 border border-stone-200 rounded-2xl text-[10px]">新增產品</button>
+                    <div class="flex gap-3 pt-6">
+                        <button onclick="saveProductData()" class="flex-1 bg-stone-900 text-white py-5 rounded-2xl font-bold shadow-xl active:scale-95 transition-transform">儲存更改內容</button>
+                        <button onclick="createNewProduct()" class="px-6 border border-stone-200 rounded-2xl text-[10px] font-bold text-stone-400 bg-white">新增</button>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="sheet-detail" class="bottom-sheet" onclick="closeSheet(this)">
+        <div class="sheet-content p-8" onclick="event.stopPropagation()">
+            <div id="p-img" class="w-full h-56 bg-contain bg-no-repeat bg-center mb-6"></div>
+            <h2 id="p-name" class="text-2xl font-black mb-1"></h2>
+            <div id="p-price" class="text-gold font-bold text-xl mb-4"></div>
+            <p id="p-desc" class="text-xs text-stone-400 leading-relaxed mb-6"></p>
+            <div class="p-5 bg-stone-50 rounded-2xl mb-6 flex justify-between items-center">
+                <span class="font-bold text-sm">數量</span>
+                <div class="flex items-center gap-6">
+                    <button onclick="adjQty(-10)" class="w-10 h-10 bg-white border rounded-xl">-</button>
+                    <span id="p-qty" class="font-black text-xl w-12 text-center"></span>
+                    <button onclick="adjQty(10)" class="w-10 h-10 bg-white border rounded-xl text-gold font-bold">+</button>
+                </div>
+            </div>
+            <button onclick="addToCartFinal()" class="w-full py-5 bg-[#b08d57] text-white rounded-2xl font-bold">加入購物清單</button>
         </div>
     </div>
 
     <div id="sheet-confirm" class="bottom-sheet" onclick="closeSheet(this)">
         <div class="sheet-content p-10" onclick="event.stopPropagation()">
-            <h3 class="text-center font-bold text-xl mb-10">確認訂單資料</h3>
-            <div class="bg-stone-50 p-6 rounded-3xl mb-8 border border-stone-100">
-                <label class="text-[10px] text-stone-400 uppercase tracking-widest block mb-2">聯絡電話 (獲得取單號碼)</label>
-                <input type="tel" id="u-tel" placeholder="請輸入 8 位香港電話" class="w-full bg-transparent text-2xl font-bold outline-none">
+            <h3 class="text-xl font-bold mb-8 text-center">最後一步</h3>
+            <div class="bg-stone-50 p-6 rounded-3xl mb-8">
+                <label class="text-[10px] text-stone-400 uppercase block mb-2 font-bold tracking-widest">聯絡電話</label>
+                <input type="tel" id="u-tel" placeholder="輸入 8 位電話號碼" class="w-full bg-transparent text-2xl font-black outline-none border-b border-stone-200 pb-2">
             </div>
-            <button onclick="submitFinalOrder()" class="w-full py-5 bg-black text-white rounded-2xl font-bold text-lg">提交訂單</button>
+            <button onclick="submitFinalOrder()" class="w-full py-5 bg-black text-white rounded-2xl font-bold">提交訂單並獲取號碼</button>
         </div>
     </div>
 
     <div id="sheet-success" class="bottom-sheet" style="z-index: 200;">
-        <div class="sheet-content p-12 flex flex-col items-center text-center">
-            <div class="text-green-500 text-5xl mb-6"><i class="fa-solid fa-check-circle"></i></div>
-            <h2 id="final-oid" class="text-6xl font-black mb-8 font-mono tracking-tighter">T0000</h2>
-            <p class="text-sm text-stone-400 mb-10 leading-relaxed">下單成功！<br>請截圖此頁面，並向工作人員出示。</p>
-            <button onclick="closeSuccess()" class="w-full py-4 bg-stone-100 text-stone-600 rounded-2xl font-bold">返回取單頁</button>
+        <div class="sheet-content p-12 text-center flex flex-col items-center">
+            <div class="text-green-500 text-6xl mb-6"><i class="fa-solid fa-circle-check"></i></div>
+            <h2 id="final-oid" class="text-7xl font-mono font-black tracking-tighter mb-8"></h2>
+            <p class="text-stone-400 text-sm mb-10 leading-relaxed">下單完成！<br>請向工作人員出示此代碼。</p>
+            <button onclick="closeSuccess()" class="w-full py-4 bg-stone-100 text-stone-600 rounded-2xl font-bold">回到取單頁</button>
         </div>
     </div>
 
     <script>
-        // 預設產品資料 (可由後台修改)
         const defaultData = [
-            { id: 1, active: true, cat: 'v', bName: 'agnès b.', name: 'agnès b. CAFÉ $50 禮券', price: 37, min: 100, expiry: '2027-03-31', img: 'https://via.placeholder.com/300x300?text=Agnes+b', desc: '適用於全港 agnès b. CAFÉ。禮券有效日期長。', tc: '不設退換，不可兌換現金。', payment: 'Visa, Master, PayMe' },
-            { id: 2, active: true, cat: 'v', bName: 'GODIVA', name: 'GODIVA $50 禮券 (粉紅)', price: 41, min: 10, expiry: '2026-12-31', img: 'https://via.placeholder.com/300x300?text=GODIVA', desc: '限定粉紅色婚慶包裝。', tc: '只限香港分店使用。', payment: 'Visa, AliPay, WeChat' }
+            { id: 1, active: true, cat: 'v', bName: 'agnès b.', name: 'agnès b. CAFÉ $50 禮券', price: 37, min: 100, expiry: '2027-03-31', img: 'https://via.placeholder.com/300', desc: '適用於全港 agnès b. CAFÉ。', tc: '不設退換。', payment: 'Visa, PayMe' }
         ];
 
         let productsData = JSON.parse(localStorage.getItem('bespoke_expo_db')) || defaultData;
         let cart = null, orders = [], isAdmin = false, currentCat = 'v', editingId = null;
 
         function init() {
-            renderBrands();
+            const activeProducts = productsData.filter(p => p.active && p.cat === currentCat);
+            const brands = ['all', ...new Set(activeProducts.map(p => p.bName || p.brand))];
+            document.getElementById('brand-menu').innerHTML = brands.map(b => `
+                <div onclick="filterBrand(this, '${b}')" class="sidebar-item ${b==='all'?'active':''} p-4 text-center py-6 capitalize">
+                    ${b === 'all' ? '所有' : b}
+                </div>
+            `).join('');
             renderProducts('all', currentCat);
         }
 
-        // 渲染品牌側欄
-        function renderBrands() {
-            const activeProducts = productsData.filter(p => p.active && p.cat === currentCat);
-            const brands = ['all', ...new Set(activeProducts.map(p => p.brand || p.bName))];
-            document.getElementById('brand-menu').innerHTML = brands.map(b => `
-                <div onclick="filterBrand(this, '${b}')" class="sidebar-item ${b==='all'?'active':''} p-4 text-center py-6">
-                    ${b === 'all' ? '所有品牌' : b}
-                </div>
-            `).join('');
-        }
-
-        // 渲染產品清單
         function renderProducts(brand, cat) {
             const list = document.getElementById('product-list');
-            const filtered = productsData.filter(p => p.active && (brand === 'all' || (p.brand || p.bName) === brand) && p.cat === cat);
-            
-            if(filtered.length === 0) {
-                list.innerHTML = `<p class="text-center py-20 text-stone-300 text-xs italic">此類別暫無產品</p>`;
-                return;
-            }
-
-            list.innerHTML = filtered.map(p => `
+            const filtered = productsData.filter(p => p.active && (brand === 'all' || (p.bName || p.brand) === brand) && p.cat === cat);
+            list.innerHTML = filtered.length ? filtered.map(p => `
                 <div class="flex gap-4 border-b border-stone-100 pb-5 items-center">
-                    <div class="w-20 h-20 bg-white border rounded-xl bg-center bg-contain bg-no-repeat flex-none" style="background-image: url('${p.img}')"></div>
+                    <div class="w-16 h-16 bg-white border rounded-xl bg-center bg-contain bg-no-repeat shadow-sm" style="background-image: url('${p.img}')"></div>
                     <div class="flex-1">
-                        <h3 class="text-sm font-bold text-stone-800">${p.name}</h3>
-                        <div class="text-gold font-bold mt-1">HK$ ${p.price}</div>
-                        <div class="text-[9px] text-stone-300 mt-1 uppercase">Expiry: ${p.expiry}</div>
+                        <div class="text-[9px] text-stone-400 uppercase font-bold">${p.bName}</div>
+                        <h3 class="text-sm font-bold text-stone-800 leading-tight">${p.name}</h3>
+                        <div class="text-gold font-bold mt-1 text-xs">HK$ ${p.price}</div>
                     </div>
-                    <button onclick="openProductDetail(${p.id})" class="bg-[#b08d57] text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
+                    <button onclick="openProductDetail(${p.id})" class="bg-[#b08d57] text-white w-9 h-9 rounded-full shadow-lg flex items-center justify-center">+</button>
                 </div>
-            `).join('');
+            `).join('') : '<p class="text-center py-20 text-stone-300 italic">暫無產品</p>';
         }
 
-        // 產品詳情
-        function openProductDetail(id) {
-            cart = productsData.find(p => p.id === id);
-            cart.qty = cart.min;
-            document.getElementById('p-name').innerText = cart.name;
-            document.getElementById('p-price').innerText = `HK$ ${cart.price}`;
-            document.getElementById('p-desc').innerText = cart.desc || '暫無說明';
-            document.getElementById('p-tc').innerText = `條款：${cart.tc || '不設退換'}`;
-            document.getElementById('p-expiry').innerText = `Valid Until: ${cart.expiry}`;
-            document.getElementById('p-img').style.backgroundImage = `url('${cart.img}')`;
-            document.getElementById('p-qty').innerText = cart.qty;
-            document.getElementById('p-payment').innerText = `接受付款: ${cart.payment || '現場支付'}`;
-            openSheet('sheet-detail');
-        }
-
-        function adjQty(v) {
-            cart.qty = Math.max(cart.min, cart.qty + v);
-            document.getElementById('p-qty').innerText = cart.qty;
-        }
-
-        function addToCartFinal() {
-            document.getElementById('cart-total').innerText = `HK$ ${(cart.price * cart.qty).toLocaleString()}`;
-            document.getElementById('cart-bar').classList.remove('hidden');
-            closeSheet(document.getElementById('sheet-detail'));
-        }
-
-        // 管理員後台邏輯
+        // 後台邏輯
         function adminLogin() {
-            if(prompt("請輸入管理員密碼") === "5963") {
+            if(prompt("Admin Password") === "5963") {
                 isAdmin = true;
                 document.body.classList.add('admin-mode');
-                alert("管理員模式已啟動");
+                alert("後台權限已開啟");
             }
         }
 
@@ -270,9 +255,10 @@
         function renderAdminPList() {
             const container = document.getElementById('admin-p-list');
             container.innerHTML = productsData.map(p => `
-                <div onclick="loadEditForm(${p.id})" class="flex-none w-20 p-2 bg-white rounded-lg border ${editingId === p.id ? 'border-gold' : 'border-stone-100'} text-center">
-                    <div class="w-full h-10 bg-contain bg-no-repeat bg-center mb-1" style="background-image:url('${p.img}')"></div>
-                    <div class="text-[8px] truncate">${p.name}</div>
+                <div onclick="loadEditForm(${p.id})" class="flex-none w-24 p-3 bg-white rounded-2xl border-2 ${editingId === p.id ? 'border-stone-900 shadow-lg' : 'border-stone-50'} text-center transition-all">
+                    <div class="w-full h-12 bg-contain bg-no-repeat bg-center mb-2" style="background-image:url('${p.img}')"></div>
+                    <div class="text-[8px] font-bold truncate">${p.name}</div>
+                    <div class="text-[7px] ${p.active?'text-green-500':'text-red-400'}">${p.active?'● ONLINE':'○ HIDDEN'}</div>
                 </div>
             `).join('');
         }
@@ -311,48 +297,56 @@
                 payment: document.getElementById('e-payment').value
             };
             localStorage.setItem('bespoke_expo_db', JSON.stringify(productsData));
-            alert("儲存成功！");
+            alert("✅ 產品資料已成功存儲");
             init();
             renderAdminPList();
         }
 
         function createNewProduct() {
             const newId = Date.now();
-            productsData.push({ id: newId, active: true, name: '新產品', cat: 'v', price: 0, min: 1, expiry: '2026-12-31', img: '', desc: '' });
+            productsData.push({ id: newId, active: true, name: '新產品', cat: 'v', price: 0, min: 1, expiry: '2026-12-31', img: '', bName: 'New Brand' });
             loadEditForm(newId);
         }
 
-        // 下單與流程
+        // 訂單邏輯
+        function openProductDetail(id) {
+            cart = productsData.find(p => p.id === id);
+            cart.qty = cart.min;
+            document.getElementById('p-name').innerText = cart.name;
+            document.getElementById('p-price').innerText = `HK$ ${cart.price}`;
+            document.getElementById('p-desc').innerText = cart.desc || '';
+            document.getElementById('p-img').style.backgroundImage = `url('${cart.img}')`;
+            document.getElementById('p-qty').innerText = cart.qty;
+            openSheet('sheet-detail');
+        }
+        function adjQty(v) { cart.qty = Math.max(cart.min, cart.qty + v); document.getElementById('p-qty').innerText = cart.qty; }
+        function addToCartFinal() {
+            document.getElementById('cart-total').innerText = `HK$ ${(cart.price * cart.qty).toLocaleString()}`;
+            document.getElementById('cart-bar').classList.remove('hidden');
+            closeSheet(document.getElementById('sheet-detail'));
+        }
         function submitFinalOrder() {
-            if(!document.getElementById('u-tel').value) return alert("請輸入電話");
+            if(!document.getElementById('u-tel').value) return alert("請填寫聯絡電話");
             const oid = 'T' + Math.floor(1000 + Math.random()*9000);
             orders.unshift({ id: oid, ...cart, total: cart.price * cart.qty });
             document.getElementById('final-oid').innerText = oid;
             openSheet('sheet-success');
         }
-
         function renderOrderRecords() {
             const flow = document.getElementById('order-flow');
-            if(orders.length === 0) { flow.innerHTML = '<p class="text-center text-stone-300 py-20 italic">暫無下單紀錄</p>'; return; }
-            flow.innerHTML = orders.map(o => `
+            flow.innerHTML = orders.length ? orders.map(o => `
                 <div class="bg-white p-6 rounded-3xl border border-stone-100 shadow-sm relative">
-                    <div class="flex justify-between items-start">
+                    <div class="flex justify-between items-start mb-4">
                         <span class="text-4xl font-mono font-black tracking-tighter">${o.id}</span>
                         <span class="text-[10px] bg-stone-900 text-white px-3 py-1 rounded-full uppercase">Processing</span>
                     </div>
-                    <div class="mt-4 text-xs font-bold text-stone-600">${o.name} x ${o.qty}</div>
-                    <div class="text-[10px] text-stone-400 mt-1">金額: HK$${o.total.toLocaleString()}</div>
-                    ${isAdmin ? `<button onclick="deleteOrder('${o.id}')" class="mt-4 w-full py-2 bg-stone-100 text-red-500 rounded-xl text-[10px] font-bold">管理員：核銷訂單</button>` : ''}
+                    <div class="text-xs font-bold text-stone-600">${o.name} x ${o.qty}</div>
+                    <div class="text-[10px] text-stone-400">HK$${o.total.toLocaleString()}</div>
+                    ${isAdmin ? `<button onclick="deleteOrder('${o.id}')" class="mt-4 w-full py-2 bg-red-50 text-red-500 rounded-xl text-[10px] font-bold">管理員核銷訂單</button>` : ''}
                 </div>
-            `).join('');
+            `).join('') : '<p class="text-center py-20 text-stone-300 italic">暫無下單紀錄</p>';
         }
-
-        function deleteOrder(id) {
-            orders = orders.filter(o => o.id !== id);
-            renderOrderRecords();
-        }
-
-        // 頁面切換邏輯
+        function deleteOrder(id) { orders = orders.filter(o => o.id !== id); renderOrderRecords(); }
         function showMainPage(p) {
             const isShop = p === 'shop';
             document.getElementById('product-list').parentElement.classList.toggle('hidden', !isShop);
@@ -361,20 +355,17 @@
             document.getElementById('nav-r').className = !isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
             if(!isShop) renderOrderRecords();
         }
-
         function switchMainCat(c) {
             currentCat = c;
             document.getElementById('tab-v').className = c==='v'?'flex-1 py-3 active-tab cursor-pointer':'flex-1 py-3 text-stone-300 cursor-pointer';
             document.getElementById('tab-g').className = c==='g'?'flex-1 py-3 active-tab cursor-pointer':'flex-1 py-3 text-stone-300 cursor-pointer';
             init();
         }
-
         function filterBrand(el, b) {
             document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             renderProducts(b, currentCat);
         }
-
         function openSheet(id) { document.getElementById(id).classList.add('active'); }
         function closeSheet(el) { el.classList.remove('active'); }
         function closeSuccess() {
@@ -382,7 +373,6 @@
             document.getElementById('cart-bar').classList.add('hidden');
             showMainPage('record');
         }
-
         window.onload = init;
     </script>
 </body>
