@@ -3,210 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BESPOKE MALL | 專業婚禮禮券與回禮平台</title>
+    <title>BESPOKE MALL | 管理後台整合版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .page { display: none; }
         .page.active { display: block; }
-        /* 自定義捲軸 */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
+        .tier-input-group:not(:first-child) { margin-top: 0.5rem; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800">
+<body class="bg-slate-50 text-slate-900">
 
-    <nav class="bg-white/80 backdrop-blur-md border-b sticky top-0 z-50">
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-6">
-                <a href="javascript:void(0)" onclick="showPage('home')" class="text-xl font-black tracking-tighter text-pink-600">BESPOKE MALL</a>
-                <div class="hidden md:flex space-x-6 text-sm font-medium">
-                    <button onclick="showPage('home')" class="hover:text-pink-500 transition">探索商品</button>
-                    <button onclick="showPage('order-track')" class="hover:text-pink-500 transition">訂單查詢</button>
+                <a href="javascript:void(0)" onclick="showPage('home')" class="text-xl font-black text-pink-600">BESPOKE MALL</a>
+                <div id="admin-nav" class="hidden flex space-x-4 text-sm font-bold text-blue-600">
+                    <button onclick="showPage('admin-brands')">品牌管理</button>
+                    <button onclick="showPage('admin-products')">產品管理</button>
+                    <button onclick="showPage('admin-orders')">訂單跟進</button>
                 </div>
             </div>
             
             <div class="flex items-center space-x-4">
-                <div id="admin-entrance" class="relative">
-                    <button id="admin-login-btn" onclick="toggleElement('admin-login-box')" class="text-[10px] uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full hover:bg-slate-200">Admin</button>
-                    <div id="admin-login-box" class="hidden absolute right-0 mt-3 w-56 bg-white border shadow-2xl p-4 rounded-xl">
-                        <p class="text-xs font-bold mb-2">管理員驗證</p>
-                        <input type="password" id="admin-pw" placeholder="輸入密碼" class="w-full border p-2 text-sm rounded-lg mb-2 focus:ring-2 focus:ring-pink-500 outline-none">
-                        <button onclick="checkAdmin()" class="w-full bg-slate-900 text-white text-sm py-2 rounded-lg hover:bg-slate-800">登入</button>
+                <div class="relative">
+                    <button id="admin-login-btn" onclick="document.getElementById('login-box').classList.toggle('hidden')" class="text-[10px] bg-slate-100 px-3 py-1 rounded-full uppercase">Admin</button>
+                    <div id="login-box" class="hidden absolute right-0 mt-2 w-48 bg-white border p-4 shadow-xl rounded-xl">
+                        <input type="password" id="admin-pw" placeholder="密碼" class="w-full border p-2 rounded mb-2 text-sm">
+                        <button onclick="checkAdmin()" class="w-full bg-slate-900 text-white py-1 rounded text-sm">確認</button>
                     </div>
-                    <div id="admin-menu" class="hidden flex items-center space-x-4 text-sm font-bold text-pink-600">
-                        <button onclick="showPage('admin-products')" class="hover:underline">產品配置</button>
-                        <button onclick="showPage('admin-orders')" class="hover:underline">訂單跟進</button>
-                        <button onclick="logoutAdmin()" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-right-from-bracket"></i></button>
-                    </div>
+                    <button id="logout-btn" onclick="logout()" class="hidden text-xs text-slate-400">登出</button>
                 </div>
-                <button class="p-2 bg-slate-100 rounded-full hover:bg-pink-100 transition">🛒</button>
+                <div class="relative cursor-pointer" onclick="showPage('cart-page')">
+                    <i class="fa-solid fa-cart-shopping text-slate-600"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] rounded-full px-1.5">0</span>
+                </div>
             </div>
         </div>
     </nav>
 
-    <section id="home" class="page active max-w-7xl mx-auto px-4 py-10">
-        <div class="mb-10">
-            <h1 class="text-4xl font-bold mb-2">精選回禮</h1>
-            <p class="text-slate-500">為您的重要日子，挑選最溫暖的心意。</p>
+    <section id="home" class="page active max-w-7xl mx-auto px-4 py-8">
+        <div class="flex space-x-4 mb-8 border-b">
+            <button class="pb-2 border-b-2 border-pink-500 font-bold">全部商品</button>
+            <button class="pb-2 text-slate-400">禮券</button>
+            <button class="pb-2 text-slate-400">回禮小禮物</button>
         </div>
-        <div class="flex space-x-8 mb-8 border-b overflow-x-auto whitespace-nowrap">
-            <button class="pb-4 border-b-2 border-pink-500 font-bold px-2">全部商品</button>
-            <button class="pb-4 text-slate-400 px-2 hover:text-slate-600">禮券 (Voucher)</button>
-            <button class="pb-4 text-slate-400 px-2 hover:text-slate-600">回禮小禮物 (Favors)</button>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div class="group cursor-pointer" onclick="showPage('product-detail')">
-                <div class="aspect-[4/5] bg-slate-200 rounded-2xl mb-4 overflow-hidden shadow-sm group-hover:shadow-xl transition-all">
-                    <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=500" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                </div>
-                <span class="text-[10px] font-bold text-pink-500 uppercase tracking-widest">Brand Name</span>
-                <h3 class="font-bold text-lg">精緻手作婚禮果醬</h3>
-                <p class="text-slate-900 font-medium">HK$38.00 <span class="text-xs text-slate-400 font-normal">起</span></p>
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
             </div>
-        </div>
     </section>
 
-    <section id="product-detail" class="page max-w-5xl mx-auto px-4 py-12">
-        <button onclick="showPage('home')" class="mb-6 text-sm font-medium text-slate-400 hover:text-pink-500 transition">← 返回探索</button>
-        <div class="flex flex-col md:flex-row gap-12">
-            <div class="flex-1 aspect-square bg-slate-200 rounded-3xl overflow-hidden shadow-inner">
-                <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
+    <section id="product-detail" class="page max-w-5xl mx-auto px-4 py-10">
+        <div class="flex flex-col md:flex-row gap-10">
+            <div class="flex-1 bg-white p-2 rounded-2xl shadow-sm border">
+                <img id="detail-img" src="" class="w-full aspect-square object-cover rounded-xl">
             </div>
-            <div class="flex-1 space-y-8">
+            <div class="flex-1 space-y-6">
+                <h2 id="detail-title" class="text-3xl font-bold"></h2>
                 <div>
-                    <h2 class="text-4xl font-bold mb-2">精緻手作婚禮果醬</h2>
-                    <p class="text-pink-600 text-2xl font-black italic">HK$38.00</p>
-                </div>
+                    <p id="detail-price" class="text-2xl font-black text-slate-900"></p>
+                    <p id="detail-expiry" class="text-sm font-bold text-red-600 mt-1"></p> </div>
+                <div id="detail-tier" class="p-4 bg-pink-50 rounded-xl text-xs space-y-1"></div>
                 
-                <div class="p-5 bg-white border border-pink-100 rounded-2xl shadow-sm">
-                    <p class="text-xs font-bold text-pink-500 mb-3"><i class="fa-solid fa-tag mr-2"></i>大量採購優惠 (階梯價)</p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-50 p-3 rounded-lg border">
-                            <p class="text-[10px] text-slate-400">滿 50 件</p>
-                            <p class="font-bold text-slate-700">HK$32.00 /件</p>
-                        </div>
-                        <div class="bg-slate-50 p-3 rounded-lg border border-pink-200">
-                            <p class="text-[10px] text-slate-400">滿 100 件</p>
-                            <p class="font-bold text-slate-700">HK$28.00 /件</p>
-                        </div>
-                    </div>
+                <div class="flex items-center space-x-4 pt-4">
+                    <input type="number" id="buy-qty" value="1" min="1" class="border-2 p-3 w-24 rounded-xl text-center font-bold">
+                    <button onclick="addToCart()" class="flex-1 bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition">加入購物車</button>
                 </div>
-
-                <div class="space-y-4 pt-4 border-t">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm font-bold text-slate-500">數量 (最少 10 件)</span>
-                        <input type="number" value="10" min="10" class="w-24 text-center border-2 border-slate-100 p-2 rounded-xl focus:border-pink-300 outline-none">
-                    </div>
-                    <button class="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold shadow-lg hover:bg-slate-800 transition transform hover:-translate-y-1">立即結帳</button>
-                </div>
-
-                <div class="text-[11px] text-slate-400 leading-relaxed bg-slate-100 p-4 rounded-xl">
-                    <p class="font-bold text-slate-500 mb-1">條款及細則 (T&C):</p>
-                    有效期至 2026-12-31。此商品為客製化產品，一經確認訂單後不設退換。請於取貨前 14 天確認設計。
+                <button class="w-full bg-pink-500 text-white py-4 rounded-xl font-bold hover:bg-pink-600 shadow-lg shadow-pink-100">立即結帳</button>
+                
+                <div class="border-t pt-4">
+                    <p class="text-xs font-bold text-slate-400 uppercase">T&C 條款細則</p>
+                    <p id="detail-tc" class="text-[11px] text-slate-500 mt-2"></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="order-track" class="page max-w-lg mx-auto px-4 py-20 text-center">
-        <h2 class="text-3xl font-black mb-4">查詢您的訂單</h2>
-        <p class="text-slate-500 mb-8">輸入手機號碼，即時掌握禮券與回禮狀態。</p>
-        <div class="bg-white p-8 rounded-3xl border shadow-xl">
-            <input type="tel" placeholder="輸入手機號碼" class="w-full border-2 border-slate-100 p-4 rounded-2xl mb-4 text-center text-xl tracking-widest focus:border-pink-300 outline-none">
-            <button class="w-full bg-pink-500 text-white py-4 rounded-2xl font-bold hover:bg-pink-600 shadow-lg shadow-pink-200 transition">查詢紀錄</button>
+    <section id="admin-brands" class="page max-w-3xl mx-auto px-4 py-10">
+        <h2 class="text-2xl font-bold mb-6">品牌設定</h2>
+        <div class="bg-white p-6 rounded-xl border mb-8">
+            <div class="flex gap-4">
+                <input type="text" id="new-brand-name" placeholder="品牌名稱" class="flex-1 border p-2 rounded-lg">
+                <input type="text" id="new-brand-logo" placeholder="Logo URL" class="flex-1 border p-2 rounded-lg">
+                <button onclick="addBrand()" class="bg-blue-600 text-white px-6 py-2 rounded-lg">新增</button>
+            </div>
         </div>
+        <ul id="brand-list" class="bg-white border rounded-xl divide-y"></ul>
+    </section>
+
+    <section id="admin-products" class="page max-w-5xl mx-auto px-4 py-10">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">產品配置</h2>
+            <button onclick="showProductForm()" class="bg-pink-500 text-white px-4 py-2 rounded-lg">+ 新增產品</button>
+        </div>
+        
+        <div id="product-form" class="hidden bg-white p-8 rounded-2xl border shadow-lg mb-10 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" id="p-name" placeholder="產品名稱" class="border p-2 rounded w-full">
+                <select id="p-brand" class="border p-2 rounded w-full"></select>
+                <select id="p-category" class="border p-2 rounded w-full">
+                    <option value="禮券">禮券</option>
+                    <option value="回禮">回禮</option>
+                </select>
+                <input type="date" id="p-expiry" class="border p-2 rounded w-full">
+                <input type="number" id="p-price" placeholder="原價" class="border p-2 rounded w-full">
+                <input type="number" id="p-min" placeholder="最少訂購量" class="border p-2 rounded w-full">
+            </div>
+            <textarea id="p-tc" placeholder="條款及細則 (T&C)" class="w-full border p-2 rounded h-24"></textarea>
+            <div class="flex justify-end gap-2">
+                <button onclick="toggleElement('product-form')" class="px-4 py-2 text-slate-400">取消</button>
+                <button onclick="saveProduct()" class="bg-slate-900 text-white px-8 py-2 rounded-lg">儲存產品</button>
+            </div>
+        </div>
+
+        <div id="admin-product-list" class="grid grid-cols-1 gap-4"></div>
     </section>
 
     <section id="admin-orders" class="page max-w-7xl mx-auto px-4 py-10">
-        <div class="flex justify-between items-center mb-10">
-            <div>
-                <h2 class="text-3xl font-black">訂單管理中心</h2>
-                <p class="text-slate-400 text-sm mt-1">管理所有線上與現場取貨訂單</p>
-            </div>
-            <div class="flex space-x-2">
-                <button class="bg-white border px-4 py-2 rounded-lg text-sm font-bold shadow-sm">匯出 Excel</button>
-            </div>
-        </div>
-        
-        <div class="bg-white border rounded-3xl overflow-hidden shadow-sm">
+        <h2 class="text-2xl font-bold mb-6">訂單跟進</h2>
+        <div class="bg-white border rounded-xl overflow-x-auto">
             <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-slate-50 border-b text-slate-400 font-bold uppercase tracking-wider">
-                        <th class="p-6">編號</th>
-                        <th class="p-6">購買內容</th>
-                        <th class="p-6">客戶電話</th>
-                        <th class="p-6">狀態</th>
-                        <th class="p-6">回禮配送資訊</th>
+                <thead class="bg-slate-50 border-b">
+                    <tr>
+                        <th class="p-4">編號</th>
+                        <th class="p-4">客戶電話</th>
+                        <th class="p-4">狀態</th>
+                        <th class="p-4">操作</th>
                     </tr>
                 </thead>
-                <tbody id="order-list">
-                    <tr class="border-b hover:bg-slate-50 transition">
-                        <td class="p-6 font-mono font-bold text-pink-600">BW0001</td>
-                        <td class="p-6 italic font-medium">婚禮果醬 x 100</td>
-                        <td class="p-6">9123 4567</td>
-                        <td class="p-6">
-                            <select class="border-none rounded-lg text-xs font-bold p-2 bg-yellow-100 text-yellow-700 outline-none">
-                                <option>已下單</option>
-                                <option selected>已付款</option>
-                                <option>準備中</option>
-                                <option>請取單</option>
-                                <option>已取單</option>
-                            </select>
-                        </td>
-                        <td class="p-6 text-xs text-slate-500 space-y-1">
-                            <p class="font-bold text-slate-700">收件：陳小姐</p>
-                            <p>日期：2026-06-15</p>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody id="order-table-body"></tbody>
             </table>
         </div>
     </section>
 
     <script>
-        // 核心切換功能
+        // 模擬資料庫
+        let brands = [{ name: '品牌 A', logo: '' }];
+        let products = [];
+        let cart = [];
+        let orders = [];
+        let nextOrderNum = 1;
+
         function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => {
-                p.classList.remove('active');
-            });
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            window.scrollTo(0,0);
-            // 隱入登入框
-            document.getElementById('admin-login-box').classList.add('hidden');
+            if(pageId === 'home') renderHome();
+            if(pageId === 'admin-brands') renderBrands();
+            if(pageId === 'admin-products') renderAdminProducts();
         }
 
-        // 元素切換 (用於登入框)
-        function toggleElement(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
-        // 管理員登入驗證
+        // 管理員邏輯
         function checkAdmin() {
-            const pw = document.getElementById('admin-pw').value;
-            if (pw === '5963') {
+            if(document.getElementById('admin-pw').value === '5963') {
+                document.getElementById('admin-nav').classList.remove('hidden');
                 document.getElementById('admin-login-btn').classList.add('hidden');
-                document.getElementById('admin-login-box').classList.add('hidden');
-                document.getElementById('admin-menu').classList.remove('hidden');
-                showPage('admin-orders');
-            } else {
-                alert('驗證密碼錯誤。');
-            }
+                document.getElementById('login-box').classList.add('hidden');
+                document.getElementById('logout-btn').classList.remove('hidden');
+                showPage('admin-products');
+            } else { alert('密碼錯誤'); }
         }
 
-        function logoutAdmin() {
-            document.getElementById('admin-login-btn').classList.remove('hidden');
-            document.getElementById('admin-menu').classList.add('hidden');
-            showPage('home');
+        function logout() { location.reload(); }
+
+        // 品牌管理
+        function addBrand() {
+            const name = document.getElementById('new-brand-name').value;
+            if(!name) return;
+            brands.push({ name, logo: document.getElementById('new-brand-logo').value });
+            renderBrands();
         }
 
-        // 訂單編號生成演示 (僅為前端視覺演示)
-        let orderCount = 2;
-        function createNewOrder() {
-            const newId = 'BW' + String(orderCount).padStart(4, '0');
-            orderCount++;
-            return newId;
+        function renderBrands() {
+            const list = document.getElementById('brand-list');
+            list.innerHTML = brands.map(b => `<li class="p-3 flex justify-between"><span>${b.name}</span> <button class="text-red-400 text-xs">刪除</button></li>`).join('');
+            const select = document.getElementById('p-brand');
+            select.innerHTML = brands.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
         }
+
+        // 產品管理
+        function showProductForm() { document.getElementById('product-form').classList.remove('hidden'); }
+
+        function saveProduct() {
+            const p = {
+                id: Date.now(),
+                name: document.getElementById('p-name').value,
+                brand: document.getElementById('p-brand').value,
+                expiry: document.getElementById('p-expiry').value,
+                price: document.getElementById('p-price').value,
+                tc: document.getElementById('p-tc').value,
+                img: 'https://via.placeholder.com/400'
+            };
+            products.push(p);
+            document.getElementById('product-form').classList.add('hidden');
+            renderAdminProducts();
+        }
+
+        function renderHome() {
+            const grid = document.getElementById('product-grid');
+            if(products.length === 0) { grid.innerHTML = '<p class="col-span-4 text-center py-10 text-slate-400">暫無產品，請從後台新增。</p>'; return; }
+            grid.innerHTML = products.map(p => `
+                <div class="bg-white p-3 rounded-xl border group cursor-pointer" onclick="showDetail(${p.id})">
+                    <div class="aspect-square bg-slate-100 rounded-lg mb-3 overflow-hidden">
+                        <img src="${p.img}" class="group-hover:scale-110 transition">
+                    </div>
+                    <p class="text-[10px] font-bold text-pink-500">${p.brand}</p>
+                    <h3 class="text-sm font-bold">${p.name}</h3>
+                    <p class="text-slate-900 font-bold">HK$${p.price}</p>
+                    <p class="text-[10px] text-red-600 font-bold">有效期: ${p.expiry}</p>
+                </div>
+            `).join('');
+        }
+
+        function showDetail(id) {
+            const p = products.find(x => x.id === id);
+            document.getElementById('detail-title').innerText = p.name;
+            document.getElementById('detail-price').innerText = 'HK$' + p.price;
+            document.getElementById('detail-expiry').innerText = '有效期: ' + p.expiry;
+            document.getElementById('detail-tc').innerText = p.tc;
+            document.getElementById('detail-img').src = p.img;
+            showPage('product-detail');
+        }
+
+        // 購物車邏輯
+        function addToCart() {
+            const qty = document.getElementById('buy-qty').value;
+            cart.push({ qty });
+            document.getElementById('cart-count').innerText = cart.length;
+            alert('已加入購物車');
+        }
+
+        function toggleElement(id) { document.getElementById(id).classList.toggle('hidden'); }
+
+        // 初始化
+        showPage('home');
     </script>
 </body>
 </html>
