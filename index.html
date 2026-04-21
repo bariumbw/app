@@ -3,39 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BESPOKE MALL | 專業婚禮禮券與回禮</title>
+    <title>BESPOKE MALL | 禮券與回禮整合平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .page { display: none; }
         .page.active { display: block; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
     <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-6">
-                <a href="javascript:void(0)" onclick="showPage('home')" class="text-xl font-black text-pink-600">BESPOKE MALL</a>
-                <div id="admin-nav" class="hidden flex space-x-4 text-xs font-bold text-blue-600">
-                    <button onclick="showPage('admin-brands')">品牌管理</button>
-                    <button onclick="showPage('admin-products')">產品管理</button>
-                    <button onclick="showPage('admin-orders')">訂單跟進</button>
+            <div class="flex items-center space-x-4">
+                <a href="javascript:void(0)" onclick="showPage('home')" class="text-xl font-black text-pink-600 tracking-tighter">BESPOKE MALL</a>
+                <div id="admin-nav" class="hidden md:flex space-x-3 text-[12px] font-bold text-blue-600 border-l pl-4">
+                    <button onclick="showPage('admin-brands')" class="hover:underline">品牌管理</button>
+                    <button onclick="showPage('admin-products')" class="hover:underline">產品配置</button>
+                    <button onclick="showPage('admin-orders')" class="hover:underline">訂單跟進</button>
                 </div>
             </div>
             
             <div class="flex items-center space-x-4">
                 <div class="relative">
-                    <button id="admin-login-btn" onclick="document.getElementById('login-box').classList.toggle('hidden')" class="text-[10px] bg-slate-100 px-3 py-1 rounded-full uppercase">Admin</button>
+                    <button id="admin-login-btn" onclick="document.getElementById('login-box').classList.toggle('hidden')" class="text-[10px] bg-slate-100 px-3 py-1 rounded-full font-bold uppercase">Admin</button>
                     <div id="login-box" class="hidden absolute right-0 mt-2 w-48 bg-white border p-4 shadow-xl rounded-xl z-[60]">
-                        <input type="password" id="admin-pw" placeholder="密碼" class="w-full border p-2 rounded mb-2 text-sm">
-                        <button onclick="checkAdmin()" class="w-full bg-slate-900 text-white py-1 rounded text-sm">確認</button>
+                        <input type="password" id="admin-pw" placeholder="輸入 5963" class="w-full border p-2 rounded mb-2 text-sm outline-none focus:border-pink-500">
+                        <button onclick="checkAdmin()" class="w-full bg-slate-900 text-white py-1 rounded text-sm font-bold">驗證</button>
                     </div>
-                    <button id="logout-btn" onclick="logout()" class="hidden text-xs text-slate-400">登出管理員</button>
+                    <button id="logout-btn" onclick="logout()" class="hidden text-xs text-slate-400 hover:text-red-500">登出</button>
                 </div>
-                <div class="relative cursor-pointer" onclick="showPage('cart-page')">
+                <div class="relative cursor-pointer p-2 hover:bg-pink-50 rounded-full transition" onclick="showPage('cart-page')">
                     <i class="fa-solid fa-cart-shopping text-slate-600"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] rounded-full px-1.5">0</span>
+                    <span id="cart-count" class="absolute top-0 right-0 bg-pink-500 text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
                 </div>
             </div>
         </div>
@@ -43,96 +45,155 @@
 
     <section id="home" class="page active max-w-7xl mx-auto px-4 py-8">
         <div class="flex space-x-6 mb-8 border-b text-sm">
-            <button onclick="filterCat('all')" class="cat-btn pb-3 border-b-2 border-pink-500 font-bold" data-cat="all">全部商品</button>
-            <button onclick="filterCat('禮券')" class="cat-btn pb-3 text-slate-400" data-cat="禮券">禮券</button>
-            <button onclick="filterCat('回禮')" class="cat-btn pb-3 text-slate-400" data-cat="回禮">回禮小禮物</button>
+            <button onclick="filterCat('all')" class="cat-btn pb-3 border-b-2 border-pink-500 font-bold">全部商品</button>
+            <button onclick="filterCat('禮券')" class="cat-btn pb-3 text-slate-400">禮券</button>
+            <button onclick="filterCat('回禮')" class="cat-btn pb-3 text-slate-400">回禮小禮物</button>
         </div>
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            </div>
     </section>
 
     <section id="product-detail" class="page max-w-5xl mx-auto px-4 py-10">
-        <button onclick="showPage('home')" class="mb-4 text-slate-400 text-sm">← 返回</button>
-        <div class="flex flex-col md:flex-row gap-10">
-            <div class="flex-1 bg-white p-2 rounded-2xl border"><img id="detail-img" src="" class="w-full aspect-square object-cover rounded-xl"></div>
+        <button onclick="showPage('home')" class="mb-4 text-slate-400 text-sm flex items-center"><i class="fa-solid fa-angle-left mr-2"></i> 返回商品列表</button>
+        <div class="flex flex-col md:flex-row gap-10 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <div class="flex-1">
+                <img id="detail-img" src="" class="w-full aspect-square object-cover rounded-2xl shadow-inner">
+            </div>
             <div class="flex-1 space-y-6">
-                <h2 id="detail-title" class="text-3xl font-bold"></h2>
                 <div>
-                    <p id="detail-price" class="text-2xl font-black"></p>
-                    <p id="detail-expiry" class="text-sm font-bold text-red-600 mt-1"></p>
+                    <p id="detail-brand" class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-1"></p>
+                    <h2 id="detail-title" class="text-3xl font-black"></h2>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <input type="number" id="buy-qty" value="1" min="1" class="border-2 p-3 w-20 rounded-xl text-center font-bold">
-                    <button onclick="addToCart()" class="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold flex-1">加入購物車</button>
+                <div>
+                    <div class="flex items-baseline space-x-3">
+                        <p id="detail-price" class="text-3xl font-black text-pink-600"></p>
+                        <p id="detail-original" class="text-sm text-slate-300 line-through"></p>
+                    </div>
+                    <p id="detail-expiry" class="text-sm font-bold text-red-600 mt-2 italic"></p>
                 </div>
-                <div class="border-t pt-4 text-xs text-slate-500"><p class="font-bold mb-1">T&C:</p><p id="detail-tc"></p></div>
+                <div class="flex items-center space-x-4 pt-4 border-t">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-bold text-slate-400 mb-1">數量</span>
+                        <input type="number" id="buy-qty" value="1" min="1" class="border-2 p-3 w-20 rounded-xl text-center font-black outline-none border-slate-100 focus:border-pink-500">
+                    </div>
+                    <button onclick="addToCart()" class="flex-1 bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition mt-5">加入購物車</button>
+                </div>
+                <div class="space-y-2 pt-4">
+                    <p class="text-xs font-bold text-slate-700">條款及細則 (T&C):</p>
+                    <p id="detail-tc" class="text-xs text-slate-500 leading-relaxed bg-slate-50 p-3 rounded-lg"></p>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="admin-brands" class="page max-w-3xl mx-auto px-4 py-10">
-        <h2 class="text-2xl font-bold mb-6">品牌設定</h2>
-        <div class="bg-white p-6 rounded-xl border mb-6 space-y-4">
-            <input type="text" id="new-brand-name" placeholder="品牌名稱" class="w-full border p-2 rounded">
-            <div class="flex items-center gap-4">
-                <label class="text-sm text-slate-500">上載 Logo:</label>
-                <input type="file" id="new-brand-file" accept="image/*" class="text-xs">
-            </div>
-            <button onclick="addBrand()" class="w-full bg-blue-600 text-white py-2 rounded">新增品牌</button>
+    <section id="cart-page" class="page max-w-2xl mx-auto px-4 py-10">
+        <div class="flex justify-between items-end mb-6">
+            <h2 class="text-3xl font-black">購物車</h2>
+            <button onclick="showPage('home')" class="text-sm text-blue-600">繼續購物</button>
         </div>
-        <div id="brand-list" class="grid grid-cols-2 gap-4"></div>
+        <div id="cart-items" class="space-y-4 mb-8">
+            </div>
+        <div id="cart-footer" class="hidden border-t pt-6">
+            <div class="flex justify-between items-center mb-6">
+                <span class="font-bold text-slate-400 uppercase tracking-widest">總計金額</span>
+                <span id="cart-total" class="text-3xl font-black text-pink-600"></span>
+            </div>
+            <button onclick="processCheckout()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-slate-800 shadow-xl transition">確認下單付款</button>
+        </div>
+    </section>
+
+    <section id="admin-brands" class="page max-w-4xl mx-auto px-4 py-10">
+        <h2 class="text-2xl font-black mb-8">品牌設定</h2>
+        <div class="bg-white p-6 rounded-2xl border shadow-sm mb-10 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="brand-name-in" placeholder="品牌名稱 (如: Lady M)" class="border p-3 rounded-xl outline-none focus:border-blue-500">
+                <div class="border-2 border-dashed border-slate-200 p-2 rounded-xl flex items-center justify-between">
+                    <span class="text-xs text-slate-400 ml-2">上載品牌 Logo</span>
+                    <input type="file" id="brand-img-in" accept="image/*" class="text-xs w-32">
+                </div>
+            </div>
+            <button onclick="addBrand()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">新增品牌</button>
+        </div>
+        <div id="brand-list-admin" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
     </section>
 
     <section id="admin-products" class="page max-w-5xl mx-auto px-4 py-10">
-        <div class="flex justify-between mb-6">
-            <h2 class="text-2xl font-bold">產品配置</h2>
-            <button onclick="toggleElement('product-form')" class="bg-pink-500 text-white px-4 py-2 rounded">+ 新增產品</button>
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-black">產品配置</h2>
+            <button onclick="toggleElement('prod-form')" class="bg-pink-500 text-white px-6 py-2 rounded-xl font-bold shadow-lg shadow-pink-200">+ 新增產品</button>
         </div>
-        <div id="product-form" class="hidden bg-white p-6 border rounded-xl mb-8 space-y-4 shadow-xl">
-            <div class="grid grid-cols-2 gap-4">
-                <input type="text" id="p-name" placeholder="產品名稱" class="border p-2 rounded">
-                <select id="p-brand" class="border p-2 rounded"></select>
-                <select id="p-cat" class="border p-2 rounded">
-                    <option value="禮券">禮券</option>
-                    <option value="回禮">回禮</option>
+        
+        <div id="prod-form" class="hidden bg-white p-8 rounded-2xl border shadow-2xl mb-10 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="p-name-in" placeholder="產品名稱" class="border p-3 rounded-xl">
+                <select id="p-brand-in" class="border p-3 rounded-xl"></select>
+                <select id="p-cat-in" class="border p-3 rounded-xl">
+                    <option value="禮券">分類：禮券</option>
+                    <option value="回禮">分類：回禮</option>
                 </select>
-                <input type="date" id="p-expiry" class="border p-2 rounded">
-                <input type="number" id="p-price" placeholder="價格" class="border p-2 rounded">
-                <input type="file" id="p-file" accept="image/*" class="text-xs pt-2">
+                <input type="date" id="p-exp-in" class="border p-3 rounded-xl">
+                <input type="number" id="p-price-in" placeholder="現價" class="border p-3 rounded-xl">
+                <input type="number" id="p-orig-in" placeholder="原價" class="border p-3 rounded-xl">
+                <div class="col-span-2 border-2 border-dashed p-3 rounded-xl">
+                    <p class="text-[10px] font-bold text-slate-400 mb-1">上載產品圖片</p>
+                    <input type="file" id="p-img-in" accept="image/*" class="text-xs">
+                </div>
+                <textarea id="p-tc-in" placeholder="T&C 條款細則" class="col-span-2 border p-3 rounded-xl h-24"></textarea>
             </div>
-            <textarea id="p-tc" placeholder="T&C 內容" class="w-full border p-2 rounded h-20"></textarea>
-            <button onclick="saveProduct()" class="w-full bg-slate-900 text-white py-2 rounded">確認儲存</button>
+            <button onclick="addProduct()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">儲存產品並上線</button>
         </div>
-        <div id="admin-p-list" class="space-y-2"></div>
+
+        <div id="prod-list-admin" class="space-y-3"></div>
+    </section>
+
+    <section id="admin-orders" class="page max-w-7xl mx-auto px-4 py-10">
+        <h2 class="text-2xl font-black mb-8 text-blue-900">訂單跟進與配送管理</h2>
+        <div class="bg-white border rounded-2xl shadow-sm overflow-hidden">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50 border-b text-slate-400">
+                    <tr>
+                        <th class="p-6">訂單編號</th>
+                        <th class="p-6">項目</th>
+                        <th class="p-6">金額</th>
+                        <th class="p-6">狀態</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-order-table">
+                    </tbody>
+            </table>
+        </div>
     </section>
 
     <script>
-        // 1. 預填產品資料 (從 bespoke-mall 抓取之模擬數據)
+        // 資料庫初始化
         let brands = [
-            { name: 'Lady M', logo: '' },
+            { name: 'Lady M', logo: 'https://bespoke-mall.myshopify.com/cdn/shop/files/Lady_M_Logo_200x.png' },
             { name: '東海堂', logo: '' },
-            { name: 'agnès b.', logo: '' },
-            { name: '永樂粉麵廠', logo: '' }
+            { name: 'agnès b.', logo: '' }
         ];
 
         let products = [
-            { id: 101, name: 'Lady M $80 禮券', brand: 'Lady M', cat: '禮券', price: 80, expiry: '2026-12-31', tc: '適用於全港 Lady M 分店。', img: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400' },
-            { id: 102, name: '東海堂 $50 禮餅券 (經典橙色)', brand: '東海堂', cat: '禮券', price: 39.5, expiry: '2026-09-30', tc: '換領面值 $50 之產品。', img: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400' },
-            { id: 103, name: 'agnès b. $50 心意禮券', brand: 'agnès b.', cat: '禮券', price: 42.5, expiry: '2026-12-31', tc: '適用於 agnès b. Cafe & Fleuriste。', img: 'https://images.unsplash.com/photo-1549462220-22687f4c3905?w=400' },
-            { id: 104, name: '永樂嫁囍禮券 (特濃蝦子麵)', brand: '永樂粉麵廠', cat: '回禮', price: 18, expiry: '2027-01-15', tc: '憑券可於順豐站換領。', img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400' }
+            { id: 1, name: 'Lady M $80 禮券', brand: 'Lady M', cat: '禮券', price: 80, original: 80, expiry: '2026-12-31', tc: '適用於全港 Lady M 分店換領蛋糕。', img: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=500' },
+            { id: 2, name: '東海堂 $50 禮餅券', brand: '東海堂', cat: '禮券', price: 39.5, original: 50, expiry: '2026-09-30', tc: '面值$50，適用於換領中西餅食。', img: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=500' }
         ];
 
         let cart = [];
-        let currentDetailId = null;
+        let orders = [];
+        let currentPid = null;
 
-        // 2. 核心功能
+        // 切換頁面
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
             if(id === 'home') renderHome();
-            if(id === 'admin-brands') renderBrands();
+            if(id === 'cart-page') renderCart();
+            if(id === 'admin-brands') renderAdminBrands();
             if(id === 'admin-products') renderAdminProducts();
+            if(id === 'admin-orders') renderAdminOrders();
         }
 
+        // 登入驗證
         function checkAdmin() {
             if(document.getElementById('admin-pw').value === '5963') {
                 document.getElementById('admin-nav').classList.remove('hidden');
@@ -140,114 +201,193 @@
                 document.getElementById('admin-login-btn').classList.add('hidden');
                 document.getElementById('login-box').classList.add('hidden');
                 showPage('admin-products');
-            } else { alert('密碼錯誤'); }
+            } else { alert('密碼無效'); }
         }
 
-        // 3. 圖片上傳處理 (Base64)
-        async function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
+        function logout() { location.reload(); }
 
+        // 圖片轉 Base64
+        const toBase64 = file => new Promise((res, rej) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => res(reader.result);
+            reader.onerror = e => rej(e);
+        });
+
+        // 品牌管理
         async function addBrand() {
-            const name = document.getElementById('new-brand-name').value;
-            const file = document.getElementById('new-brand-file').files[0];
-            let logo = '';
-            if(file) logo = await fileToBase64(file);
+            const name = document.getElementById('brand-name-in').value;
+            const file = document.getElementById('brand-img-in').files[0];
             if(!name) return;
+            const logo = file ? await toBase64(file) : '';
             brands.push({ name, logo });
-            renderBrands();
-            document.getElementById('new-brand-name').value = '';
+            renderAdminBrands();
+            document.getElementById('brand-name-in').value = '';
         }
 
-        async function saveProduct() {
-            const file = document.getElementById('p-file').files[0];
+        function renderAdminBrands() {
+            document.getElementById('brand-list-admin').innerHTML = brands.map(b => `
+                <div class="bg-white p-4 border rounded-2xl flex flex-col items-center">
+                    <img src="${b.logo || 'https://via.placeholder.com/60'}" class="w-12 h-12 object-contain mb-2">
+                    <span class="text-xs font-bold">${b.name}</span>
+                </div>
+            `).join('');
+            // 同步產品表單的品牌下拉選單
+            document.getElementById('p-brand-in').innerHTML = brands.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+        }
+
+        // 產品管理
+        async function addProduct() {
+            const file = document.getElementById('p-img-in').files[0];
             const p = {
                 id: Date.now(),
-                name: document.getElementById('p-name').value,
-                brand: document.getElementById('p-brand').value,
-                cat: document.getElementById('p-cat').value,
-                expiry: document.getElementById('p-expiry').value,
-                price: document.getElementById('p-price').value,
-                tc: document.getElementById('p-tc').value,
-                img: file ? await fileToBase64(file) : 'https://via.placeholder.com/400'
+                name: document.getElementById('p-name-in').value,
+                brand: document.getElementById('p-brand-in').value,
+                cat: document.getElementById('p-cat-in').value,
+                expiry: document.getElementById('p-exp-in').value,
+                price: parseFloat(document.getElementById('p-price-in').value),
+                original: parseFloat(document.getElementById('p-orig-in').value),
+                tc: document.getElementById('p-tc-in').value,
+                img: file ? await toBase64(file) : 'https://via.placeholder.com/400'
             };
             products.push(p);
-            toggleElement('product-form');
+            toggleElement('prod-form');
             renderAdminProducts();
         }
 
-        // 4. 渲染邏輯
-        function renderHome(filter = 'all') {
-            const grid = document.getElementById('product-grid');
-            const list = filter === 'all' ? products : products.filter(p => p.cat === filter);
-            grid.innerHTML = list.map(p => `
-                <div class="bg-white p-3 rounded-2xl border hover:shadow-lg transition cursor-pointer" onclick="showDetail(${p.id})">
-                    <img src="${p.img}" class="w-full aspect-square object-cover rounded-xl mb-3">
-                    <p class="text-[10px] font-bold text-pink-500">${p.brand}</p>
-                    <h3 class="text-sm font-bold truncate">${p.name}</h3>
-                    <p class="text-lg font-black">HK$${p.price}</p>
-                    <p class="text-[10px] text-red-600 font-bold">有效期: ${p.expiry}</p>
+        function renderAdminProducts() {
+            document.getElementById('prod-list-admin').innerHTML = products.map(p => `
+                <div class="bg-white p-4 border rounded-xl flex justify-between items-center shadow-sm">
+                    <div class="flex items-center space-x-4">
+                        <img src="${p.img}" class="w-12 h-12 object-cover rounded-lg">
+                        <div>
+                            <p class="font-bold text-sm">${p.name}</p>
+                            <p class="text-[10px] text-slate-400">${p.brand} | HK$${p.price}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteProd(${p.id})" class="text-red-400 text-xs">刪除</button>
+                </div>
+            `).join('');
+        }
+
+        // 前台展示
+        function renderHome(cat = 'all') {
+            const list = cat === 'all' ? products : products.filter(x => x.cat === cat);
+            document.getElementById('product-grid').innerHTML = list.map(p => `
+                <div onclick="showDetail(${p.id})" class="group cursor-pointer">
+                    <div class="aspect-square bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm group-hover:shadow-xl transition-all mb-3">
+                        <img src="${p.img}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    </div>
+                    <p class="text-[10px] font-bold text-pink-500 uppercase">${p.brand}</p>
+                    <h3 class="font-bold text-sm truncate mb-1">${p.name}</h3>
+                    <div class="flex items-baseline space-x-2">
+                        <span class="font-black text-slate-900">HK$${p.price}</span>
+                        <span class="text-[10px] text-slate-300 line-through">HK$${p.original}</span>
+                    </div>
+                    <p class="text-[10px] text-red-600 font-bold mt-1 italic">有效期: ${p.expiry}</p>
                 </div>
             `).join('');
         }
 
         function showDetail(id) {
             const p = products.find(x => x.id === id);
-            currentDetailId = id;
+            currentPid = id;
+            document.getElementById('detail-img').src = p.img;
+            document.getElementById('detail-brand').innerText = p.brand;
             document.getElementById('detail-title').innerText = p.name;
             document.getElementById('detail-price').innerText = 'HK$' + p.price;
+            document.getElementById('detail-original').innerText = '原價 HK$' + p.original;
             document.getElementById('detail-expiry').innerText = '有效期: ' + p.expiry;
             document.getElementById('detail-tc').innerText = p.tc;
-            document.getElementById('detail-img').src = p.img;
             showPage('product-detail');
         }
 
-        function filterCat(cat) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn pb-3 text-slate-400');
-            event.target.className = 'cat-btn pb-3 border-b-2 border-pink-500 font-bold';
-            renderHome(cat);
+        // 購物車功能
+        function addToCart() {
+            const qty = parseInt(document.getElementById('buy-qty').value);
+            const exist = cart.find(x => x.pid === currentPid);
+            if(exist) exist.qty += qty;
+            else cart.push({ pid: currentPid, qty: qty });
+            updateCartUI();
+            alert('已加入購物車');
         }
 
-        function renderBrands() {
-            document.getElementById('brand-list').innerHTML = brands.map(b => `
-                <div class="bg-white p-3 border rounded-xl flex items-center gap-3">
-                    <img src="${b.logo || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full bg-slate-100">
-                    <span class="font-bold text-sm">${b.name}</span>
-                </div>
-            `).join('');
-            document.getElementById('p-brand').innerHTML = brands.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         }
 
-        function renderAdminProducts() {
-            document.getElementById('admin-p-list').innerHTML = products.map(p => `
-                <div class="bg-white p-3 border rounded-lg flex justify-between items-center text-sm">
-                    <div class="flex items-center gap-3">
-                        <img src="${p.img}" class="w-10 h-10 object-cover rounded">
-                        <div>
-                            <p class="font-bold">${p.name}</p>
-                            <p class="text-[10px] text-slate-400">${p.brand} | ${p.cat}</p>
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const footer = document.getElementById('cart-footer');
+            if(cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-20 text-slate-300"><i class="fa-solid fa-cart-ghost text-4xl mb-2"></i><p>購物車是空的</p></div>`;
+                footer.classList.add('hidden');
+                return;
+            }
+            let total = 0;
+            container.innerHTML = cart.map((item, idx) => {
+                const p = products.find(x => x.id === item.pid);
+                const sub = p.price * item.qty;
+                total += sub;
+                return `
+                    <div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm">
+                        <img src="${p.img}" class="w-16 h-16 object-cover rounded-xl">
+                        <div class="flex-1">
+                            <p class="font-bold text-sm">${p.name}</p>
+                            <p class="text-[10px] text-slate-400">HK$${p.price} x ${item.qty}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-black text-pink-600">HK$${sub}</p>
+                            <button onclick="removeCart(${idx})" class="text-[10px] text-red-300 uppercase font-bold">移除</button>
                         </div>
                     </div>
-                    <button onclick="products = products.filter(x=>x.id != ${p.id}); renderAdminProducts();" class="text-red-500 text-xs">刪除</button>
-                </div>
+                `;
+            }).join('');
+            document.getElementById('cart-total').innerText = 'HK$' + total.toLocaleString();
+            footer.classList.remove('hidden');
+        }
+
+        function removeCart(idx) { cart.splice(idx, 1); renderCart(); updateCartUI(); }
+
+        // 模擬結帳
+        function processCheckout() {
+            const id = 'BW' + String(orders.length + 1).padStart(4, '0');
+            const total = document.getElementById('cart-total').innerText;
+            orders.push({ id, total, items: [...cart], status: '已下單' });
+            alert('結帳成功！訂單編號：' + id);
+            cart = [];
+            updateCartUI();
+            showPage('home');
+        }
+
+        function renderAdminOrders() {
+            document.getElementById('admin-order-table').innerHTML = orders.map(o => `
+                <tr class="border-b hover:bg-slate-50 transition">
+                    <td class="p-6 font-mono font-bold text-pink-600">${o.id}</td>
+                    <td class="p-6 text-xs text-slate-500">${o.items.length} 個項目</td>
+                    <td class="p-6 font-bold">${o.total}</td>
+                    <td class="p-6">
+                        <select class="bg-blue-50 text-blue-700 text-xs font-bold p-2 rounded-lg border-none outline-none">
+                            <option>已下單</option>
+                            <option>已付款</option>
+                            <option>準備中</option>
+                            <option>已取單</option>
+                        </select>
+                    </td>
+                </tr>
             `).join('');
         }
 
-        function addToCart() {
-            cart.push({ id: currentDetailId, qty: document.getElementById('buy-qty').value });
-            document.getElementById('cart-count').innerText = cart.length;
-            alert('已成功加入購物車！');
+        function filterCat(c) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.replace('border-b-2', 'text-slate-400'));
+            event.target.classList.add('border-b-2', 'border-pink-500', 'font-bold');
+            renderHome(c);
         }
 
         function toggleElement(id) { document.getElementById(id).classList.toggle('hidden'); }
-        function logout() { location.reload(); }
+        function deleteProd(id) { products = products.filter(x => x.id !== id); renderAdminProducts(); }
 
-        // 初始化
+        // 啟動
         showPage('home');
     </script>
 </body>
