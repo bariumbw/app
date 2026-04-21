@@ -1,175 +1,221 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bespoke Mall | PinMe 類系統</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bespoke Mall | 婚展限定</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, sans-serif; background-color: #f8f9fa; }
-        .pinme-gold { color: #b49b72; }
-        .pinme-bg-gold { background-color: #b49b72; }
-        .nav-active { color: #b49b72; border-bottom: 2px solid #b49b72; font-weight: bold; }
-        .sidebar-active { background: white; border-left: 4px solid #b49b72; color: #b49b72; }
-        .modal-up { animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .tab-active { color: #b08d57; border-top: 2px solid #b08d57; }
+        .modal-overlay { background: rgba(0,0,0,0.5); display: none; }
+        .sidebar-active { background-color: #f3f4f6; border-left: 4px solid #b08d57; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 pb-20">
 
-    <div id="client-app" class="max-w-md mx-auto bg-white min-h-screen relative overflow-x-hidden">
-        
-        <div class="bg-yellow-50 p-2 text-[10px] text-center text-gray-600 border-b border-yellow-100">
-            此為展場限定系統。非展場客戶請至 <span class="underline">bespoke-mall.com</span>
+    <header id="front-header" class="bg-white p-4 text-center border-b sticky top-0 z-50">
+        <p class="text-xs text-gray-500 mb-1">此網站只適用於展場下單</p>
+        <h1 class="text-xl font-light tracking-widest text-cyan-600">☆ BESPOKE MALL</h1>
+    </header>
+
+    <main id="app-front" class="max-w-md mx-auto">
+        <div class="flex border-b bg-white">
+            <button class="flex-1 py-3 text-sm font-medium border-b-2 border-cyan-600">禮券</button>
+            <button class="flex-1 py-3 text-sm font-medium text-gray-400">回禮</button>
         </div>
 
-        <div class="flex justify-around border-b sticky top-0 bg-white z-10">
-            <button onclick="switchTab('vouchers')" id="tab-v" class="py-3 px-6 nav-active">禮券</button>
-            <button onclick="switchTab('favors')" id="tab-f" class="py-3 px-6 text-gray-400">回禮</button>
+        <div class="p-2">
+            <img src="https://via.placeholder.com/400x120?text=限時快閃優惠" class="w-full rounded shadow-sm">
         </div>
 
-        <div class="flex">
-            <aside class="w-20 bg-gray-50 min-h-screen text-[11px]" id="sidebar">
-                <div class="sidebar-active p-4 text-center border-b">東海堂</div>
-                <div class="p-4 text-center border-b text-gray-400">Lady M</div>
-                <div class="p-4 text-center border-b text-gray-400">美心</div>
-            </aside>
-
-            <main class="flex-1 p-3">
-                <div onclick="openProductDetail()" class="border rounded-xl p-2 mb-3 shadow-sm bg-white active:scale-95 transition-transform">
-                    <img src="https://via.placeholder.com/150x100" class="w-full rounded-md mb-2">
-                    <h3 class="text-xs font-bold">萬里木蘭 (展場價)</h3>
-                    <p class="text-[10px] text-red-500 font-bold mt-1">HK$ 132.00 <span class="text-gray-300 line-through font-normal ml-1">HK$150</span></p>
-                </div>
-            </main>
-        </div>
-
-        <footer class="fixed bottom-0 w-full max-w-md bg-white border-t p-4 flex justify-between items-center shadow-2xl">
-            <div class="flex items-center gap-3">
-                <div class="bg-gray-800 text-white w-10 h-10 rounded-full flex items-center justify-center relative">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 rounded-full flex items-center justify-center">1</span>
-                </div>
-                <span class="font-bold text-lg">HK$ 1,320</span>
-            </div>
-            <button onclick="showCheckout()" class="pinme-bg-gold text-white px-8 py-2 rounded-full font-bold">去結帳</button>
-        </footer>
-    </div>
-
-    <div id="checkout-page" class="hidden fixed inset-0 bg-gray-50 z-20 max-w-md mx-auto">
-        <header class="bg-white p-4 flex items-center border-b">
-            <i onclick="hideCheckout()" class="fa-solid fa-chevron-left mr-4"></i>
-            <h2 class="flex-1 text-center font-bold">確認訂單</h2>
-        </header>
-
-        <div class="p-4 space-y-4">
-            <div class="bg-blue-50 p-4 rounded-xl flex justify-between items-center text-blue-800">
-                <span class="text-xs font-bold"><i class="fa-solid fa-clock mr-1"></i> 前方有 <span class="text-lg">4</span> 張訂單</span>
-                <span class="text-[10px]">預計等待 1 分鐘</span>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl shadow-sm">
-                <div class="flex justify-between py-2 border-b">
-                    <span class="text-sm">聯絡電話</span>
-                    <input type="text" placeholder="請輸入" class="text-right outline-none text-sm">
-                </div>
-                <div class="flex justify-between py-3 text-xs text-gray-500">
-                    <span>回禮產品必填資訊</span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl shadow-sm flex gap-3">
-                <div class="w-16 h-16 bg-gray-100 rounded"></div>
+        <div class="p-4 space-y-6">
+            <div class="flex gap-4 items-start bg-white p-2 rounded-lg shadow-sm">
+                <img src="https://via.placeholder.com/100x150?text=GODIVA" class="w-24 h-32 object-cover rounded">
                 <div class="flex-1">
-                    <h4 class="text-xs font-bold">萬里木蘭 x10</h4>
-                    <p class="text-right pinme-gold font-bold mt-4">HK$ 1,320</p>
+                    <h3 class="text-sm font-bold leading-tight">【婚展限定優惠】GODIVA HK$50 禮券 (粉紅色封套版)</h3>
+                    <p class="text-xs text-gray-400 mt-1">有效期至: 31/3/2027</p>
+                    <p class="text-xs text-gray-400">最少需訂購: 10張</p>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span class="text-red-500 font-bold">HK$ 41.00</span>
+                        <span class="text-gray-300 text-xs line-through">HK$ 50.00</span>
+                    </div>
+                    <button onclick="addToCart('GODIVA 禮券', 41)" class="mt-2 bg-[#b08d57] text-white px-4 py-1 rounded-full text-xs">購買</button>
+                </div>
+            </div>
+
+            <div class="flex gap-4 items-start bg-white p-2 rounded-lg shadow-sm">
+                <img src="https://via.placeholder.com/100x150?text=Agnes+B" class="w-24 h-32 object-cover rounded">
+                <div class="flex-1">
+                    <h3 class="text-sm font-bold leading-tight">【婚展限定優惠】agnès b. CAFÉ 婚禮回禮禮盒</h3>
+                    <p class="text-xs text-gray-400 mt-1">最少需訂購: 50盒</p>
+                    <div class="mt-2">
+                        <span class="text-red-500 font-bold">HK$ 32.00</span>
+                    </div>
+                    <button onclick="addToCart('Agnes B 禮盒', 32)" class="mt-2 bg-[#b08d57] text-white px-4 py-1 rounded-full text-xs">購買</button>
                 </div>
             </div>
         </div>
+    </main>
 
-        <button onclick="alert('訂單提交成功！請至取貨處付款。')" class="fixed bottom-6 left-4 right-4 pinme-bg-gold text-white py-4 rounded-xl font-bold text-lg shadow-lg">提交訂單</button>
-    </div>
-
-    <button onclick="toggleAdmin()" class="fixed top-20 right-0 bg-black text-white text-[10px] p-2 rounded-l-md opacity-50 hover:opacity-100 z-50">切換後台</button>
-
-    <div id="admin-panel" class="hidden fixed inset-0 bg-white z-[60] overflow-y-auto p-6">
-        <div class="flex justify-between items-center mb-8 border-b pb-4">
-            <h1 class="text-2xl font-bold">PinMe 後台管理</h1>
-            <button onclick="toggleAdmin()" class="text-gray-400">關閉</button>
+    <main id="app-backoffice" class="hidden min-h-screen bg-gray-100 p-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold">後台管理系統</h2>
+            <button onclick="toggleApp('front')" class="text-sm text-blue-600 underline">返回前台</button>
         </div>
+        
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-4 border-b flex gap-4">
+                <button onclick="renderOrders('all')" class="text-sm font-bold text-blue-600">全部訂單</button>
+                <button onclick="renderOrders('pending')" class="text-sm text-gray-500">準備中</button>
+                <button onclick="renderOrders('ready')" class="text-sm text-gray-500">可取貨</button>
+            </div>
+            <div id="order-list" class="divide-y">
+                </div>
+        </div>
+    </main>
 
-        <section class="mb-10">
-            <h2 class="font-bold mb-4 flex items-center"><i class="fa-solid fa-tags mr-2"></i> 品牌系列</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="border p-4 rounded-lg bg-gray-50 text-center">
-                    <div class="w-10 h-10 bg-white rounded mx-auto mb-2 shadow-sm"></div>
-                    <p class="text-xs font-bold">東海堂</p>
-                </div>
-                <div class="border p-4 rounded-lg flex items-center justify-center border-dashed text-gray-400 text-xs">
-                    + 新增品牌
-                </div>
-            </div>
-        </section>
+    <nav id="bottom-nav" class="fixed bottom-0 w-full bg-white border-t flex justify-around py-2 z-50">
+        <button onclick="toggleApp('front')" class="flex flex-col items-center">
+            <i class="fa-solid fa-utensils text-gray-400"></i>
+            <span class="text-[10px]">點單</span>
+        </button>
+        <button onclick="showCartModal()" class="flex flex-col items-center relative">
+            <div id="cart-count" class="absolute -top-1 -right-2 bg-red-500 text-white text-[8px] rounded-full px-1">0</div>
+            <i class="fa-solid fa-shopping-bag text-gray-400"></i>
+            <span class="text-[10px]">購物車</span>
+        </button>
+        <button onclick="toggleApp('backoffice')" class="flex flex-col items-center">
+            <i class="fa-solid fa-receipt text-gray-400"></i>
+            <span class="text-[10px]">取單(後台)</span>
+        </button>
+    </nav>
 
-        <section>
-            <h2 class="font-bold mb-4 flex items-center"><i class="fa-solid fa-dollar-sign mr-2"></i> 產品價格階梯 (Offer Tiers)</h2>
-            <div class="space-y-4">
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <div class="flex justify-between text-xs font-bold mb-3"><span>Tier 1</span><span class="text-blue-600">編輯</span></div>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <input type="text" value="10-99張" class="p-2 border rounded">
-                        <input type="text" value="HK$ 132" class="p-2 border rounded">
-                    </div>
+    <div id="cart-modal" class="modal-overlay fixed inset-0 z-[60] flex items-end">
+        <div class="bg-white w-full rounded-t-2xl p-6 animate-slide-up">
+            <h2 class="text-lg font-bold mb-4">確認訂單</h2>
+            <div id="cart-items" class="space-y-3 mb-6">
                 </div>
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <div class="flex justify-between text-xs font-bold mb-3"><span>Tier 2</span><span class="text-blue-600">編輯</span></div>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <input type="text" value="100張以上" class="p-2 border rounded">
-                        <input type="text" value="HK$ 127.5" class="p-2 border rounded">
-                    </div>
-                </div>
+            <div class="border-t pt-4">
+                <input type="text" id="user-phone" placeholder="輸入聯絡電話 (獲取號碼)" class="w-full p-3 border rounded mb-4">
+                <button onclick="submitOrder()" class="w-full bg-[#b08d57] text-white py-4 rounded-xl font-bold">提交訂單</button>
+                <button onclick="closeCartModal()" class="w-full py-2 text-gray-400 text-sm mt-2">取消</button>
             </div>
-        </section>
-    </div>
-
-    <div id="product-modal" class="hidden fixed inset-0 bg-black/60 z-30 flex items-end">
-        <div class="bg-white w-full rounded-t-3xl p-6 modal-up">
-            <div class="flex justify-between mb-4">
-                <h3 class="font-bold">產品詳情</h3>
-                <i onclick="closeModal()" class="fa-solid fa-xmark text-gray-400"></i>
-            </div>
-            <div class="flex gap-4 mb-6">
-                <div class="w-20 h-20 bg-gray-100 rounded"></div>
-                <div>
-                    <h4 class="font-bold text-sm">萬里木蘭</h4>
-                    <p class="text-red-500 font-bold text-lg mt-1">HK$ 132.00</p>
-                </div>
-            </div>
-            <div class="flex items-center justify-between border-t border-b py-4 mb-6">
-                <span class="text-sm font-bold">購買數量</span>
-                <div class="flex items-center gap-4">
-                    <button class="w-8 h-8 rounded-full border">-</button>
-                    <span class="font-bold">10</span>
-                    <button class="w-8 h-8 rounded-full border">+</button>
-                </div>
-            </div>
-            <button onclick="goToCheckout()" class="w-full pinme-bg-gold text-white py-4 rounded-xl font-bold">立即購買</button>
         </div>
     </div>
 
     <script>
-        function switchTab(type) {
-            document.getElementById('tab-v').className = type === 'vouchers' ? 'py-3 px-6 nav-active' : 'py-3 px-6 text-gray-400';
-            document.getElementById('tab-f').className = type === 'favors' ? 'py-3 px-6 nav-active' : 'py-3 px-6 text-gray-400';
+        let cart = [];
+        let orders = JSON.parse(localStorage.getItem('bespoke_orders')) || [];
+
+        // 切換前後台
+        function toggleApp(view) {
+            if (view === 'front') {
+                document.getElementById('app-front').classList.remove('hidden');
+                document.getElementById('front-header').classList.remove('hidden');
+                document.getElementById('app-backoffice').classList.add('hidden');
+            } else {
+                document.getElementById('app-front').classList.add('hidden');
+                document.getElementById('front-header').classList.add('hidden');
+                document.getElementById('app-backoffice').classList.remove('hidden');
+                renderOrders();
+            }
         }
-        function openProductDetail() { document.getElementById('product-modal').classList.remove('hidden'); }
-        function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
-        function showCheckout() { document.getElementById('checkout-page').classList.remove('hidden'); }
-        function hideCheckout() { document.getElementById('checkout-page').classList.add('hidden'); }
-        function toggleAdmin() { document.getElementById('admin-panel').classList.toggle('hidden'); }
-        function goToCheckout() { closeModal(); showCheckout(); }
+
+        // 加入購物車
+        function addToCart(name, price) {
+            cart.push({ name, price, id: Date.now() });
+            updateCartUI();
+            alert('已加入購物車');
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+
+        function showCartModal() {
+            const container = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-400">購物車是空的</p>';
+            } else {
+                let total = cart.reduce((sum, item) => sum + item.price, 0);
+                container.innerHTML = cart.map(item => `
+                    <div class="flex justify-between text-sm">
+                        <span>${item.name}</span>
+                        <span class="font-bold">HK$${item.price}</span>
+                    </div>
+                `).join('') + `<div class="border-t pt-2 flex justify-between font-bold text-red-600"><span>合計</span><span>HK$${total}</span></div>`;
+            }
+            document.getElementById('cart-modal').style.display = 'flex';
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').style.display = 'none';
+        }
+
+        // 提交訂單 (模擬 PinMe 流程)
+        function submitOrder() {
+            const phone = document.getElementById('user-phone').value;
+            if (!phone) return alert('請填寫電話');
+
+            const newOrder = {
+                id: 'T' + Math.floor(1000 + Math.random() * 9000),
+                items: [...cart],
+                phone: phone,
+                status: 'pending', // pending, ready, completed
+                time: new Date().toLocaleTimeString()
+            };
+
+            orders.push(newOrder);
+            localStorage.setItem('bespoke_orders', JSON.stringify(orders));
+            
+            alert(`下單成功！您的取票號碼是: ${newOrder.id}`);
+            cart = [];
+            updateCartUI();
+            closeCartModal();
+        }
+
+        // 後台渲染訂單
+        function renderOrders(filter = 'all') {
+            const container = document.getElementById('order-list');
+            let filtered = orders;
+            if (filter === 'pending') filtered = orders.filter(o => o.status === 'pending');
+            if (filter === 'ready') filtered = orders.filter(o => o.status === 'ready');
+
+            container.innerHTML = filtered.map(order => `
+                <div class="p-4 flex justify-between items-center bg-white mb-1">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono font-bold text-lg text-blue-600">${order.id}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full ${order.status === 'pending' ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'}">
+                                ${order.status === 'pending' ? '準備中' : '可取貨'}
+                            </span>
+                        </div>
+                        <p class="text-xs text-gray-500">${order.items.map(i => i.name).join(', ')}</p>
+                        <p class="text-[10px] text-gray-400">${order.time} | ${order.phone}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        ${order.status === 'pending' ? 
+                            `<button onclick="updateStatus('${order.id}', 'ready')" class="bg-green-500 text-white text-xs px-3 py-1 rounded">完成</button>` : 
+                            `<button onclick="deleteOrder('${order.id}')" class="bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded">結單</button>`
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStatus(orderId, status) {
+            orders = orders.map(o => o.id === orderId ? {...o, status} : o);
+            localStorage.setItem('bespoke_orders', JSON.stringify(orders));
+            renderOrders();
+        }
+
+        function deleteOrder(orderId) {
+            orders = orders.filter(o => o.id !== orderId);
+            localStorage.setItem('bespoke_orders', JSON.stringify(orders));
+            renderOrders();
+        }
     </script>
 </body>
 </html>
