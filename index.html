@@ -3,199 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bespoke Mall - 展場下單系統</title>
+    <title>Bespoke Mall | PinMe 類系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .active-tab { border-bottom: 3px solid #b49b72; color: #b49b72; font-weight: bold; }
-        .sidebar-active { background: white; border-left: 4px solid #b49b72; color: #b49b72; font-weight: bold; }
-        .hide { display: none; }
+        body { font-family: -apple-system, sans-serif; background-color: #f8f9fa; }
+        .pinme-gold { color: #b49b72; }
+        .pinme-bg-gold { background-color: #b49b72; }
+        .nav-active { color: #b49b72; border-bottom: 2px solid #b49b72; font-weight: bold; }
+        .sidebar-active { background: white; border-left: 4px solid #b49b72; color: #b49b72; }
+        .modal-up { animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-    <div id="page-home" class="pb-32">
-        <div class="bg-yellow-100 p-3 text-[10px] text-center leading-tight">
-            此網站只適用於展場下單，非展場客戶請到官網下單<br>
-            <a href="https://www.bespoke-mall.com" class="underline text-blue-600">https://www.bespoke-mall.com</a><br>
-            官網下單最少需時 7-14 個工作天
+    <div id="client-app" class="max-w-md mx-auto bg-white min-h-screen relative overflow-x-hidden">
+        
+        <div class="bg-yellow-50 p-2 text-[10px] text-center text-gray-600 border-b border-yellow-100">
+            此為展場限定系統。非展場客戶請至 <span class="underline">bespoke-mall.com</span>
         </div>
 
-        <header class="bg-white p-4 flex justify-between items-center shadow-sm">
-            <h1 class="text-xl tracking-widest font-serif">BESPOKE MALL</h1>
-            <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-        </header>
-
-        <div class="flex bg-white border-b">
-            <button onclick="switchMainCat('vouchers')" id="tab-vouchers" class="flex-1 py-3 text-center active-tab">禮券</button>
-            <button onclick="switchMainCat('favors')" id="tab-favors" class="flex-1 py-3 text-center text-gray-400">回禮</button>
+        <div class="flex justify-around border-b sticky top-0 bg-white z-10">
+            <button onclick="switchTab('vouchers')" id="tab-v" class="py-3 px-6 nav-active">禮券</button>
+            <button onclick="switchTab('favors')" id="tab-f" class="py-3 px-6 text-gray-400">回禮</button>
         </div>
 
         <div class="flex">
-            <aside class="w-24 bg-gray-100 min-h-screen text-xs border-r" id="sidebar">
-                <div onclick="filterBrand('GODIVA')" class="sidebar-active p-4 text-center border-b">GODIVA</div>
-                <div onclick="filterBrand('東海堂')" class="p-4 text-center border-b text-gray-500">東海堂</div>
-                <div onclick="filterBrand('Lady M')" class="p-4 text-center border-b text-gray-500">Lady M</div>
-                <div onclick="filterBrand('美心')" class="p-4 text-center border-b text-gray-500">美心</div>
+            <aside class="w-20 bg-gray-50 min-h-screen text-[11px]" id="sidebar">
+                <div class="sidebar-active p-4 text-center border-b">東海堂</div>
+                <div class="p-4 text-center border-b text-gray-400">Lady M</div>
+                <div class="p-4 text-center border-b text-gray-400">美心</div>
             </aside>
 
             <main class="flex-1 p-3">
-                <div class="mb-4">
-                    <img src="https://via.placeholder.com/400x150?text=限時快閃優惠" class="w-full rounded-lg shadow-sm">
-                </div>
-                
-                <div id="products">
-                    <div onclick="openProductDetail('GODIVA HK$50 禮券 (粉紅色套裝版)', 41, 10)" class="bg-white p-3 rounded-xl shadow-sm mb-4 flex gap-3 border">
-                        <div class="w-20 h-20 bg-gray-100 rounded"></div>
-                        <div class="flex-1">
-                            <h3 class="text-xs font-bold">【婚展限定優惠】GODIVA HK$50 禮券</h3>
-                            <p class="text-[9px] text-gray-400">有效期至: 31/3/2027<br>最少需訂購: 10張</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-red-600 font-bold">HK$41.00 <small class="text-gray-400 line-through">HK$50</small></span>
-                                <button class="bg-[#b49b72] text-white px-3 py-1 rounded-full text-[10px]">購買</button>
-                            </div>
-                        </div>
-                    </div>
+                <div onclick="openProductDetail()" class="border rounded-xl p-2 mb-3 shadow-sm bg-white active:scale-95 transition-transform">
+                    <img src="https://via.placeholder.com/150x100" class="w-full rounded-md mb-2">
+                    <h3 class="text-xs font-bold">萬里木蘭 (展場價)</h3>
+                    <p class="text-[10px] text-red-500 font-bold mt-1">HK$ 132.00 <span class="text-gray-300 line-through font-normal ml-1">HK$150</span></p>
                 </div>
             </main>
         </div>
-    </div>
 
-    <div id="page-checkout" class="hide bg-gray-50 min-h-screen pb-32">
-        <nav class="bg-white p-4 flex items-center border-b">
-            <i onclick="goHome()" class="fa-solid fa-chevron-left mr-4"></i>
-            <h2 class="flex-1 text-center font-bold">確認訂單</h2>
-        </nav>
-        
-        <div class="p-4 space-y-3">
-            <div class="bg-white p-4 rounded-xl flex justify-between items-center">
-                <span class="text-sm font-bold">前方 <span class="text-red-500">4</span> 張訂單準備中</span>
-                <span class="text-xs text-gray-400">預計等待 1 分鐘</span>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl space-y-4">
-                <div class="flex justify-between items-center">
-                    <label class="text-sm">聯絡電話</label>
-                    <input type="text" placeholder="輸入電話" class="text-right text-sm outline-none">
+        <footer class="fixed bottom-0 w-full max-w-md bg-white border-t p-4 flex justify-between items-center shadow-2xl">
+            <div class="flex items-center gap-3">
+                <div class="bg-gray-800 text-white w-10 h-10 rounded-full flex items-center justify-center relative">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 rounded-full flex items-center justify-center">1</span>
                 </div>
-                <div onclick="openSubForm('favors')" class="flex justify-between items-center text-sm border-t pt-3">
-                    <span>購買回禮產品必填</span>
-                    <i class="fa-solid fa-chevron-right text-gray-300"></i>
-                </div>
-                <div onclick="openSubForm('oos')" class="flex justify-between items-center text-sm border-t pt-3">
-                    <span>產品缺貨時必填</span>
-                    <i class="fa-solid fa-chevron-right text-gray-300"></i>
-                </div>
+                <span class="font-bold text-lg">HK$ 1,320</span>
             </div>
-
-            <div class="bg-white p-4 rounded-xl">
-                <div class="flex gap-3">
-                    <div class="w-16 h-16 bg-gray-100 rounded"></div>
-                    <div class="flex-1">
-                        <h4 class="text-xs font-bold">GODIVA HK$50 禮券...</h4>
-                        <p class="text-[10px] text-gray-400">x10</p>
-                        <p class="text-right font-bold">HK$ 410</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-[10px] text-gray-400 p-2">
-                下單前請確認各款禮券的有效期是否適用...<br>
-                下單後將無法退款/更改
-            </div>
-        </div>
-
-        <footer class="fixed bottom-0 w-full bg-white p-4 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex justify-between items-center">
-            <div class="text-sm">合共 HK$ <span class="text-xl font-bold text-red-600">410</span></div>
-            <button onclick="submitOrder()" class="bg-[#b49b72] text-white px-10 py-3 rounded-full font-bold">提交訂單</button>
+            <button onclick="showCheckout()" class="pinme-bg-gold text-white px-8 py-2 rounded-full font-bold">去結帳</button>
         </footer>
     </div>
 
-    <div id="product-modal" class="hide fixed inset-0 bg-black/60 z-50 flex items-end">
-        <div class="bg-white w-full rounded-t-3xl p-6 transition-transform">
-            <div class="flex justify-end"><i onclick="closeModal()" class="fa-solid fa-xmark text-gray-400 text-xl"></i></div>
-            <div class="flex gap-4 mb-6">
-                <div class="w-24 h-24 bg-gray-100 rounded-lg"></div>
-                <div>
-                    <h2 id="m-title" class="font-bold text-lg leading-tight"></h2>
-                    <p id="m-price" class="text-red-600 font-bold text-xl mt-2"></p>
+    <div id="checkout-page" class="hidden fixed inset-0 bg-gray-50 z-20 max-w-md mx-auto">
+        <header class="bg-white p-4 flex items-center border-b">
+            <i onclick="hideCheckout()" class="fa-solid fa-chevron-left mr-4"></i>
+            <h2 class="flex-1 text-center font-bold">確認訂單</h2>
+        </header>
+
+        <div class="p-4 space-y-4">
+            <div class="bg-blue-50 p-4 rounded-xl flex justify-between items-center text-blue-800">
+                <span class="text-xs font-bold"><i class="fa-solid fa-clock mr-1"></i> 前方有 <span class="text-lg">4</span> 張訂單</span>
+                <span class="text-[10px]">預計等待 1 分鐘</span>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="flex justify-between py-2 border-b">
+                    <span class="text-sm">聯絡電話</span>
+                    <input type="text" placeholder="請輸入" class="text-right outline-none text-sm">
+                </div>
+                <div class="flex justify-between py-3 text-xs text-gray-500">
+                    <span>回禮產品必填資訊</span>
+                    <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </div>
 
-            <div class="bg-blue-50 rounded-lg p-3 space-y-2 mb-6 text-xs">
-                <div class="flex justify-between"><span>10-99張</span><span class="text-blue-600 font-bold">HK$132</span></div>
-                <div class="flex justify-between"><span>100-299張</span><span class="text-blue-600 font-bold">HK$127.5</span></div>
-                <div class="flex justify-between"><span>300張或以上</span><span class="text-blue-600 font-bold">HK$120</span></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm flex gap-3">
+                <div class="w-16 h-16 bg-gray-100 rounded"></div>
+                <div class="flex-1">
+                    <h4 class="text-xs font-bold">萬里木蘭 x10</h4>
+                    <p class="text-right pinme-gold font-bold mt-4">HK$ 1,320</p>
+                </div>
             </div>
+        </div>
 
-            <div class="flex items-center justify-between mb-8">
-                <span class="text-sm font-bold">數量</span>
+        <button onclick="alert('訂單提交成功！請至取貨處付款。')" class="fixed bottom-6 left-4 right-4 pinme-bg-gold text-white py-4 rounded-xl font-bold text-lg shadow-lg">提交訂單</button>
+    </div>
+
+    <button onclick="toggleAdmin()" class="fixed top-20 right-0 bg-black text-white text-[10px] p-2 rounded-l-md opacity-50 hover:opacity-100 z-50">切換後台</button>
+
+    <div id="admin-panel" class="hidden fixed inset-0 bg-white z-[60] overflow-y-auto p-6">
+        <div class="flex justify-between items-center mb-8 border-b pb-4">
+            <h1 class="text-2xl font-bold">PinMe 後台管理</h1>
+            <button onclick="toggleAdmin()" class="text-gray-400">關閉</button>
+        </div>
+
+        <section class="mb-10">
+            <h2 class="font-bold mb-4 flex items-center"><i class="fa-solid fa-tags mr-2"></i> 品牌系列</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="border p-4 rounded-lg bg-gray-50 text-center">
+                    <div class="w-10 h-10 bg-white rounded mx-auto mb-2 shadow-sm"></div>
+                    <p class="text-xs font-bold">東海堂</p>
+                </div>
+                <div class="border p-4 rounded-lg flex items-center justify-center border-dashed text-gray-400 text-xs">
+                    + 新增品牌
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="font-bold mb-4 flex items-center"><i class="fa-solid fa-dollar-sign mr-2"></i> 產品價格階梯 (Offer Tiers)</h2>
+            <div class="space-y-4">
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <div class="flex justify-between text-xs font-bold mb-3"><span>Tier 1</span><span class="text-blue-600">編輯</span></div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <input type="text" value="10-99張" class="p-2 border rounded">
+                        <input type="text" value="HK$ 132" class="p-2 border rounded">
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <div class="flex justify-between text-xs font-bold mb-3"><span>Tier 2</span><span class="text-blue-600">編輯</span></div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <input type="text" value="100張以上" class="p-2 border rounded">
+                        <input type="text" value="HK$ 127.5" class="p-2 border rounded">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="product-modal" class="hidden fixed inset-0 bg-black/60 z-30 flex items-end">
+        <div class="bg-white w-full rounded-t-3xl p-6 modal-up">
+            <div class="flex justify-between mb-4">
+                <h3 class="font-bold">產品詳情</h3>
+                <i onclick="closeModal()" class="fa-solid fa-xmark text-gray-400"></i>
+            </div>
+            <div class="flex gap-4 mb-6">
+                <div class="w-20 h-20 bg-gray-100 rounded"></div>
+                <div>
+                    <h4 class="font-bold text-sm">萬里木蘭</h4>
+                    <p class="text-red-500 font-bold text-lg mt-1">HK$ 132.00</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-b py-4 mb-6">
+                <span class="text-sm font-bold">購買數量</span>
                 <div class="flex items-center gap-4">
                     <button class="w-8 h-8 rounded-full border">-</button>
                     <span class="font-bold">10</span>
                     <button class="w-8 h-8 rounded-full border">+</button>
                 </div>
             </div>
-
-            <div class="flex gap-3">
-                <button onclick="alert('已加入購物車')" class="flex-1 border border-[#b49b72] text-[#b49b72] py-3 rounded-full font-bold">加入購物車</button>
-                <button onclick="goToCheckout()" class="flex-1 bg-[#b49b72] text-white py-3 rounded-full font-bold">立即購買</button>
-            </div>
+            <button onclick="goToCheckout()" class="w-full pinme-bg-gold text-white py-4 rounded-xl font-bold">立即購買</button>
         </div>
     </div>
 
-    <nav id="bottom-nav" class="fixed bottom-0 w-full bg-white border-t flex justify-around py-2 text-[10px] text-gray-400">
-        <div onclick="goHome()" class="text-[#b49b72] flex flex-col items-center">
-            <i class="fa-solid fa-house text-lg"></i><span>首頁</span>
-        </div>
-        <div class="flex flex-col items-center">
-            <i class="fa-solid fa-list-ul text-lg"></i><span>點單</span>
-        </div>
-        <div class="flex flex-col items-center">
-            <i class="fa-solid fa-receipt text-lg"></i><span>取單</span>
-        </div>
-        <div class="flex flex-col items-center">
-            <i class="fa-solid fa-user text-lg"></i><span>我的</span>
-        </div>
-    </nav>
-
     <script>
-        function switchMainCat(cat) {
-            document.getElementById('tab-vouchers').className = cat === 'vouchers' ? 'flex-1 py-3 text-center active-tab' : 'flex-1 py-3 text-center text-gray-400';
-            document.getElementById('tab-favors').className = cat === 'favors' ? 'flex-1 py-3 text-center active-tab' : 'flex-1 py-3 text-center text-gray-400';
+        function switchTab(type) {
+            document.getElementById('tab-v').className = type === 'vouchers' ? 'py-3 px-6 nav-active' : 'py-3 px-6 text-gray-400';
+            document.getElementById('tab-f').className = type === 'favors' ? 'py-3 px-6 nav-active' : 'py-3 px-6 text-gray-400';
         }
-
-        function filterBrand(brand) {
-            alert('篩選品牌: ' + brand);
-        }
-
-        function openProductDetail(title, price, min) {
-            document.getElementById('m-title').innerText = title;
-            document.getElementById('m-price').innerText = 'HK$ ' + price;
-            document.getElementById('product-modal').classList.remove('hide');
-        }
-
-        function closeModal() {
-            document.getElementById('product-modal').classList.add('hide');
-        }
-
-        function goToCheckout() {
-            closeModal();
-            document.getElementById('page-home').classList.add('hide');
-            document.getElementById('bottom-nav').classList.add('hide');
-            document.getElementById('page-checkout').classList.remove('hide');
-        }
-
-        function goHome() {
-            document.getElementById('page-home').classList.remove('hide');
-            document.getElementById('bottom-nav').classList.remove('hide');
-            document.getElementById('page-checkout').classList.add('hide');
-        }
-
-        function submitOrder() {
-            alert('訂單已成功提交！請前往取單頁面查看狀態 T0104');
-        }
+        function openProductDetail() { document.getElementById('product-modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
+        function showCheckout() { document.getElementById('checkout-page').classList.remove('hidden'); }
+        function hideCheckout() { document.getElementById('checkout-page').classList.add('hidden'); }
+        function toggleAdmin() { document.getElementById('admin-panel').classList.toggle('hidden'); }
+        function goToCheckout() { closeModal(); showCheckout(); }
     </script>
 </body>
 </html>
