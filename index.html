@@ -3,155 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bespoke Mall | 智能訂購系統 2026</title>
+    <title>Bespoke Mall | Wedding Expo 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #b08d57; --bg-light: #fdfcfb; }
-        body { font-family: -apple-system, "Noto Sans TC", sans-serif; background-color: var(--bg-light); overflow: hidden; }
-        .active-tab { color: var(--gold); border-bottom: 2px solid var(--gold); font-weight: bold; }
+        :root { --gold: #b08d57; --stone: #57534e; }
+        body { font-family: -apple-system, "PingFang HK", sans-serif; background-color: #fdfcfb; overflow: hidden; }
         .sidebar-item.active { background: #fff; border-left: 4px solid var(--gold); color: #000; font-weight: bold; }
         .bottom-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: flex-end; }
         .bottom-sheet.active { display: flex; }
         .sheet-content { background: white; width: 100%; border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom); }
-        .admin-mode-bar { display: none; background: #000; color: #fff; text-align: center; font-size: 10px; padding: 4px 0; letter-spacing: 2px; }
-        body.admin-mode .admin-mode-bar { display: block; }
-        body.admin-mode .admin-btn { display: block !important; }
+        .active-tab { color: var(--gold); border-bottom: 2px solid var(--gold); font-weight: bold; }
+        body.admin-mode .admin-action { display: block !important; }
     </style>
 </head>
 <body class="h-screen flex flex-col">
 
-    <div class="admin-mode-bar uppercase">Management Mode Enabled</div>
-
-    <header class="bg-white border-b shadow-sm z-10">
-        <div class="text-[10px] text-center py-2 px-4 bg-stone-50 text-stone-400">
-            婚展期間訂單只限現場取貨或預約送貨
-        </div>
+    <header class="bg-white border-b z-10">
+        <div class="text-[10px] text-center py-2 bg-stone-50 text-stone-400 tracking-tighter">展場下單專用系統 | 官網數據同步版</div>
         <div class="flex justify-between items-center px-6 py-4">
             <div class="flex flex-col">
                 <span class="text-sm font-bold tracking-[0.2em]">BESPOKE MALL</span>
-                <span class="text-[8px] text-stone-400 uppercase tracking-widest">Bridal Digital Concierge</span>
+                <span class="text-[8px] text-stone-300 uppercase">Bridal Vouchers & Gifts</span>
             </div>
-            <button onclick="adminLogin()" class="w-8 h-8 flex items-center justify-center text-stone-200">
-                <i class="fa-solid fa-shield-halved"></i>
-            </button>
+            <button onclick="adminLogin()" class="text-stone-200"><i class="fa-solid fa-user-gear text-lg"></i></button>
         </div>
         <div class="flex text-sm text-center border-t">
-            <div id="tab-v" class="flex-1 py-3 active-tab cursor-pointer" onclick="changeCategory('v')">禮券 (Vouchers)</div>
-            <div id="tab-g" class="flex-1 py-3 text-stone-300 cursor-pointer" onclick="changeCategory('g')">回禮 (Gifts)</div>
+            <div id="tab-v" class="flex-1 py-3 active-tab cursor-pointer" onclick="switchCat('v')">禮券 (Voucher)</div>
+            <div id="tab-g" class="flex-1 py-3 text-stone-300 cursor-pointer" onclick="switchCat('g')">回禮 (Gift)</div>
         </div>
     </header>
 
     <main class="flex-1 flex overflow-hidden">
-        <aside id="brand-list" class="w-24 bg-stone-50 overflow-y-auto border-r text-[11px] text-stone-500">
-            </aside>
-
-        <section id="product-list" class="flex-1 overflow-y-auto p-4 space-y-4 pb-40">
-            </section>
-
+        <aside id="brand-menu" class="w-24 bg-stone-50 overflow-y-auto border-r text-[11px] text-stone-500"></aside>
+        <section id="product-list" class="flex-1 overflow-y-auto p-4 space-y-4 pb-40"></section>
+        
         <section id="record-page" class="hidden flex-1 overflow-y-auto bg-stone-50 p-6 pb-40">
-            <h2 class="text-xl font-bold mb-6">我的訂單紀錄</h2>
-            <div id="order-container" class="space-y-4">
-                <div class="text-center py-20 text-stone-300 text-sm italic">尚無訂單資料</div>
+            <h2 class="text-xl font-bold mb-6">我的取單號碼</h2>
+            <div id="order-flow" class="space-y-4">
+                <p class="text-center text-stone-300 py-20 italic">暫無訂單</p>
             </div>
         </section>
     </main>
 
-    <nav class="bg-white border-t flex justify-around py-3 safe-area-bottom z-50 shadow-2xl">
-        <button onclick="switchMainTab('shop')" id="nav-shop" class="flex flex-col items-center gap-1 text-gold">
-            <i class="fa-solid fa-shop text-xl"></i><span class="text-[10px] font-bold">選購產品</span>
+    <nav class="bg-white border-t flex justify-around py-3 safe-area-bottom z-50">
+        <button onclick="showPage('shop')" id="nav-s" class="flex flex-col items-center gap-1 text-gold">
+            <i class="fa-solid fa-store text-xl"></i><span class="text-[10px] font-bold">產品目錄</span>
         </button>
-        <button onclick="switchMainTab('record')" id="nav-record" class="flex flex-col items-center gap-1 text-stone-300">
-            <i class="fa-solid fa-receipt text-xl"></i><span class="text-[10px] font-bold">取單號碼</span>
+        <button onclick="showPage('record')" id="nav-r" class="flex flex-col items-center gap-1 text-stone-300">
+            <i class="fa-solid fa-ticket text-xl"></i><span class="text-[10px] font-bold">取單紀錄</span>
         </button>
     </nav>
 
-    <div id="cart-float" class="fixed bottom-24 left-4 right-4 h-16 bg-white border border-stone-100 rounded-2xl flex items-center justify-between px-4 shadow-2xl z-40 hidden animate-bounce-in">
-        <div class="flex items-center gap-3">
-            <div class="bg-stone-900 text-white w-10 h-10 rounded-xl flex items-center justify-center relative">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span id="cart-count" class="absolute -top-2 -right-2 bg-gold text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
-            </div>
-            <div id="cart-total" class="text-lg font-black tracking-tight">HK$0</div>
+    <div id="cart-bar" class="fixed bottom-24 left-4 right-4 h-16 bg-white border rounded-2xl flex items-center justify-between px-4 shadow-2xl z-40 hidden">
+        <div class="flex flex-col">
+            <span class="text-[10px] text-stone-400 uppercase">Total Estimate</span>
+            <span id="cart-total" class="text-lg font-black">HK$0</span>
         </div>
-        <button onclick="openSheet('confirm-sheet')" class="bg-[#b08d57] text-white px-8 py-3 rounded-xl text-sm font-bold">下單</button>
+        <button onclick="openSheet('sheet-confirm')" class="bg-[#b08d57] text-white px-8 py-3 rounded-xl text-sm font-bold">確認下單</button>
     </div>
 
-    <div id="detail-sheet" class="bottom-sheet" onclick="closeSheet(this)">
+    <div id="sheet-detail" class="bottom-sheet" onclick="closeSheet(this)">
         <div class="sheet-content" onclick="event.stopPropagation()">
             <div class="w-12 h-1 bg-stone-100 rounded-full mx-auto my-4"></div>
-            <div id="p-img" class="w-full h-64 bg-stone-50 bg-center bg-contain bg-no-repeat"></div>
+            <div id="p-img" class="w-full h-64 bg-center bg-contain bg-no-repeat bg-stone-50"></div>
             <div class="p-8">
                 <div class="flex justify-between items-start mb-2">
-                    <h2 id="p-name" class="text-2xl font-bold">產品名稱</h2>
-                    <span id="p-price" class="text-gold font-bold text-xl"></span>
+                    <h2 id="p-name" class="text-xl font-bold">產品名稱</h2>
+                    <span id="p-price" class="text-gold font-bold text-lg"></span>
                 </div>
-                <div id="p-expiry" class="text-[10px] text-red-500 font-bold mb-4 uppercase tracking-tighter"></div>
+                <div id="p-expiry" class="text-[10px] text-red-500 font-bold mb-4 uppercase"></div>
                 <p id="p-desc" class="text-xs text-stone-400 mb-8 leading-relaxed"></p>
-                
-                <div class="flex justify-between items-center p-5 bg-stone-50 rounded-2xl mb-10">
+                <div class="flex justify-between items-center p-5 bg-stone-50 rounded-2xl mb-8">
                     <span class="font-bold text-sm">訂購數量</span>
                     <div class="flex items-center gap-6">
-                        <button onclick="updateSelectedQty(-10)" class="w-10 h-10 bg-white border rounded-xl shadow-sm text-stone-300">-</button>
-                        <span id="p-qty" class="font-black text-xl min-w-[30px] text-center">10</span>
-                        <button onclick="updateSelectedQty(10)" class="w-10 h-10 bg-white border rounded-xl shadow-sm text-gold font-bold">+</button>
+                        <button onclick="adjQty(-10)" class="w-10 h-10 bg-white border rounded-xl text-stone-300">-</button>
+                        <span id="p-qty" class="font-black text-xl w-10 text-center">100</span>
+                        <button onclick="adjQty(10)" class="w-10 h-10 bg-white border rounded-xl text-gold font-bold">+</button>
                     </div>
                 </div>
-                <button onclick="addToCartAction()" class="w-full py-5 bg-[#b08d57] text-white rounded-2xl font-bold text-lg shadow-xl shadow-yellow-900/10">確認並加入</button>
+                <button onclick="addCart()" class="w-full py-5 bg-[#b08d57] text-white rounded-2xl font-bold text-lg">加入清單</button>
             </div>
         </div>
     </div>
 
-    <div id="confirm-sheet" class="bottom-sheet" onclick="closeSheet(this)">
+    <div id="sheet-confirm" class="bottom-sheet" onclick="closeSheet(this)">
         <div class="sheet-content p-8" onclick="event.stopPropagation()">
-            <h3 class="text-center text-xl font-bold mb-8">確認聯絡資訊</h3>
-            <div class="space-y-4 mb-10">
-                <div class="bg-stone-50 p-5 rounded-2xl border-2 border-stone-100">
-                    <label class="text-[10px] text-stone-400 uppercase block mb-1">電話號碼 (手機)</label>
-                    <input type="tel" id="user-tel" placeholder="請輸入 8 位電話號碼" class="w-full bg-transparent text-xl font-bold outline-none">
-                </div>
-                <div class="text-[10px] text-stone-400 px-2 italic">提交後將生成專屬取單碼，請將結果截圖保存。</div>
-            </div>
-            <button onclick="submitOrder()" class="w-full py-5 bg-black text-white rounded-2xl font-bold text-lg">提交訂單並獲取號碼</button>
+            <h3 class="text-center font-bold mb-8">請輸入聯絡電話以生成取單碼</h3>
+            <input type="tel" id="u-tel" placeholder="8 位香港電話號碼" class="w-full bg-stone-50 p-5 rounded-2xl border-2 border-stone-100 text-xl font-bold outline-none mb-6">
+            <button onclick="doSubmit()" class="w-full py-5 bg-black text-white rounded-2xl font-bold">獲取號碼</button>
         </div>
     </div>
 
-    <div id="success-sheet" class="bottom-sheet" style="z-index: 200;">
+    <div id="sheet-success" class="bottom-sheet" style="z-index: 200;">
         <div class="sheet-content p-12 flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mb-6 text-2xl">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h2 id="final-id" class="text-6xl font-black mb-8 tracking-tighter font-mono">T0000</h2>
-            <p class="text-sm text-stone-400 mb-10">下單成功！請向工作人員出示此號碼。</p>
-            <button onclick="closeSuccess()" class="w-full py-4 bg-stone-100 text-stone-600 rounded-2xl font-bold">返回首頁</button>
+            <div class="text-green-500 text-5xl mb-6"><i class="fa-solid fa-circle-check"></i></div>
+            <h2 id="final-id" class="text-6xl font-black mb-8 font-mono tracking-tighter">T0000</h2>
+            <p class="text-sm text-stone-400 mb-10">下單成功！請向工作人員出示此號碼進行核銷。</p>
+            <button onclick="closeSuccess()" class="w-full py-4 bg-stone-100 text-stone-600 rounded-2xl font-bold">返回</button>
         </div>
     </div>
 
     <script>
-        // 產品數據結構 (可依據 https://bariumbw.github.io/BESPOKEMALL202602/ 內容擴充)
         const productsData = [
-            { id: 1, brand: 'agnes', brandName: 'agnès b.', cat: 'v', name: 'agnès b. CAFÉ $50 禮券', price: 37, min: 100, expiry: '2027-03-31', desc: '適用於全港 agnès b. CAFÉ，婚展限定折扣。', img: 'https://via.placeholder.com/300x300?text=Agnes+b' },
-            { id: 2, brand: 'godiva', brandName: 'GODIVA', cat: 'v', name: 'GODIVA $50 禮券 (粉紅)', price: 41, min: 10, expiry: '2026-12-31', desc: '限定粉紅色婚慶包裝。', img: 'https://via.placeholder.com/300x300?text=GODIVA' },
-            { id: 3, brand: 'st', brandName: '聖安娜', cat: 'v', name: '聖安娜 $50 禮券', price: 35, min: 50, expiry: '2026-06-30', desc: '全港門市適用。', img: 'https://via.placeholder.com/300x300?text=SaintHonore' }
+            { id: 1, brand: 'agnes', bName: 'agnès b.', cat: 'v', name: 'agnès b. CAFÉ $50 禮券', price: 37, min: 100, expiry: '2027-03-31', desc: '適用於全港 agnès b. CAFÉ。500張以上價錢更優惠。', img: 'https://via.placeholder.com/300x300?text=Agnes+b' },
+            { id: 2, brand: 'godiva', bName: 'GODIVA', cat: 'v', name: 'GODIVA $50 禮券 (粉紅)', price: 41, min: 10, expiry: '2026-12-31', desc: '限定粉紅色婚慶包裝，有效期長。', img: 'https://via.placeholder.com/300x300?text=GODIVA' },
+            { id: 3, brand: 'st', bName: '聖安娜', cat: 'v', name: '聖安娜餅屋 $50 禮券', price: 35.5, min: 50, expiry: '2026-12-31', desc: '全港門市適用，兌換麵包及蛋糕。', img: 'https://via.placeholder.com/300x300?text=Saint+Honore' },
+            { id: 4, brand: 'arome', bName: '東海堂', cat: 'v', name: '東海堂 $50 禮券', price: 36, min: 50, expiry: '2026-09-30', desc: '適用於全港東海堂分店。', img: 'https://via.placeholder.com/300x300?text=Arome' },
+            { id: 5, brand: 'wagyu', bName: '華御結', cat: 'v', name: '華御結 $20 禮券', price: 18, min: 20, expiry: '2026-06-30', desc: '飯糰愛好者首選，適合婚後派發。', img: 'https://via.placeholder.com/300x300?text=Wagyu' },
+            { id: 6, brand: 'haagen', bName: 'Häagen-Dazs', cat: 'v', name: 'Häagen-Dazs $50 禮券', price: 38, min: 20, expiry: '2027-01-01', desc: '全港分店適用，兌換雪糕產品。', img: 'https://via.placeholder.com/300x300?text=HD' }
         ];
 
-        let activeOrders = [];
-        let currentItem = null;
-        let selectedQty = 0;
+        let cart = null;
+        let orders = [];
         let isAdmin = false;
 
         function init() {
             const brands = ['all', ...new Set(productsData.map(p => p.brand))];
-            const menu = document.getElementById('brand-list');
-            menu.innerHTML = brands.map(b => `
-                <div onclick="filterByBrand(this, '${b}')" class="sidebar-item ${b==='all'?'active':''} p-4 text-center py-6">
-                    ${b === 'all' ? '所有品牌' : productsData.find(p => p.brand === b).brandName}
+            document.getElementById('brand-menu').innerHTML = brands.map(b => `
+                <div onclick="filterBrand(this, '${b}')" class="sidebar-item ${b==='all'?'active':''} p-4 text-center py-6 capitalize">
+                    ${b === 'all' ? '所有品牌' : productsData.find(p => p.brand === b).bName}
                 </div>
             `).join('');
             renderProducts('all', 'v');
         }
 
-        function filterByBrand(el, brand) {
+        function filterBrand(el, brand) {
             document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             renderProducts(brand, 'v');
@@ -162,89 +139,88 @@
             const filtered = productsData.filter(p => (brand === 'all' || p.brand === brand) && p.cat === cat);
             list.innerHTML = filtered.map(p => `
                 <div class="flex gap-4 border-b border-stone-100 pb-5 items-center">
-                    <div class="w-20 h-20 bg-white border border-stone-50 rounded-xl bg-center bg-contain bg-no-repeat flex-none" style="background-image: url('${p.img}')"></div>
+                    <div class="w-20 h-20 bg-white border rounded-xl bg-center bg-contain bg-no-repeat flex-none shadow-sm" style="background-image: url('${p.img}')"></div>
                     <div class="flex-1">
                         <h3 class="text-sm font-bold text-stone-800">${p.name}</h3>
-                        <div class="mt-2 text-gold font-bold">HK$ ${p.price}.00</div>
+                        <div class="text-gold font-bold mt-1">HK$ ${p.price}</div>
                         <div class="text-[9px] text-stone-300 mt-1 uppercase">Expiry: ${p.expiry}</div>
                     </div>
-                    <button onclick="openProduct(${p.id})" class="bg-[#b08d57] text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg"><i class="fa-solid fa-plus text-xs"></i></button>
+                    <button onclick="openProduct(${p.id})" class="bg-[#b08d57] text-white w-9 h-9 rounded-full shadow-lg flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
                 </div>
             `).join('');
         }
 
         function openProduct(id) {
-            currentItem = productsData.find(p => p.id === id);
-            selectedQty = currentItem.min;
-            document.getElementById('p-name').innerText = currentItem.name;
-            document.getElementById('p-price').innerText = `HK$ ${currentItem.price}`;
-            document.getElementById('p-desc').innerText = currentItem.desc;
-            document.getElementById('p-expiry').innerText = `Expiry Date: ${currentItem.expiry}`;
-            document.getElementById('p-img').style.backgroundImage = `url('${currentItem.img}')`;
-            document.getElementById('p-qty').innerText = selectedQty;
-            document.getElementById('detail-sheet').classList.add('active');
+            cart = productsData.find(p => p.id === id);
+            cart.qty = cart.min;
+            document.getElementById('p-name').innerText = cart.name;
+            document.getElementById('p-price').innerText = `HK$ ${cart.price}`;
+            document.getElementById('p-desc').innerText = cart.desc;
+            document.getElementById('p-expiry').innerText = `Valid Until: ${cart.expiry}`;
+            document.getElementById('p-img').style.backgroundImage = `url('${cart.img}')`;
+            document.getElementById('p-qty').innerText = cart.qty;
+            document.getElementById('sheet-detail').classList.add('active');
         }
 
-        function updateSelectedQty(val) {
-            selectedQty = Math.max(currentItem.min, selectedQty + val);
-            document.getElementById('p-qty').innerText = selectedQty;
+        function adjQty(v) {
+            cart.qty = Math.max(cart.min, cart.qty + v);
+            // 處理 agnes b. 階梯定價示例
+            if(cart.brand === 'agnes') {
+                cart.price = cart.qty >= 500 ? 33.5 : 37;
+                document.getElementById('p-price').innerText = `HK$ ${cart.price}`;
+            }
+            document.getElementById('p-qty').innerText = cart.qty;
         }
 
-        function addToCartAction() {
-            const total = currentItem.price * selectedQty;
-            document.getElementById('cart-count').innerText = 1;
-            document.getElementById('cart-total').innerText = `HK$ ${total.toLocaleString()}`;
-            document.getElementById('cart-float').classList.remove('hidden');
-            closeSheet(document.getElementById('detail-sheet'));
+        function addCart() {
+            document.getElementById('cart-total').innerText = `HK$ ${(cart.price * cart.qty).toLocaleString()}`;
+            document.getElementById('cart-bar').classList.remove('hidden');
+            closeSheet(document.getElementById('sheet-detail'));
         }
 
-        function submitOrder() {
-            if(!document.getElementById('user-tel').value) return alert("請輸入電話號碼");
+        function doSubmit() {
+            if(!document.getElementById('u-tel').value) return alert("請輸入電話");
             const oid = 'T' + Math.floor(1000 + Math.random()*9000);
-            activeOrders.unshift({ id: oid, name: currentItem.name, qty: selectedQty, total: currentItem.price * selectedQty });
+            orders.unshift({ id: oid, ...cart, total: cart.price * cart.qty });
             document.getElementById('final-id').innerText = oid;
-            document.getElementById('success-sheet').classList.add('active');
+            document.getElementById('sheet-success').classList.add('active');
         }
 
         function renderOrders() {
-            const container = document.getElementById('order-container');
-            if(activeOrders.length === 0) {
-                container.innerHTML = '<div class="text-center py-20 text-stone-300 text-sm italic">尚無訂單資料</div>';
-                return;
-            }
-            container.innerHTML = activeOrders.map(o => `
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="text-3xl font-mono font-black tracking-tighter">${o.id}</span>
+            const flow = document.getElementById('order-flow');
+            if(orders.length === 0) { flow.innerHTML = '<p class="text-center text-stone-300 py-20 italic">暫無訂單</p>'; return; }
+            flow.innerHTML = orders.map(o => `
+                <div class="bg-white p-6 rounded-2xl border border-stone-100 shadow-sm relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <span class="text-4xl font-mono font-black tracking-tighter">${o.id}</span>
                         <span class="text-[10px] bg-stone-900 text-white px-2 py-1 rounded">PROCESSING</span>
                     </div>
-                    <div class="text-xs text-stone-500">${o.name} x ${o.qty}</div>
-                    <div class="text-[10px] text-gold font-bold mt-1">TOTAL: HK$${o.total.toLocaleString()}</div>
-                    ${isAdmin ? `<button onclick="settle('${o.id}')" class="mt-4 w-full py-2 bg-stone-900 text-white rounded-lg text-[10px] font-bold">MARK AS COMPLETED</button>` : ''}
+                    <div class="text-xs text-stone-500 mt-4 font-bold">${o.name}</div>
+                    <div class="text-[10px] text-stone-400">數量: ${o.qty} | 金額: HK$${o.total.toLocaleString()}</div>
+                    ${isAdmin ? `<button onclick="settle('${o.id}')" class="mt-4 w-full py-2 bg-stone-900 text-white rounded-lg text-[10px] font-bold">核銷此訂單</button>` : ''}
                 </div>
             `).join('');
         }
 
         function settle(id) {
-            activeOrders = activeOrders.filter(o => o.id !== id);
+            orders = orders.filter(o => o.id !== id);
             renderOrders();
         }
 
         function adminLogin() {
             if(prompt("Admin Password") === "5963") {
                 isAdmin = true;
-                document.body.classList.add('admin-mode');
-                alert("Manager Mode: You can now clear orders.");
+                alert("已切換為管理員模式，可進行核銷。");
                 renderOrders();
             }
         }
 
-        function switchMainTab(t) {
-            const isShop = t === 'shop';
+        function showPage(p) {
+            const isShop = p === 'shop';
             document.getElementById('product-list').parentElement.classList.toggle('hidden', !isShop);
             document.getElementById('record-page').classList.toggle('hidden', isShop);
-            document.getElementById('nav-shop').className = isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
-            document.getElementById('nav-record').className = !isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
+            document.getElementById('nav-s').className = isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
+            document.getElementById('nav-r').className = !isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
             if(!isShop) renderOrders();
         }
 
@@ -252,12 +228,12 @@
         function openSheet(id) { document.getElementById(id).classList.add('active'); }
         function closeSuccess() {
             document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('active'));
-            document.getElementById('cart-float').classList.add('hidden');
-            switchMainTab('record');
+            document.getElementById('cart-bar').classList.add('hidden');
+            showPage('record');
         }
-        function changeCategory(c) {
-            document.getElementById('tab-v').className = c === 'v' ? 'flex-1 py-3 active-tab cursor-pointer' : 'flex-1 py-3 text-stone-300 cursor-pointer';
-            document.getElementById('tab-g').className = c === 'g' ? 'flex-1 py-3 active-tab cursor-pointer' : 'flex-1 py-3 text-stone-300 cursor-pointer';
+        function switchCat(c) {
+            document.getElementById('tab-v').className = c==='v'?'flex-1 py-3 active-tab cursor-pointer':'flex-1 py-3 text-stone-300 cursor-pointer';
+            document.getElementById('tab-g').className = c==='g'?'flex-1 py-3 active-tab cursor-pointer':'flex-1 py-3 text-stone-300 cursor-pointer';
         }
 
         window.onload = init;
