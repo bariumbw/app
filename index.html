@@ -3,273 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bespoke Mall | 婚展系統更新版</title>
+    <title>Bespoke Mall | Wedding Expo Order System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto; background-color: #fff; overflow: hidden; }
-        .sidebar-item { cursor: pointer; border-left: 4px solid transparent; transition: 0.2s; }
-        .sidebar-item.active { background-color: #fff; border-left-color: #b08d57; font-weight: bold; color: black; }
-        .active-tab { color: #b08d57; border-bottom: 2px solid #b08d57; font-weight: bold; }
+        :root { --gold: #b08d57; --dark: #1a1a1a; --light-gold: #f9f6f2; }
+        body { font-family: "PingFang HK", "Helvetica Neue", sans-serif; background-color: #fff; overflow: hidden; }
+        
+        /* 側欄與導航樣式 */
+        .sidebar-item { cursor: pointer; border-left: 4px solid transparent; transition: 0.2s; color: #666; }
+        .sidebar-item.active { background-color: #fff; border-left-color: var(--gold); font-weight: bold; color: var(--dark); }
+        .active-tab { color: var(--gold); border-bottom: 2px solid var(--gold); font-weight: bold; }
+        
+        /* 彈窗底層 */
         .bottom-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: flex-end; }
         .bottom-sheet.active { display: flex; }
-        .sheet-content { background: white; width: 100%; border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; }
-        .bg-gold { background-color: #b08d57; }
-        .text-gold { color: #b08d57; }
-        .admin-mode-indicator { display: none; background: #000; color: #fff; text-align: center; font-size: 10px; padding: 2px; }
-        body.admin-mode .admin-mode-indicator { display: block; }
-        .price-tag { color: #e11d48; font-weight: 700; }
+        .sheet-content { 
+            background: white; width: 100%; border-radius: 24px 24px 0 0; 
+            max-height: 92vh; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* 按鈕視覺 */
+        .btn-gold { background-color: var(--gold); color: white; transition: 0.2s; }
+        .btn-gold:active { opacity: 0.8; transform: scale(0.98); }
+        .price-text { color: #d63031; font-weight: 700; }
+        
+        /* 管理員模式 */
+        .admin-tag { display: none; background: var(--dark); color: white; text-align: center; font-size: 10px; padding: 2px; letter-spacing: 1px; }
+        body.admin-mode .admin-tag { display: block; }
+        body.admin-mode .admin-action { display: block !important; }
     </style>
 </head>
 <body class="h-screen flex flex-col">
 
-    <div class="admin-mode-indicator">管理者模式已啟動 (可進行訂單核銷)</div>
+    <div class="admin-tag">ADMINISTRATOR MODE ACTIVE</div>
 
-    <header id="main-header" class="flex-none bg-white">
-        <div class="text-[10px] text-center py-2 px-4 bg-gray-50 text-gray-500 border-b leading-tight">
-            此網站只適用於展場下單，非展場客戶請至官網<br>
-            <span class="text-blue-500 underline">https://www.bespoke-mall.com/</span>
+    <header class="flex-none bg-white">
+        <div class="text-[10px] text-center py-2 px-4 bg-gray-50 text-gray-400 border-b leading-tight">
+            婚展期間限定折扣：多買多折，低至 7 折起<br>
+            <span class="text-blue-500 underline text-[9px]">https://bespoke-mall.myshopify.com/</span>
         </div>
-        <div class="flex justify-between items-center px-4 py-3 border-b">
-            <h1 class="text-lg font-light tracking-widest text-cyan-800">☆ BESPOKE MALL</h1>
-            <button onclick="adminAuth()" id="admin-login-btn" class="text-[10px] text-gray-400 border px-2 py-1 rounded">管理員登入</button>
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+            <div class="flex flex-col">
+                <span class="text-xs font-bold tracking-[0.2em] text-gray-800">BESPOKE MALL</span>
+                <span class="text-[8px] text-gray-400 uppercase tracking-widest">Bridal Excellence</span>
+            </div>
+            <button onclick="adminAuth()" id="admin-trigger" class="text-[18px] text-gray-200"><i class="fa-solid fa-circle-user"></i></button>
         </div>
         <div class="flex border-b text-sm text-center">
-            <div id="tab-v" class="flex-1 py-3 active-tab cursor-pointer" onclick="switchCategory('v')">禮券</div>
-            <div id="tab-g" class="flex-1 py-3 text-gray-400 cursor-pointer" onclick="switchCategory('g')">回禮</div>
+            <div id="tab-v" class="flex-1 py-3 active-tab cursor-pointer" onclick="switchCategory('v')">禮券 (Voucher)</div>
+            <div id="tab-g" class="flex-1 py-3 text-gray-300 cursor-pointer" onclick="switchCategory('g')">回禮 (Gift)</div>
         </div>
     </header>
 
     <main class="flex-1 flex overflow-hidden">
-        <aside class="w-20 bg-gray-50 overflow-y-auto border-r text-[11px] text-gray-500 flex-none">
-            <div onclick="filterByBrand(this, 'all')" class="sidebar-item active p-4 text-center py-6">所有</div>
-            <div onclick="filterByBrand(this, 'agnes')" class="sidebar-item p-4 text-center py-6">agnès b.</div>
-            <div onclick="filterByBrand(this, 'st-honore')" class="sidebar-item p-4 text-center py-6">聖安娜</div>
-            <div onclick="filterByBrand(this, 'wagyu')" class="sidebar-item p-4 text-center py-6">華御結</div>
-            <div onclick="filterByBrand(this, 'godiva')" class="sidebar-item p-4 text-center py-6 font-serif italic">GODIVA</div>
-            <div onclick="filterByBrand(this, 'arome')" class="sidebar-item p-4 text-center py-6">東海堂</div>
+        <aside class="w-24 bg-gray-50 overflow-y-auto border-r text-[11px] flex-none">
+            <div onclick="filterBrand(this, 'all')" class="sidebar-item active p-4 text-center py-6">所有品牌</div>
+            <div onclick="filterBrand(this, 'agnes')" class="sidebar-item p-4 text-center py-6">agnès b.</div>
+            <div onclick="filterBrand(this, 'godiva')" class="sidebar-item p-4 text-center py-6">GODIVA</div>
+            <div onclick="filterBrand(this, 'st')" class="sidebar-item p-4 text-center py-6">聖安娜</div>
+            <div onclick="filterBrand(this, 'arome')" class="sidebar-item p-4 text-center py-6">東海堂</div>
+            <div onclick="filterBrand(this, 'haagen')" class="sidebar-item p-4 text-center py-6">Häagen-Dazs</div>
         </aside>
 
-        <section id="product-container" class="flex-1 overflow-y-auto p-3 space-y-4 pb-32">
-            <div class="flex gap-3 border-b pb-4 product-card brand-agnes">
-                <div class="w-20 h-28 bg-gray-100 rounded-lg flex-none flex items-center justify-center"><i class="fa-solid fa-image text-gray-300"></i></div>
+        <section id="product-container" class="flex-1 overflow-y-auto p-4 space-y-5 pb-32">
+            <div class="flex gap-4 border-b border-gray-50 pb-5 brand-agnes">
+                <div class="w-24 h-24 bg-gray-100 rounded-xl flex-none flex items-center justify-center text-gray-300 relative">
+                    <i class="fa-regular fa-image text-3xl"></i>
+                    <div class="absolute top-1 left-1 bg-black text-white text-[8px] px-2 py-0.5 rounded-full">15% OFF</div>
+                </div>
                 <div class="flex-1">
-                    <h3 class="text-[13px] font-bold">agnès b. CAFÉ HK$50 禮券</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">100張起訂</p>
-                    <div class="mt-2 price-tag">HK$ 37.00</div>
-                    <div class="flex justify-end">
-                        <button onclick="openDetail('agnès b. 禮券', 37, 100, '適用於全港 agnès b. CAFÉ 及 LA LOGGIA bis。')" class="bg-gold text-white px-5 py-1.5 rounded-full text-xs">購買</button>
+                    <h3 class="text-sm font-bold text-gray-800">agnès b. CAFÉ $50 禮券</h3>
+                    <p class="text-[10px] text-gray-400 mt-1 italic">多買多折：100張起訂</p>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span class="price-text text-lg">HK$ 42.50</span>
+                        <span class="text-[10px] text-gray-300 line-through">HK$ 50</span>
+                    </div>
+                    <div class="flex justify-end mt-1">
+                        <button onclick="openDetail('agnès b. CAFÉ $50 禮券', 42.5, 100, '適用於全港 agnès b. CAFÉ。展場限定每 100 張加送 $50 現金券一張。')" class="btn-gold px-6 py-2 rounded-full text-[11px] font-bold">選購</button>
                     </div>
                 </div>
             </div>
 
-            <div class="flex gap-3 border-b pb-4 product-card brand-godiva">
-                <div class="w-20 h-28 bg-pink-50 rounded-lg flex-none flex items-center justify-center"><i class="fa-solid fa-image text-pink-200"></i></div>
+            <div class="flex gap-4 border-b border-gray-50 pb-5 brand-godiva">
+                <div class="w-24 h-24 bg-pink-50 rounded-xl flex-none flex items-center justify-center text-pink-200">
+                    <i class="fa-regular fa-image text-3xl"></i>
+                </div>
                 <div class="flex-1">
-                    <h3 class="text-[13px] font-bold">GODIVA HK$50 禮券 (粉紅版)</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">10張起訂</p>
-                    <div class="mt-2 price-tag">HK$ 41.00</div>
-                    <div class="flex justify-end">
-                        <button onclick="openDetail('GODIVA 禮券', 41, 10, '婚展限定優惠，有效期至 2027年3月。')" class="bg-gold text-white px-5 py-1.5 rounded-full text-xs">購買</button>
+                    <h3 class="text-sm font-bold text-gray-800">GODIVA $50 禮券 (粉紅)</h3>
+                    <p class="text-[10px] text-gray-400 mt-1 italic">10張起訂</p>
+                    <div class="mt-2 price-text text-lg">HK$ 41.00</div>
+                    <div class="flex justify-end mt-1">
+                        <button onclick="openDetail('GODIVA $50 禮券', 41, 10, '限定粉紅色婚慶封套，有效期至 2027 年。')" class="btn-gold px-6 py-2 rounded-full text-[11px] font-bold">選購</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="order-page" class="hidden flex-1 bg-gray-50 overflow-y-auto p-4 pb-32">
-            <h2 class="text-center font-bold text-gray-700 mb-4">進行中的訂單</h2>
-            <div id="order-list-view" class="space-y-4">
-                <p class="text-center text-gray-300 text-sm py-20">暫無訂單資料</p>
+        <section id="receipt-page" class="hidden flex-1 bg-[#fafafa] overflow-y-auto p-5 pb-32">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-black text-gray-800">展場取單中心</h2>
+                <span class="text-[10px] text-gray-400">更新於 11:25 AM</span>
+            </div>
+            <div id="order-flow" class="space-y-4">
+                <p class="text-center text-gray-300 py-20 text-sm">請在下單後於此頁查看取單號碼</p>
             </div>
         </section>
     </main>
 
-    <nav class="flex-none bg-white border-t flex justify-around py-3 safe-area-bottom z-50">
-        <button onclick="changeMainTab('order')" id="btn-order" class="flex flex-col items-center gap-1 text-gold">
-            <i class="fa-solid fa-file-invoice text-xl"></i><span class="text-[10px]">點單</span>
+    <nav class="flex-none bg-white border-t flex justify-around py-3 safe-area-bottom z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.02)]">
+        <button onclick="switchPage('order')" id="nav-o" class="flex flex-col items-center gap-1 text-gold">
+            <i class="fa-solid fa-store text-xl"></i><span class="text-[10px] font-bold">點單選購</span>
         </button>
-        <button onclick="changeMainTab('receipt')" id="btn-receipt" class="flex flex-col items-center gap-1 text-gray-300">
-            <i class="fa-solid fa-receipt text-xl"></i><span class="text-[10px]">取單</span>
+        <button onclick="switchPage('receipt')" id="nav-r" class="flex flex-col items-center gap-1 text-gray-300">
+            <i class="fa-solid fa-ticket text-xl"></i><span class="text-[10px] font-bold">我的取單</span>
         </button>
     </nav>
 
-    <div id="cart-summary" class="fixed bottom-20 left-4 right-4 h-14 bg-black/90 backdrop-blur rounded-full flex items-center justify-between px-2 text-white z-40 hidden">
-        <div class="flex items-center gap-3 ml-2">
-            <div class="relative bg-white/20 p-2 rounded-full">
-                <i class="fa-solid fa-shopping-bag"></i>
-                <span id="badge-count" class="absolute -top-1 -right-1 bg-gold text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+    <div id="cart-float" class="fixed bottom-20 left-4 right-4 h-16 bg-white border border-gray-100 rounded-2xl flex items-center justify-between px-4 shadow-2xl z-40 hidden">
+        <div class="flex items-center gap-3">
+            <div class="bg-gold text-white w-10 h-10 rounded-xl flex items-center justify-center relative">
+                <i class="fa-solid fa-shopping-cart"></i>
+                <span id="cart-num" class="absolute -top-2 -right-2 bg-black text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">1</span>
             </div>
-            <span id="text-total" class="font-bold text-lg">HK$0</span>
+            <div>
+                <div class="text-[10px] text-gray-400">總額預算</div>
+                <div id="cart-total" class="text-lg font-black text-gray-800">HK$0</div>
+            </div>
         </div>
-        <button onclick="openSheet('confirm-sheet')" class="bg-gold px-8 py-3 rounded-full text-sm font-bold active:opacity-80">結帳</button>
+        <button onclick="openSheet('sheet-confirm')" class="btn-gold px-10 py-3 rounded-xl text-sm font-bold shadow-lg shadow-yellow-800/20">立即下單</button>
     </div>
 
-    <div id="product-sheet" class="bottom-sheet" onclick="closeThis(this)">
+    <div id="sheet-detail" class="bottom-sheet" onclick="closeSheet(this)">
         <div class="sheet-content" onclick="event.stopPropagation()">
-            <div class="w-12 h-1 bg-gray-200 rounded-full mx-auto my-4"></div>
-            <div class="w-full h-56 bg-gray-50 flex items-center justify-center text-gray-300 border-b">
-                <i class="fa-regular fa-image text-5xl"></i>
+            <div class="w-12 h-1 bg-gray-100 rounded-full mx-auto my-4"></div>
+            <div class="w-full h-64 bg-gray-50 flex items-center justify-center text-gray-200">
+                <i class="fa-regular fa-image text-6xl"></i>
             </div>
-            <div class="p-6">
-                <h2 id="sp-title" class="text-xl font-bold mb-2">產品名稱</h2>
-                <p id="sp-info" class="text-xs text-gray-400 mb-8 leading-relaxed">這是產品詳細內容與規格資訊...</p>
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 id="sp-name" class="text-2xl font-bold text-gray-800">產品名稱</h2>
+                    <span class="text-gold font-bold" id="sp-price-unit">HK$0</span>
+                </div>
+                <p id="sp-desc" class="text-xs text-gray-400 mb-8 leading-relaxed">產品描述占位符...</p>
                 
-                <div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl mb-8">
-                    <span class="text-sm font-bold">訂購數量</span>
+                <div class="flex justify-between items-center p-5 bg-gray-50 rounded-2xl mb-10">
+                    <span class="font-bold text-sm">訂購數量</span>
                     <div class="flex items-center gap-6">
-                        <button onclick="adjQty(-1)" class="w-10 h-10 border rounded-xl flex items-center justify-center bg-white shadow-sm">-</button>
-                        <span id="sp-qty" class="font-bold text-lg min-w-[30px] text-center">10</span>
-                        <button onclick="adjQty(1)" class="w-10 h-10 border rounded-xl flex items-center justify-center bg-white shadow-sm text-gold font-bold">+</button>
+                        <button onclick="changeQty(-1)" class="w-10 h-10 bg-white border border-gray-100 rounded-xl flex items-center justify-center shadow-sm text-gray-400">-</button>
+                        <span id="sp-qty" class="font-black text-xl min-w-[30px] text-center">10</span>
+                        <button onclick="changeQty(1)" class="w-10 h-10 bg-white border border-gray-100 rounded-xl flex items-center justify-center shadow-sm text-gold font-bold">+</button>
                     </div>
                 </div>
                 
-                <div class="flex gap-3">
-                    <button onclick="addAndClose()" class="flex-1 py-4 border-2 border-gray-100 rounded-2xl font-bold">立即購買</button>
-                    <button onclick="addAndClose()" class="flex-1 py-4 bg-gold text-white rounded-2xl font-bold">加入購物車</button>
-                </div>
+                <button onclick="confirmCart()" class="w-full py-5 btn-gold rounded-2xl font-bold text-lg shadow-xl shadow-yellow-800/20">加入購物車</button>
             </div>
         </div>
     </div>
 
-    <div id="confirm-sheet" class="bottom-sheet" onclick="closeThis(this)">
-        <div class="sheet-content p-6" onclick="event.stopPropagation()">
-            <h3 class="text-center font-bold mb-6">填寫資料</h3>
-            <div class="space-y-4 mb-8">
-                <div>
-                    <label class="text-[11px] text-gray-400 ml-1">聯絡電話 (必填) *</label>
-                    <input type="tel" id="tel-input" placeholder="請輸入 8 位電話號碼" class="w-full bg-gray-50 border-2 border-yellow-50 p-4 rounded-2xl outline-none focus:border-gold">
+    <div id="sheet-confirm" class="bottom-sheet" onclick="closeSheet(this)">
+        <div class="sheet-content p-8" onclick="event.stopPropagation()">
+            <h3 class="text-center text-xl font-bold mb-8">確認訂單資訊</h3>
+            <div class="space-y-5 mb-10">
+                <div class="bg-gray-50 p-5 rounded-2xl border-2 border-yellow-100/50">
+                    <label class="text-[10px] text-gray-400 uppercase tracking-widest block mb-2">聯絡電話 (以獲取取單碼)</label>
+                    <input type="tel" id="user-phone" placeholder="請輸入 8 位香港電話" class="w-full bg-transparent text-xl font-bold outline-none">
                 </div>
-                <div class="p-4 bg-gray-50 rounded-2xl text-xs text-gray-500 flex justify-between items-center">
-                    <span>回禮/缺貨必填資料預設已填寫</span>
-                    <i class="fa-solid fa-circle-check text-green-500"></i>
+                <div class="flex justify-between text-sm px-2">
+                    <span class="text-gray-400">合計項目</span>
+                    <span id="final-sum" class="font-bold">HK$0</span>
                 </div>
             </div>
-            <button onclick="doSubmit()" class="w-full py-4 bg-gold text-white rounded-2xl font-bold text-lg shadow-lg">提交並生成取單碼</button>
+            <button onclick="finalSubmit()" class="w-full py-5 btn-gold rounded-2xl font-black text-lg">提交訂單並生成編號</button>
         </div>
     </div>
 
-    <div id="success-sheet" class="bottom-sheet" style="z-index: 200;">
-        <div class="sheet-content p-10 flex flex-col items-center">
-            <span class="text-gold font-bold text-xs mb-2">準備中</span>
-            <h2 id="final-code" class="text-6xl font-black mb-8 tracking-tighter font-mono">T0104</h2>
-            <p class="text-[11px] text-gray-400 text-center mb-8 leading-relaxed">請將此頁截圖或出示給工作人員<br>以完成取貨程序</p>
-            <button onclick="finalDone()" class="w-full py-4 bg-gray-100 rounded-2xl font-bold text-gray-500">返回主頁</button>
+    <div id="sheet-success" class="bottom-sheet" style="z-index: 200;">
+        <div class="sheet-content p-12 flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mb-6 text-2xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <span class="text-gold font-bold text-xs tracking-[0.3em] uppercase mb-2">Order Confirmed</span>
+            <h2 id="order-id" class="text-6xl font-black mb-8 tracking-tighter font-mono">T0104</h2>
+            <p class="text-[11px] text-gray-400 leading-relaxed mb-10">請向展位工作人員出示此編號<br>核對資料後即可安排取貨或安排送貨</p>
+            <button onclick="backToReceipt()" class="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold">查看我的所有訂單</button>
         </div>
     </div>
 
     <script>
-        let currentItem = { name: '', price: 0, qty: 0, min: 0 };
-        let activeOrders = [];
-        let isManagementMode = false;
+        let currentItem = { name: '', price: 0, qty: 10, min: 10 };
+        let orders = [];
+        let adminMode = false;
 
-        // 管理員密碼驗證
         function adminAuth() {
-            const pw = prompt("請輸入管理員密碼:");
-            if (pw === "5963") {
-                isManagementMode = true;
+            const p = prompt("Enter Admin Password:");
+            if(p === "5963") {
+                adminMode = true;
                 document.body.classList.add('admin-mode');
-                document.getElementById('admin-login-btn').innerText = "管理者: ON";
-                alert("進入管理員模式：您可以點擊訂單進行核銷。");
+                alert("Management Mode Enabled.");
                 renderOrders();
-            } else {
-                alert("密碼不正確");
             }
         }
 
-        // 品牌過濾
-        function filterByBrand(el, brand) {
+        function filterBrand(el, brand) {
             document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            document.querySelectorAll('.product-card').forEach(card => {
-                if(brand === 'all' || card.classList.contains('brand-'+brand)) card.style.display = 'flex';
-                else card.style.display = 'none';
+            document.querySelectorAll('.product-card, .product-item').forEach(p => {
+                if(brand === 'all' || p.classList.contains('brand-'+brand)) p.style.display = 'flex';
+                else p.style.display = 'none';
             });
         }
 
-        // 開啟詳情
-        function openDetail(name, price, min, info) {
+        function openDetail(name, price, min, desc) {
             currentItem = { name, price, qty: min, min };
-            document.getElementById('sp-title').innerText = name;
-            document.getElementById('sp-info').innerText = info;
+            document.getElementById('sp-name').innerText = name;
+            document.getElementById('sp-price-unit').innerText = 'HK$ ' + price;
+            document.getElementById('sp-desc').innerText = desc;
             document.getElementById('sp-qty').innerText = min;
-            document.getElementById('product-sheet').classList.add('active');
+            document.getElementById('sheet-detail').classList.add('active');
         }
 
-        function adjQty(v) {
+        function changeQty(v) {
             currentItem.qty = Math.max(currentItem.min, currentItem.qty + v);
             document.getElementById('sp-qty').innerText = currentItem.qty;
         }
 
-        function addAndClose() {
-            document.getElementById('badge-count').innerText = 1;
-            document.getElementById('text-total').innerText = 'HK$ ' + (currentItem.price * currentItem.qty);
-            document.getElementById('cart-summary').classList.remove('hidden');
-            document.getElementById('product-sheet').classList.remove('active');
+        function confirmCart() {
+            const total = currentItem.price * currentItem.qty;
+            document.getElementById('cart-num').innerText = 1;
+            document.getElementById('cart-total').innerText = 'HK$' + total.toLocaleString();
+            document.getElementById('final-sum').innerText = 'HK$' + total.toLocaleString();
+            document.getElementById('cart-float').classList.remove('hidden');
+            closeSheet(document.getElementById('sheet-detail'));
         }
 
-        function doSubmit() {
-            if(!document.getElementById('tel-input').value) return alert("請輸入電話號碼以獲取取單碼");
-            
-            const newOrder = {
-                id: 'T' + Math.floor(1000 + Math.random()*8999),
-                name: currentItem.name,
-                qty: currentItem.qty,
-                time: new Date().toLocaleTimeString()
-            };
-            activeOrders.unshift(newOrder);
-            document.getElementById('final-code').innerText = newOrder.id;
-            document.getElementById('success-sheet').classList.add('active');
+        function finalSubmit() {
+            if(!document.getElementById('user-phone').value) return alert("請填寫聯絡電話");
+            const oid = 'T' + Math.floor(1000 + Math.random()*8999);
+            const newOrder = { id: oid, name: currentItem.name, qty: currentItem.qty, total: currentItem.price * currentItem.qty };
+            orders.unshift(newOrder);
+            document.getElementById('order-id').innerText = oid;
+            document.getElementById('sheet-success').classList.add('active');
         }
 
         function renderOrders() {
-            const list = document.getElementById('order-list-view');
-            if(activeOrders.length === 0) {
-                list.innerHTML = '<p class="text-center text-gray-300 text-sm py-20 italic">尚無進行中的訂單</p>';
+            const container = document.getElementById('order-flow');
+            if(orders.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-300 py-20 text-sm">請在下單後於此頁查看取單號碼</p>';
                 return;
             }
-            list.innerHTML = activeOrders.map(o => `
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative">
-                    <div class="flex justify-between items-start">
-                        <h4 class="text-3xl font-black font-mono">${o.id}</h4>
-                        <span class="text-[10px] text-gold font-bold bg-gold/5 px-2 py-1 rounded">處理中</span>
+            container.innerHTML = orders.map(o => `
+                <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-3xl font-mono font-black">${o.id}</span>
+                        <span class="text-[10px] bg-gold/10 text-gold px-3 py-1 rounded-full font-bold">處理中</span>
                     </div>
-                    <div class="text-xs text-gray-500 mt-2">${o.name} x ${o.qty}</div>
-                    <div class="text-[10px] text-gray-300 mt-1">下單時間: ${o.time}</div>
-                    ${isManagementMode ? `<button onclick="settle('${o.id}')" class="mt-4 w-full py-2 bg-black text-white rounded-lg text-xs font-bold">核銷此訂單 (管理員操作)</button>` : ''}
+                    <div class="text-xs text-gray-500">${o.name} x ${o.qty}</div>
+                    <div class="text-[10px] text-gray-300 mt-1 italic">金額: HK$${o.total}</div>
+                    ${adminMode ? `<button onclick="settle('${o.id}')" class="mt-4 w-full py-2 bg-black text-white rounded-xl text-[10px] font-bold">核銷訂單 (管理員)</button>` : ''}
                 </div>
             `).join('');
         }
 
         function settle(id) {
-            if(confirm("確定核銷此訂單？")) {
-                activeOrders = activeOrders.filter(o => o.id !== id);
-                renderOrders();
-            }
+            orders = orders.filter(o => o.id !== id);
+            renderOrders();
         }
 
-        function changeMainTab(tab) {
-            const isOrder = tab === 'order';
+        function switchPage(page) {
+            const isOrder = page === 'order';
             document.getElementById('product-container').parentElement.classList.toggle('hidden', !isOrder);
-            document.getElementById('main-header').classList.toggle('hidden', !isOrder);
-            document.getElementById('order-page').classList.toggle('hidden', isOrder);
-            
-            document.getElementById('btn-order').className = isOrder ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-gray-300';
-            document.getElementById('btn-receipt').className = !isOrder ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-gray-300';
-            
+            document.getElementById('receipt-page').classList.toggle('hidden', isOrder);
+            document.getElementById('nav-o').className = isOrder ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-gray-300';
+            document.getElementById('nav-r').className = !isOrder ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-gray-300';
             if(!isOrder) renderOrders();
         }
 
-        function finalDone() {
+        function backToReceipt() {
             document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('active'));
-            document.getElementById('cart-summary').classList.add('hidden');
-            changeMainTab('receipt');
+            document.getElementById('cart-float').classList.add('hidden');
+            switchPage('receipt');
         }
 
         function openSheet(id) { document.getElementById(id).classList.add('active'); }
-        function closeThis(el) { el.classList.remove('active'); }
+        function closeSheet(el) { el.classList.remove('active'); }
         function switchCategory(c) {
-            document.getElementById('tab-v').className = c==='v' ? 'flex-1 py-3 active-tab cursor-pointer' : 'flex-1 py-3 text-gray-400 cursor-pointer';
-            document.getElementById('tab-g').className = c==='g' ? 'flex-1 py-3 active-tab cursor-pointer' : 'flex-1 py-3 text-gray-400 cursor-pointer';
+            document.getElementById('tab-v').className = c==='v' ? 'flex-1 py-3 active-tab cursor-pointer' : 'flex-1 py-3 text-gray-300 cursor-pointer';
+            document.getElementById('tab-g').className = c==='g' ? 'flex-1 py-3 active-tab cursor-pointer' : 'flex-1 py-3 text-gray-300 cursor-pointer';
         }
     </script>
 </body>
