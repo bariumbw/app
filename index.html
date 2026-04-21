@@ -1,301 +1,352 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bespoke Mall | Expo Master System</title>
+    <title>Bespoke Mall | 智能訂購系統</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
-        :root { --gold: #b08d57; --stone-bg: #fdfcfb; }
-        body { font-family: -apple-system, "PingFang HK", sans-serif; background-color: var(--stone-bg); color: #333; overflow-x: hidden; }
-        .sidebar-item.active { background: white; border-left: 4px solid var(--gold); color: #000; font-weight: bold; }
-        .bottom-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; }
-        .bottom-sheet.active { display: flex; }
-        .sheet-content { background: white; width: 100%; border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; position: relative; }
-        
-        /* 員工模式 UI 控制 */
-        .admin-controls { display: none !important; }
-        body.admin-mode .admin-controls { display: flex !important; }
-
-        .img-preview { width: 100%; height: 140px; border: 2px dashed #ddd; border-radius: 12px; display: flex; align-items: center; justify-content: center; background-size: contain; background-repeat: no-repeat; background-position: center; cursor: pointer; color: #999; font-size: 12px; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; }
-        .status-dot.active { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans HK', sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: contain; background-color: #f8fafc; }
+        .brand-card { transition: all 0.2s; border-radius: 2rem; border: 1px solid #f1f5f9; cursor: pointer; }
+        .product-card { transition: all 0.2s; border-radius: 1.5rem; }
+        .animate-up { animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .tab-active { color: #f43f5e; border-bottom: 3px solid #f43f5e; }
+        .yellow-label { background: #fde047; padding: 4px 8px; font-size: 10px; font-weight: bold; border-radius: 4px; }
     </style>
 </head>
-<body class="h-screen flex flex-col">
-
-    <div class="admin-controls bg-zinc-900 text-white text-[10px] px-4 py-2 flex justify-between items-center z-[60]">
-        <span class="tracking-widest font-bold"><i class="fa-solid fa-screwdriver-wrench mr-2"></i> 員工管理模式已啟動</span>
-        <button onclick="openAdmin()" class="bg-white text-black px-3 py-1 rounded font-black text-[9px]">開啟編輯器</button>
-    </div>
-
-    <header class="bg-white border-b sticky top-0 z-40">
-        <div class="bg-stone-50 text-[10px] text-center py-2 px-4 text-stone-400 border-b italic">
-            展場下單系統 - 數據儲存於本地瀏覽器
-        </div>
-        <div class="flex justify-between items-center px-6 py-4">
-            <h1 class="text-xl font-light tracking-[0.3em] text-cyan-700">BESPOKE MALL</h1>
-            <button onclick="adminLogin()" class="text-stone-100"><i class="fa-solid fa-user-gear text-2xl"></i></button>
-        </div>
-        <div class="flex text-sm">
-            <button onclick="switchTab('v')" id="tab-v" class="flex-1 py-3 border-b-2 border-gold font-bold">禮券</button>
-            <button onclick="switchTab('g')" id="tab-g" class="flex-1 py-3 border-b-2 border-transparent text-stone-300">回禮</button>
-        </div>
-    </header>
-
-    <main id="view-shop" class="flex-1 flex overflow-hidden">
-        <aside id="brand-sidebar" class="w-24 bg-stone-100 overflow-y-auto border-r text-[11px]"></aside>
-        <section class="flex-1 overflow-y-auto p-4 space-y-4 pb-32" id="product-list"></section>
-    </main>
-
-    <main id="view-orders" class="hidden flex-1 overflow-y-auto bg-stone-50 p-4 pb-32">
-        <h2 class="text-center font-bold text-lg mb-4">我的訂單</h2>
-        <div id="order-container" class="space-y-4"></div>
-    </main>
-
-    <nav class="fixed bottom-0 w-full bg-white border-t flex justify-around py-3 pb-6 z-50">
-        <button onclick="showPage('shop')" id="nav-s" class="flex flex-col items-center gap-1 text-gold">
-            <i class="fa-solid fa-list-check text-xl"></i><span class="text-[10px] font-bold">點單</span>
-        </button>
-        <button onclick="showPage('orders')" id="nav-r" class="flex flex-col items-center gap-1 text-stone-300">
-            <i class="fa-solid fa-receipt text-xl"></i><span class="text-[10px] font-bold">取單</span>
-        </button>
-    </nav>
-
-    <div id="cart-float" class="fixed bottom-24 left-4 right-4 bg-stone-800 text-white rounded-2xl h-14 flex items-center px-6 justify-between shadow-2xl z-40 hidden">
-        <div class="flex flex-col">
-            <span class="text-[9px] text-stone-400">總計金額</span>
-            <span id="cart-price" class="font-bold text-orange-200">HK$0</span>
-        </div>
-        <button onclick="openConfirmSheet()" class="bg-white text-black px-6 py-2 rounded-full font-bold text-xs">確認清單</button>
-    </div>
-
-    <div id="sheet-detail" class="bottom-sheet" onclick="closeSheet('sheet-detail')">
-        <div class="sheet-content p-6" onclick="event.stopPropagation()">
-            <div id="det-img" class="w-full h-60 bg-stone-50 rounded-2xl mb-4 bg-center bg-contain bg-no-repeat border"></div>
-            <h2 id="det-name" class="text-lg font-bold mb-1"></h2>
-            <div id="det-tiers" class="bg-stone-50 rounded-xl p-4 mb-6 space-y-2 text-xs"></div>
-            <div class="flex justify-between items-center border p-4 rounded-xl mb-6">
-                <span class="text-sm font-bold">訂購數量</span>
-                <div class="flex items-center gap-4">
-                    <button onclick="updateQty(-1)" class="w-8 h-8 border rounded-lg">-</button>
-                    <span id="det-qty" class="font-bold w-10 text-center"></span>
-                    <button onclick="updateQty(1)" class="w-8 h-8 border rounded-lg text-gold font-bold">+</button>
-                </div>
-            </div>
-            <div class="flex items-center justify-between mb-8">
-                <span id="det-total" class="text-2xl font-black text-orange-600 font-mono">HK$ 0</span>
-            </div>
-            <button onclick="addToCart()" class="w-full py-4 bg-stone-900 text-white rounded-full font-bold">加入購買清單</button>
-        </div>
-    </div>
-
-    <div id="sheet-admin" class="bottom-sheet" onclick="closeSheet('sheet-admin')">
-        <div class="sheet-content p-6 max-h-[92vh]" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-black">後台管理中心</h2>
-                <button onclick="closeSheet('sheet-admin')" class="text-stone-300 text-2xl">&times;</button>
-            </div>
-            <div class="flex gap-6 border-b mb-6 text-sm">
-                <button onclick="adminTab('b')" id="ad-btn-b" class="pb-2 border-b-2 border-black font-bold">品牌設定</button>
-                <button onclick="adminTab('p')" id="ad-btn-p" class="pb-2 text-stone-300">產品發佈</button>
-            </div>
-
-            <div id="admin-b" class="space-y-4">
-                <input type="text" id="new-b-name" placeholder="品牌名稱" class="w-full p-4 bg-stone-50 rounded-xl border outline-none">
-                <select id="new-b-cat" class="w-full p-4 bg-stone-50 rounded-xl border outline-none">
-                    <option value="v">禮券分類</option>
-                    <option value="g">回禮分類</option>
-                </select>
-                <div class="img-preview" id="logo-preview" onclick="document.getElementById('file-logo').click()">點擊上傳品牌 Logo</div>
-                <input type="file" id="file-logo" class="hidden" accept="image/*" onchange="handleFile(this, 'logo-preview')">
-                <button onclick="saveBrand()" class="w-full py-4 bg-stone-900 text-white rounded-xl font-bold">儲存品牌資料</button>
-                <div id="admin-brand-list" class="grid grid-cols-4 gap-2 pt-4 border-t mt-4"></div>
-            </div>
-
-            <div id="admin-p" class="hidden space-y-4 pb-20">
-                <input type="text" id="new-p-name" placeholder="產品名稱" class="w-full p-4 bg-stone-50 rounded-xl border outline-none">
-                <select id="new-p-brand" class="w-full p-4 bg-stone-50 rounded-xl border outline-none"></select>
-                <div class="img-preview" id="p-img-preview" onclick="document.getElementById('file-p').click()">點擊上傳產品圖</div>
-                <input type="file" id="file-p" class="hidden" accept="image/*" onchange="handleFile(this, 'p-img-preview')">
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="number" id="new-p-price" placeholder="基本單價" class="w-full p-4 bg-stone-50 rounded-xl border">
-                    <input type="number" id="new-p-min" placeholder="最低起訂" class="w-full p-4 bg-stone-50 rounded-xl border">
-                </div>
-                <textarea id="new-p-tiers" placeholder="階梯價格格式：數量-價格 (每行一筆)&#10;50-18&#10;100-15" class="w-full p-4 bg-stone-50 rounded-xl border h-24 text-xs"></textarea>
-                <button onclick="saveProduct()" class="w-full py-4 bg-stone-900 text-white rounded-xl font-bold">正式發佈</button>
-            </div>
-        </div>
-    </div>
+<body>
+    <div id="root"></div>
 
     <script>
-        // 固定 Key 名，確保資料不丟失
-        const DB_KEY = 'BESPOKE_MASTER_DB';
-        let db = JSON.parse(localStorage.getItem(DB_KEY)) || { brands: [], products: [], orders: [] };
-        let currentTab = 'v', currentBrand = 'all', cart = null, tempImg = "";
+        const { useState, useMemo, useRef, useEffect } = React;
 
-        function init() {
-            renderSidebar();
-            renderProducts();
-            updateNavUI('shop');
-        }
+        // --- 1. 配置與資料 ---
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwx9qCf1N4QxA-4jXTLEjSr3Bgp5-AARpf7MHA_E9SA6xoyZre4grbXyIDtAhm6LpltLg/exec";
 
-        // 員工登入驗證
-        function adminLogin() {
-            const pass = prompt("請輸入員工管理密碼：");
-            if (pass === "5963") {
-                document.body.classList.add('admin-mode');
-                alert("已解鎖管理權限");
-                refreshAdminLists();
-            } else if (pass !== null) {
-                alert("密碼錯誤");
-            }
-        }
+        const BRAND_CONFIG = {
+            "agnès b.": "https://www.bespoke-wedding.com/sites/default/files/%E7%A6%AE%E5%8D%A1/Agne%CC%80s%20b.png",
+            "聖安娜": "https://www.bespoke-wedding.com/sites/default/files/禮卡/SAINT%20%20HIGH.webp",
+            "GODIVA": "https://www.bespoke-wedding.com/sites/default/files/禮卡/GODIVA.png",
+            "東海堂": "https://www.bespoke-wedding.com/sites/default/files/禮卡/禮卡png/tong.png",
+            "太興": "https://www.bespoke-wedding.com/sites/default/files/禮卡/太興.jpeg",
+            "鴻福堂": "https://www.bespoke-wedding.com/sites/default/files/禮卡/HungFukTong.webp",
+            "Lady M": "https://www.bespoke-wedding.com/sites/default/files/禮卡/禮卡png/Sugarfina%20(2).png",
+            "L.M.D.C": "https://www.bespoke-wedding.com/sites/default/files/禮卡/禮卡png/Imdc.png",
+            "華御結": "https://www.bespoke-wedding.com/sites/default/files/禮卡/HM%20Logo%20Wide-01.png",
+            "甜姨姨": "https://www.bespoke-wedding.com/sites/default/files/禮卡/auntie%20Sweet.webp",
+            "永樂": "https://www.bespoke-wedding.com/sites/default/files/禮卡/winglok_LOGO.webp",
+            "LE CREUSET": "https://www.bespoke-wedding.com/sites/default/files/禮卡/禮卡png/Copy%20of%20禮卡11.png",
+            "奇華": "https://www.bespoke-wedding.com/sites/default/files/KWLOGO.png",
+            "糕點時光": "https://www.bespoke-wedding.com/sites/default/files/禮卡/糕點時光.webp",
+            "Bonne Maman": "https://www.bespoke-wedding.com/sites/default/files/禮卡/Bonne%20Maman_%20.png"
+        };
 
-        function handleFile(input, previewId) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                tempImg = e.target.result;
-                document.getElementById(previewId).style.backgroundImage = `url(${tempImg})`;
-                document.getElementById(previewId).innerText = "";
+        const PRODUCT_DEFS = [
+            { category: "Gift Card", brand: "agnès b.", name: "agnès b. $50禮券", sku: "20081", expiry: "2026-12-31", orig: 50, min: 10, img: "https://www.bespoke-wedding.com/sites/default/files/禮卡/禮卡png/agnes50.png", tiers: [{q:10, d:0.85}] },
+            { category: "Gift Card", brand: "agnès b.", name: "agnès b. $80禮券", sku: "200082", expiry: "2026-12-31", orig: 80, min: 10, img: "https://www.bespoke-wedding.com/sites/default/files/禮卡/禮卡png/agnes80.png", tiers: [{q:10, d:0.85}] },
+            { category: "Gift Card", brand: "GODIVA", name: "GODIVA $50(粉紅封套)", sku: "10344", expiry: "2027-03-31", orig: 50, min: 1, img: "https://www.bespoke-wedding.com/sites/default/files/禮卡/禮卡png/godiva-p.png", tiers: [{q:1, d:0.56}] },
+            { category: "Gift Card", brand: "鴻福堂", name: "自家湯套票(10張)", sku: "HFT-001", expiry: "2026-12-31", orig: 600, min: 1, img: "https://www.bespoke-wedding.com/sites/default/files/禮卡/禮卡png/自家湯.png", tiers: [{q:1, d:0.6583}] },
+            { category: "Favor", brand: "永樂", name:"有麵子回禮小禮物", sku: "10422", expiry: "2026-12-31", orig: 38, min: 20, img: "https://www.bespoke-wedding.com/sites/default/files/禮卡/永樂%20有麵子%20回禮小禮物%20.jpg", tiers: [{q:20, d:0.79}] }
+            // ... 其餘產品資料比照 PDF 補齊
+        ];
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('Gift Card');
+            const [selectedBrand, setSelectedBrand] = useState(null);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [cart, setCart] = useState({});
+            const [showPreview, setShowPreview] = useState(false);
+            const [showBarcode, setShowBarcode] = useState(false);
+            const [showHistory, setShowHistory] = useState(false);
+            const [currentOrder, setCurrentOrder] = useState(null);
+            const [orderHistory, setOrderHistory] = useState([]);
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [phone, setPhone] = useState(''); // 新增：電話欄位
+            const barcodeRef = useRef(null);
+
+            useEffect(() => {
+                const saved = localStorage.getItem('bw_cust_history_v7');
+                if (saved) setOrderHistory(JSON.parse(saved));
+            }, []);
+
+            // 價格計算邏輯
+            const getPrice = (sku, qty) => {
+                const p = PRODUCT_DEFS.find(x => x.sku === sku);
+                if (!p) return { price: 0 };
+                const qtyToCheck = qty || p.min;
+                const activeTier = [...p.tiers].sort((a,b) => b.q - a.q).find(t => qtyToCheck >= t.q);
+                const discount = activeTier ? activeTier.d : 1;
+                return { price: Math.round(p.orig * discount * 100) / 100 };
             };
-            reader.readAsDataURL(file);
-        }
 
-        function renderSidebar() {
-            const container = document.getElementById('brand-sidebar');
-            const filtered = db.brands.filter(b => b.cat === currentTab);
-            let html = `<div onclick="filterBrand('all')" class="sidebar-item ${currentBrand === 'all' ? 'active' : ''} p-4 text-center">所有品牌</div>`;
-            filtered.forEach(b => {
-                html += `<div onclick="filterBrand(${b.id})" class="sidebar-item ${currentBrand == b.id ? 'active' : ''} py-5 flex flex-col items-center gap-2">
-                    <div class="w-10 h-10 bg-white rounded-full bg-center bg-contain bg-no-repeat border" style="background-image:url(${b.img})"></div>
-                    <span class="text-[9px] text-center truncate w-full px-1">${b.name}</span>
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
+            const cartItems = useMemo(() => 
+                Object.entries(cart).map(([sku, qty]) => {
+                    const def = PRODUCT_DEFS.find(p => p.sku === sku);
+                    const { price } = getPrice(sku, qty);
+                    return { ...def, qty, currentPrice: price };
+                }), [cart]);
 
-        function renderProducts() {
-            const container = document.getElementById('product-list');
-            const filtered = db.products.filter(p => p.cat === currentTab && (currentBrand === 'all' || p.brandId == currentBrand));
-            if (!filtered.length) {
-                container.innerHTML = `<div class="py-20 text-center text-stone-300 text-xs italic">尚無產品，請從後台新增</div>`;
-                return;
-            }
-            container.innerHTML = filtered.map(p => `
-                <div class="flex gap-4 items-center bg-white p-2 rounded-2xl shadow-sm border border-stone-50">
-                    <div class="w-24 h-24 bg-stone-50 rounded-xl bg-center bg-contain bg-no-repeat border" style="background-image:url(${p.img})"></div>
-                    <div class="flex-1">
-                        <h4 class="text-xs font-bold text-stone-800 leading-tight mb-1">${p.name}</h4>
-                        <div class="text-orange-600 font-black text-sm mt-2">HK$ ${p.price}</div>
-                        <div class="text-[8px] text-stone-400">最低起訂: ${p.min}</div>
-                    </div>
-                    <button onclick="openDetail(${p.id})" class="w-10 h-10 bg-orange-100 text-orange-900 rounded-full flex items-center justify-center font-bold mr-2"><i class="fa-solid fa-plus text-xs"></i></button>
-                </div>
-            `).join('');
-        }
+            const totalPrice = cartItems.reduce((acc, item) => acc + (item.currentPrice * item.qty), 0);
+            const totalCount = Object.values(cart).reduce((a, b) => a + b, 0);
 
-        function openDetail(id) {
-            const p = db.products.find(x => x.id == id);
-            cart = { ...p, qty: p.min };
-            document.getElementById('det-name').innerText = p.name;
-            document.getElementById('det-img').style.backgroundImage = `url(${p.img})`;
-            document.getElementById('det-qty').innerText = cart.qty;
-            let tierHtml = (p.tiers || []).map(t => `<div class="flex justify-between border-b pb-1 text-stone-500"><span>${t.q} 張+</span><span class="font-bold text-black">HK$ ${t.p}</span></div>`).join('');
-            document.getElementById('det-tiers').innerHTML = tierHtml || "展場單一優惠價格";
-            calculateTotal();
-            openSheet('sheet-detail');
-        }
+            const updateQty = (sku, delta) => {
+                const def = PRODUCT_DEFS.find(p => p.sku === sku);
+                setCart(prev => {
+                    const cur = prev[sku] || 0;
+                    let next = cur + delta;
+                    if (cur === 0 && delta > 0) next = def.min;
+                    else if (cur === def.min && delta < 0) next = 0;
+                    const res = { ...prev };
+                    if (next <= 0) delete res[sku]; else res[sku] = next;
+                    return res;
+                });
+            };
 
-        function updateQty(val) {
-            cart.qty = Math.max(cart.min, cart.qty + (val * 10));
-            document.getElementById('det-qty').innerText = cart.qty;
-            calculateTotal();
-        }
+            // 確認下單並送往 Google Sheet
+            const handleConfirm = async () => {
+                if (isSubmitting) return;
+                if (!phone) return alert("請輸入聯絡電話以獲取號碼！");
+                
+                setIsSubmitting(true);
+                const id = Math.floor(100000 + Math.random() * 900000).toString();
+                const now = new Date().toLocaleString('zh-HK', { hour12: false });
+                const newOrder = {
+                    id: id,
+                    phone: phone,
+                    total: totalPrice,
+                    date: now,
+                    items: cartItems.map(i => ({ name: i.name, qty: i.qty, sku: i.sku, price: i.currentPrice }))
+                };
 
-        function calculateTotal() {
-            let unitPrice = cart.price;
-            if (cart.tiers) {
-                const match = [...cart.tiers].sort((a,b) => b.q - a.q).find(t => cart.qty >= t.q);
-                if (match) unitPrice = match.p;
-            }
-            cart.currentPrice = unitPrice;
-            document.getElementById('det-total').innerText = `HK$ ${(unitPrice * cart.qty).toLocaleString()}`;
-        }
+                const updatedHistory = [newOrder, ...orderHistory].slice(0, 5);
+                setOrderHistory(updatedHistory);
+                localStorage.setItem('bw_cust_history_v7', JSON.stringify(updatedHistory));
+                setCurrentOrder(newOrder);
+                setShowPreview(false);
+                setShowBarcode(true);
+                setCart({});
+                setPhone('');
 
-        function addToCart() {
-            document.getElementById('cart-price').innerText = `HK$ ${(cart.currentPrice * cart.qty).toLocaleString()}`;
-            document.getElementById('cart-float').classList.remove('hidden');
-            closeSheet('sheet-detail');
-        }
+                try {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newOrder)
+                    });
+                } catch (e) { console.error("Sync error", e); }
+                setIsSubmitting(false);
+            };
 
-        function showPage(p) {
-            document.getElementById('view-shop').classList.toggle('hidden', p !== 'shop');
-            document.getElementById('view-orders').classList.toggle('hidden', p !== 'orders');
-            updateNavUI(p);
-        }
+            useEffect(() => {
+                if (showBarcode && currentOrder && barcodeRef.current) {
+                    JsBarcode(barcodeRef.current, "BW-" + currentOrder.id, {
+                        format: "CODE128", width: 2, height: 60, displayValue: true, fontSize: 18, margin: 10
+                    });
+                }
+            }, [showBarcode, currentOrder]);
 
-        function updateNavUI(p) {
-            const isShop = p === 'shop';
-            document.getElementById('nav-s').className = isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
-            document.getElementById('nav-r').className = !isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
-        }
+            return React.createElement('div', { className: "min-h-screen max-w-md mx-auto relative pb-24" },
+                // Header
+                React.createElement('header', { className: "bg-white p-6 sticky top-0 z-30 shadow-sm flex justify-between items-center" },
+                    React.createElement('div', null,
+                        React.createElement('h1', { className: "text-2xl font-black text-rose-500 italic", onClick: () => { setSelectedBrand(null); setSearchTerm(''); } }, "BESPOKE MALL"),
+                        React.createElement('p', { className: "text-[10px] text-gray-400 font-bold" }, "(只限展場下單)")
+                    ),
+                    React.createElement('button', { onClick: () => setShowHistory(true), className: "bg-slate-100 px-4 py-2 rounded-full text-xs font-bold" }, "歷史紀錄")
+                ),
 
-        function switchTab(t) { currentTab = t; currentBrand = 'all'; init(); }
-        function filterBrand(id) { currentBrand = id; renderProducts(); renderSidebar(); }
-        function openAdmin() { openSheet('sheet-admin'); }
-        function openSheet(id) { document.getElementById(id).classList.add('active'); }
-        function closeSheet(id) { document.getElementById(id).classList.remove('active'); }
+                // 分類切換
+                !searchTerm && React.createElement('div', { className: "flex bg-white px-6 border-b" },
+                    ['Gift Card', 'Favor'].map(tab => React.createElement('button', {
+                        key: tab,
+                        onClick: () => { setActiveTab(tab); setSelectedBrand(null); },
+                        className: `flex-1 py-4 text-sm font-bold ${activeTab === tab ? 'tab-active' : 'text-gray-400'}`
+                    }, tab === 'Gift Card' ? '禮券' : '回禮小禮物'))
+                ),
 
-        function adminTab(t) {
-            document.getElementById('admin-b').classList.toggle('hidden', t !== 'b');
-            document.getElementById('admin-p').classList.toggle('hidden', t !== 'p');
-            document.getElementById('ad-btn-b').className = t==='b' ? 'pb-2 border-b-2 border-black font-bold' : 'pb-2 text-stone-300';
-            document.getElementById('ad-btn-p').className = t==='p' ? 'pb-2 border-b-2 border-black font-bold' : 'pb-2 text-stone-300';
-        }
+                // 搜尋框
+                React.createElement('div', { className: "p-4" },
+                    React.createElement('input', {
+                        className: "w-full bg-white border px-4 py-3 rounded-2xl text-sm outline-none",
+                        placeholder: "搜尋產品或品牌...",
+                        value: searchTerm,
+                        onChange: e => setSearchTerm(e.target.value)
+                    })
+                ),
 
-        function saveBrand() {
-            const name = document.getElementById('new-b-name').value;
-            const cat = document.getElementById('new-b-cat').value;
-            if (!name) return alert("品牌名稱必填");
-            db.brands.push({ id: Date.now(), name, cat, img: tempImg });
-            saveDB();
-            refreshAdminLists();
-            tempImg = "";
-            document.getElementById('logo-preview').style.backgroundImage = "";
-        }
+                // 主內容區
+                React.createElement('main', { className: "px-4" },
+                    selectedBrand || searchTerm ? 
+                    React.createElement('div', { className: "space-y-3" },
+                        PRODUCT_DEFS.filter(p => searchTerm ? 
+                            (p.name.includes(searchTerm) || p.brand.includes(searchTerm)) : 
+                            (p.brand === selectedBrand && p.category === activeTab)
+                        ).map(p => {
+                            const { price } = getPrice(p.sku, cart[p.sku]);
+                            return React.createElement('div', { key: p.sku, className: "product-card bg-white p-4 border flex gap-3 items-center shadow-sm" },
+                                React.createElement('img', { src: p.img, className: "w-16 h-16 rounded-lg object-cover" }),
+                                React.createElement('div', { className: "flex-1" },
+                                    React.createElement('div', { className: "text-xs font-bold" }, p.name),
+                                    React.createElement('div', { className: "text-rose-500 font-black" }, "$" + price)
+                                ),
+                                React.createElement('div', { className: "flex items-center gap-2 bg-gray-50 rounded-full px-2" },
+                                    React.createElement('button', { onClick: () => updateQty(p.sku, -1), className: "w-8 h-8 font-bold text-gray-400" }, "-"),
+                                    React.createElement('span', { className: "text-xs font-black w-6 text-center" }, cart[p.sku] || 0),
+                                    React.createElement('button', { onClick: () => updateQty(p.sku, 1), className: "w-8 h-8 font-bold text-rose-500" }, "+")
+                                )
+                            );
+                        })
+                    ) : 
+                    React.createElement('div', { className: "grid grid-cols-2 gap-4" },
+                        Object.entries(BRAND_CONFIG).filter(([name]) => PRODUCT_DEFS.some(p => p.brand === name && p.category === activeTab)).map(([name, logo]) => 
+                            React.createElement('div', { key: name, onClick: () => setSelectedBrand(name), className: "brand-card bg-white p-6 h-32 flex flex-col items-center justify-center shadow-sm" },
+                                React.createElement('img', { src: logo, className: "h-12 object-contain mb-2" }),
+                                React.createElement('span', { className: "text-[10px] text-gray-400 uppercase font-bold" }, name)
+                            )
+                        )
+                    )
+                ),
 
-        function saveProduct() {
-            const name = document.getElementById('new-p-name').value;
-            const brandId = document.getElementById('new-p-brand').value;
-            const price = parseFloat(document.getElementById('new-p-price').value);
-            const min = parseInt(document.getElementById('new-p-min').value);
-            const tiersRaw = document.getElementById('new-p-tiers').value;
-            const tiers = tiersRaw.split('\n').filter(r => r.includes('-')).map(r => {
-                const [q, p] = r.split('-');
-                return { q: parseInt(q), p: parseFloat(p) };
-            });
-            const brand = db.brands.find(b => b.id == brandId);
-            db.products.push({ id: Date.now(), name, brandId, cat: brand.cat, price, min, img: tempImg, tiers });
-            saveDB();
-            refreshAdminLists();
-            alert("產品發佈成功！");
-        }
+                // 底部浮動購物籃
+                React.createElement('footer', { className: "fixed bottom-0 left-0 right-0 p-6 z-40" },
+                    React.createElement('div', { className: "bg-slate-900 rounded-[2rem] px-6 py-4 flex justify-between items-center text-white shadow-2xl" },
+                        React.createElement('div', null,
+                            React.createElement('p', { className: "text-[10px] text-gray-400" }, "合計金額"),
+                            React.createElement('p', { className: "text-xl font-black text-rose-400" }, "$" + totalPrice.toLocaleString())
+                        ),
+                        React.createElement('button', {
+                            disabled: totalCount === 0 || isSubmitting,
+                            onClick: () => setShowPreview(true),
+                            className: `px-6 py-2 rounded-xl font-black text-sm ${totalCount > 0 ? 'bg-rose-500' : 'bg-slate-800 text-slate-500'}`
+                        }, isSubmitting ? "處理中..." : `預覽購物車 (${totalCount})`)
+                    )
+                ),
 
-        function refreshAdminLists() {
-            document.getElementById('admin-brand-list').innerHTML = db.brands.map(b => `<div class="border text-[8px] p-1 text-center truncate"><img src="${b.img}" class="h-6 mx-auto mb-1">${b.name}</div>`).join('');
-            document.getElementById('new-p-brand').innerHTML = db.brands.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
-        }
+                // 確認訂單彈窗 (根據截圖優化)
+                showPreview && React.createElement('div', { className: "fixed inset-0 bg-black/80 z-50 flex items-end justify-center" },
+                    React.createElement('div', { className: "bg-white w-full rounded-t-[3rem] p-8 animate-up max-h-[95vh] overflow-y-auto hide-scrollbar" },
+                        React.createElement('div', { className: "flex justify-center mb-6" },
+                            React.createElement('h3', { className: "text-xl font-black" }, "確認訂單")
+                        ),
+                        
+                        // 頂部 Logo
+                        React.createElement('div', { className: "flex justify-center mb-8" },
+                            React.createElement('h1', { className: "text-2xl font-light tracking-widest text-cyan-800" }, "BESPOKE MALL")
+                        ),
 
-        function saveDB() {
-            localStorage.setItem(DB_KEY, JSON.stringify(db));
-            init();
-        }
+                        // 前方訂單資訊
+                        React.createElement('div', { className: "text-lg font-bold mb-6" }, "前方 ", React.createElement('span', { className: "text-orange-900" }, "XX"), " 張訂單準備中"),
 
-        window.onload = init;
+                        // 聯絡電話輸入區
+                        React.createElement('div', { className: "flex items-center gap-2 mb-6 border-y py-4 relative" },
+                            React.createElement('span', { className: "text-sm font-bold w-20" }, "聯絡電話"),
+                            React.createElement('input', {
+                                type: "tel",
+                                placeholder: "選填，便於訂單異常時聯絡",
+                                value: phone,
+                                onChange: e => setPhone(e.target.value),
+                                className: "flex-1 text-sm outline-none bg-transparent"
+                            }),
+                            React.createElement('button', { className: "border px-3 py-1 text-[10px] text-gray-400 rounded" }, "獲取號碼"),
+                            React.createElement('div', { className: "absolute -right-16 yellow-label" }, "← 必須要填寫")
+                        ),
+
+                        // 選單功能區
+                        ['購買回禮產品必填', '產品缺貨時必填'].map(txt => 
+                            React.createElement('div', { key: txt, className: "flex justify-between items-center border-b py-4 text-sm font-bold text-gray-700" },
+                                React.createElement('span', null, txt),
+                                React.createElement('span', { className: "text-gray-300" }, ">")
+                            )
+                        ),
+
+                        // 產品列表
+                        React.createElement('div', { className: "my-6 space-y-6" },
+                            cartItems.map(item => React.createElement('div', { key: item.sku, className: "flex gap-4" },
+                                React.createElement('img', { src: item.img, className: "w-16 h-16 rounded object-cover" }),
+                                React.createElement('div', { className: "flex-1" },
+                                    React.createElement('div', { className: "text-xs font-black" }, item.name),
+                                    React.createElement('div', { className: "text-[10px] text-gray-400 mt-1" }, "有效期至: " + item.expiry),
+                                    React.createElement('div', { className: "flex justify-between items-end mt-1" },
+                                        React.createElement('span', { className: "text-[10px]" }, "x" + item.qty),
+                                        React.createElement('span', { className: "font-black" }, "HK$" + item.currentPrice)
+                                    )
+                                )
+                            ))
+                        ),
+
+                        // 總計金額
+                        React.createElement('div', { className: "text-right text-lg font-black border-t pt-4 mb-6" },
+                            "合共 HK$" + totalPrice.toLocaleString()
+                        ),
+
+                        // 警告提示
+                        React.createElement('div', { className: "bg-rose-50 p-6 rounded-3xl text-center space-y-2 mb-8" },
+                            React.createElement('p', { className: "text-xs font-bold" }, "下單前請確認各款禮券的有效期是否適用"),
+                            React.createElement('p', { className: "text-[10px] text-gray-500" }, "(部分禮券有效期為一年內)"),
+                            React.createElement('p', { className: "text-xs font-black" }, "下單後將無法退款/更改"),
+                            React.createElement('p', { className: "text-[10px] text-gray-400" }, "**有效期資料顯示於每款禮卡的分項內容**")
+                        ),
+
+                        // 提交按鈕
+                        React.createElement('div', { className: "flex gap-4 items-center" },
+                            React.createElement('div', { className: "text-xs font-bold" }, `共 ${totalCount} 件 合共：`, React.createElement('span', { className: "text-orange-700" }, "HK$" + totalPrice)),
+                            React.createElement('button', {
+                                onClick: handleConfirm,
+                                disabled: isSubmitting,
+                                className: "flex-1 bg-orange-900/60 text-white py-4 rounded-full font-black text-lg"
+                            }, isSubmitting ? "下單中..." : "提交訂單")
+                        ),
+                        React.createElement('button', { onClick: () => setShowPreview(false), className: "w-full mt-4 text-gray-400 text-sm font-bold" }, "返回修改")
+                    )
+                ),
+
+                // 條碼顯示 (下單成功後)
+                showBarcode && React.createElement('div', { className: "fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-6 backdrop-blur-sm" },
+                    React.createElement('div', { className: "bg-white w-full max-w-xs rounded-[3rem] p-8 flex flex-col items-center animate-up shadow-2xl relative" },
+                        React.createElement('button', { onClick: () => setShowBarcode(false), className: "absolute top-6 right-6 text-gray-300 text-xl" }, "✕"),
+                        React.createElement('h2', { className: "text-lg font-black mb-6 text-slate-800 text-center" }, "向職員出示條碼\n完成付款"),
+                        React.createElement('svg', { ref: barcodeRef }),
+                        React.createElement('div', { className: "mt-6 text-center" },
+                            React.createElement('div', { className: "text-[10px] text-gray-400 font-bold uppercase" }, "Reference Number"),
+                            React.createElement('div', { className: "text-2xl font-black text-rose-500" }, "BW-" + currentOrder?.id)
+                        ),
+                        React.createElement('button', { onClick: () => setShowBarcode(false), className: "mt-8 w-full bg-slate-900 text-white py-4 rounded-2xl font-black" }, "完成")
+                    )
+                ),
+
+                // 歷史紀錄
+                showHistory && React.createElement('div', { className: "fixed inset-0 bg-black/60 z-[70] flex items-center justify-center p-6" },
+                    React.createElement('div', { className: "bg-white w-full rounded-[2rem] p-8 max-h-[70vh] overflow-y-auto" },
+                        React.createElement('div', { className: "flex justify-between items-center mb-6" },
+                            React.createElement('h2', { className: "font-black" }, "最近下單紀錄"),
+                            React.createElement('button', { onClick: () => setShowHistory(false) }, "✕")
+                        ),
+                        orderHistory.length === 0 ? React.createElement('p', { className: "text-center text-gray-400 italic" }, "暫無紀錄") :
+                        orderHistory.map(ord => React.createElement('div', {
+                            key: ord.id,
+                            onClick: () => { setCurrentOrder(ord); setShowBarcode(true); },
+                            className: "bg-gray-50 p-4 rounded-2xl mb-3 flex justify-between items-center cursor-pointer border"
+                        }, 
+                            React.createElement('div', null,
+                                React.createElement('div', { className: "text-rose-500 font-black" }, "BW-" + ord.id),
+                                React.createElement('div', { className: "text-[10px] text-gray-400" }, ord.date)
+                            ),
+                            React.createElement('div', { className: "font-black" }, "$" + ord.total)
+                        ))
+                    )
+                )
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
     </script>
 </body>
 </html>
