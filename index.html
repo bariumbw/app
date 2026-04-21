@@ -3,34 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bespoke Mall | Wedding Expo 2026</title>
+    <title>Bespoke Mall | Live Admin System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #b08d57; --stone: #57534e; }
+        :root { --gold: #b08d57; }
         body { font-family: -apple-system, "PingFang HK", sans-serif; background-color: #fdfcfb; overflow: hidden; }
         .sidebar-item.active { background: #fff; border-left: 4px solid var(--gold); color: #000; font-weight: bold; }
         .bottom-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: flex-end; }
         .bottom-sheet.active { display: flex; }
-        .sheet-content { background: white; width: 100%; border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom); }
+        .sheet-content { background: white; width: 100%; border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; }
         .active-tab { color: var(--gold); border-bottom: 2px solid var(--gold); font-weight: bold; }
-        body.admin-mode .admin-action { display: block !important; }
+        /* 管理員專屬樣式 */
+        .admin-only { display: none; }
+        body.admin-mode .admin-only { display: block; }
     </style>
 </head>
 <body class="h-screen flex flex-col">
 
+    <div class="admin-only bg-black text-white text-[10px] py-1 px-4 flex justify-between items-center">
+        <span>ADMIN MODE ACTIVE</span>
+        <button onclick="openAdminEditor()" class="bg-white text-black px-2 py-0.5 rounded text-[9px] font-bold">修改產品數據</button>
+    </div>
+
     <header class="bg-white border-b z-10">
-        <div class="text-[10px] text-center py-2 bg-stone-50 text-stone-400 tracking-tighter">展場下單專用系統 | 官網數據同步版</div>
         <div class="flex justify-between items-center px-6 py-4">
             <div class="flex flex-col">
                 <span class="text-sm font-bold tracking-[0.2em]">BESPOKE MALL</span>
-                <span class="text-[8px] text-stone-300 uppercase">Bridal Vouchers & Gifts</span>
+                <span class="text-[8px] text-stone-300 uppercase">2026 Wedding Expo</span>
             </div>
-            <button onclick="adminLogin()" class="text-stone-200"><i class="fa-solid fa-user-gear text-lg"></i></button>
+            <button onclick="adminLogin()" class="text-stone-200"><i class="fa-solid fa-user-shield text-lg"></i></button>
         </div>
         <div class="flex text-sm text-center border-t">
-            <div id="tab-v" class="flex-1 py-3 active-tab cursor-pointer" onclick="switchCat('v')">禮券 (Voucher)</div>
-            <div id="tab-g" class="flex-1 py-3 text-stone-300 cursor-pointer" onclick="switchCat('g')">回禮 (Gift)</div>
+            <div id="tab-v" class="flex-1 py-3 active-tab cursor-pointer" onclick="switchCat('v')">禮券</div>
+            <div id="tab-g" class="flex-1 py-3 text-stone-300 cursor-pointer" onclick="switchCat('g')">回禮</div>
         </div>
     </header>
 
@@ -39,201 +45,142 @@
         <section id="product-list" class="flex-1 overflow-y-auto p-4 space-y-4 pb-40"></section>
         
         <section id="record-page" class="hidden flex-1 overflow-y-auto bg-stone-50 p-6 pb-40">
-            <h2 class="text-xl font-bold mb-6">我的取單號碼</h2>
-            <div id="order-flow" class="space-y-4">
-                <p class="text-center text-stone-300 py-20 italic">暫無訂單</p>
-            </div>
+            <h2 class="text-xl font-bold mb-6 italic">Orders</h2>
+            <div id="order-flow" class="space-y-4"></div>
         </section>
     </main>
 
     <nav class="bg-white border-t flex justify-around py-3 safe-area-bottom z-50">
         <button onclick="showPage('shop')" id="nav-s" class="flex flex-col items-center gap-1 text-gold">
-            <i class="fa-solid fa-store text-xl"></i><span class="text-[10px] font-bold">產品目錄</span>
+            <i class="fa-solid fa-store text-xl"></i><span class="text-[10px]">目錄</span>
         </button>
         <button onclick="showPage('record')" id="nav-r" class="flex flex-col items-center gap-1 text-stone-300">
-            <i class="fa-solid fa-ticket text-xl"></i><span class="text-[10px] font-bold">取單紀錄</span>
+            <i class="fa-solid fa-receipt text-xl"></i><span class="text-[10px]">取單</span>
         </button>
     </nav>
 
-    <div id="cart-bar" class="fixed bottom-24 left-4 right-4 h-16 bg-white border rounded-2xl flex items-center justify-between px-4 shadow-2xl z-40 hidden">
-        <div class="flex flex-col">
-            <span class="text-[10px] text-stone-400 uppercase">Total Estimate</span>
-            <span id="cart-total" class="text-lg font-black">HK$0</span>
+    <div id="admin-editor-sheet" class="bottom-sheet" onclick="closeSheet(this)">
+        <div class="sheet-content p-6" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold">編輯產品資料 (JSON)</h3>
+                <button onclick="saveAdminData()" class="bg-green-600 text-white px-4 py-2 rounded-lg text-xs">儲存並刷新</button>
+            </div>
+            <p class="text-[10px] text-stone-400 mb-2">直接在下方修改數值、圖片連結或價格：</p>
+            <textarea id="json-editor" class="w-full h-96 p-4 bg-stone-900 text-green-400 font-mono text-[10px] rounded-xl outline-none leading-relaxed"></textarea>
+            <button onclick="resetData()" class="w-full mt-4 py-2 text-red-500 text-[10px] border border-red-100 rounded-lg">恢復預設數據</button>
         </div>
-        <button onclick="openSheet('sheet-confirm')" class="bg-[#b08d57] text-white px-8 py-3 rounded-xl text-sm font-bold">確認下單</button>
     </div>
 
     <div id="sheet-detail" class="bottom-sheet" onclick="closeSheet(this)">
-        <div class="sheet-content" onclick="event.stopPropagation()">
-            <div class="w-12 h-1 bg-stone-100 rounded-full mx-auto my-4"></div>
-            <div id="p-img" class="w-full h-64 bg-center bg-contain bg-no-repeat bg-stone-50"></div>
-            <div class="p-8">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 id="p-name" class="text-xl font-bold">產品名稱</h2>
-                    <span id="p-price" class="text-gold font-bold text-lg"></span>
-                </div>
-                <div id="p-expiry" class="text-[10px] text-red-500 font-bold mb-4 uppercase"></div>
-                <p id="p-desc" class="text-xs text-stone-400 mb-8 leading-relaxed"></p>
-                <div class="flex justify-between items-center p-5 bg-stone-50 rounded-2xl mb-8">
-                    <span class="font-bold text-sm">訂購數量</span>
-                    <div class="flex items-center gap-6">
-                        <button onclick="adjQty(-10)" class="w-10 h-10 bg-white border rounded-xl text-stone-300">-</button>
-                        <span id="p-qty" class="font-black text-xl w-10 text-center">100</span>
-                        <button onclick="adjQty(10)" class="w-10 h-10 bg-white border rounded-xl text-gold font-bold">+</button>
-                    </div>
-                </div>
-                <button onclick="addCart()" class="w-full py-5 bg-[#b08d57] text-white rounded-2xl font-bold text-lg">加入清單</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="sheet-confirm" class="bottom-sheet" onclick="closeSheet(this)">
         <div class="sheet-content p-8" onclick="event.stopPropagation()">
-            <h3 class="text-center font-bold mb-8">請輸入聯絡電話以生成取單碼</h3>
-            <input type="tel" id="u-tel" placeholder="8 位香港電話號碼" class="w-full bg-stone-50 p-5 rounded-2xl border-2 border-stone-100 text-xl font-bold outline-none mb-6">
-            <button onclick="doSubmit()" class="w-full py-5 bg-black text-white rounded-2xl font-bold">獲取號碼</button>
-        </div>
-    </div>
-
-    <div id="sheet-success" class="bottom-sheet" style="z-index: 200;">
-        <div class="sheet-content p-12 flex flex-col items-center text-center">
-            <div class="text-green-500 text-5xl mb-6"><i class="fa-solid fa-circle-check"></i></div>
-            <h2 id="final-id" class="text-6xl font-black mb-8 font-mono tracking-tighter">T0000</h2>
-            <p class="text-sm text-stone-400 mb-10">下單成功！請向工作人員出示此號碼進行核銷。</p>
-            <button onclick="closeSuccess()" class="w-full py-4 bg-stone-100 text-stone-600 rounded-2xl font-bold">返回</button>
+             <div id="p-img" class="w-full h-48 bg-contain bg-no-repeat bg-center mb-4"></div>
+             <h2 id="p-name" class="text-xl font-bold mb-2"></h2>
+             <p id="p-desc" class="text-xs text-stone-400 mb-6"></p>
+             <div class="flex justify-between items-center mb-6 bg-stone-50 p-4 rounded-xl">
+                 <span class="text-sm font-bold">數量: <span id="p-qty"></span></span>
+                 <div class="flex gap-4">
+                     <button onclick="adjQty(-10)" class="w-8 h-8 border rounded">-</button>
+                     <button onclick="adjQty(10)" class="w-8 h-8 border rounded">+</button>
+                 </div>
+             </div>
+             <button onclick="addCart()" class="w-full py-4 bg-[#b08d57] text-white rounded-xl font-bold">加入清單</button>
         </div>
     </div>
 
     <script>
-        const productsData = [
-            { id: 1, brand: 'agnes', bName: 'agnès b.', cat: 'v', name: 'agnès b. CAFÉ $50 禮券', price: 37, min: 100, expiry: '2027-03-31', desc: '適用於全港 agnès b. CAFÉ。500張以上價錢更優惠。', img: 'https://via.placeholder.com/300x300?text=Agnes+b' },
-            { id: 2, brand: 'godiva', bName: 'GODIVA', cat: 'v', name: 'GODIVA $50 禮券 (粉紅)', price: 41, min: 10, expiry: '2026-12-31', desc: '限定粉紅色婚慶包裝，有效期長。', img: 'https://via.placeholder.com/300x300?text=GODIVA' },
-            { id: 3, brand: 'st', bName: '聖安娜', cat: 'v', name: '聖安娜餅屋 $50 禮券', price: 35.5, min: 50, expiry: '2026-12-31', desc: '全港門市適用，兌換麵包及蛋糕。', img: 'https://via.placeholder.com/300x300?text=Saint+Honore' },
-            { id: 4, brand: 'arome', bName: '東海堂', cat: 'v', name: '東海堂 $50 禮券', price: 36, min: 50, expiry: '2026-09-30', desc: '適用於全港東海堂分店。', img: 'https://via.placeholder.com/300x300?text=Arome' },
-            { id: 5, brand: 'wagyu', bName: '華御結', cat: 'v', name: '華御結 $20 禮券', price: 18, min: 20, expiry: '2026-06-30', desc: '飯糰愛好者首選，適合婚後派發。', img: 'https://via.placeholder.com/300x300?text=Wagyu' },
-            { id: 6, brand: 'haagen', bName: 'Häagen-Dazs', cat: 'v', name: 'Häagen-Dazs $50 禮券', price: 38, min: 20, expiry: '2027-01-01', desc: '全港分店適用，兌換雪糕產品。', img: 'https://via.placeholder.com/300x300?text=HD' }
+        // 1. 預設數據
+        const defaultProducts = [
+            { id: 1, brand: 'agnes', bName: 'agnès b.', cat: 'v', name: 'agnès b. CAFÉ $50 禮券', price: 37, min: 100, expiry: '2027-03-31', desc: '適用於全港分店', img: 'https://via.placeholder.com/200' },
+            { id: 2, brand: 'godiva', bName: 'GODIVA', cat: 'v', name: 'GODIVA $50 禮券', price: 41, min: 10, expiry: '2026-12-31', desc: '粉紅禮金包裝', img: 'https://via.placeholder.com/200' }
         ];
 
-        let cart = null;
-        let orders = [];
-        let isAdmin = false;
+        // 2. 從 LocalStorage 加載數據 (若無則使用預設)
+        let productsData = JSON.parse(localStorage.getItem('bespoke_mall_data')) || defaultProducts;
+        let cart = null, orders = [], isAdmin = false, currentCat = 'v';
 
         function init() {
-            const brands = ['all', ...new Set(productsData.map(p => p.brand))];
-            document.getElementById('brand-menu').innerHTML = brands.map(b => `
-                <div onclick="filterBrand(this, '${b}')" class="sidebar-item ${b==='all'?'active':''} p-4 text-center py-6 capitalize">
-                    ${b === 'all' ? '所有品牌' : productsData.find(p => p.brand === b).bName}
-                </div>
-            `).join('');
-            renderProducts('all', 'v');
+            renderBrands();
+            renderProducts('all', currentCat);
         }
 
-        function filterBrand(el, brand) {
-            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            renderProducts(brand, 'v');
+        function renderBrands() {
+            const brands = ['all', ...new Set(productsData.map(p => p.brand))];
+            document.getElementById('brand-menu').innerHTML = brands.map(b => `
+                <div onclick="filterBrand(this, '${b}')" class="sidebar-item ${b==='all'?'active':''} p-4 text-center py-6">
+                    ${b === 'all' ? '所有' : productsData.find(p => p.brand === b).bName}
+                </div>
+            `).join('');
         }
 
         function renderProducts(brand, cat) {
             const list = document.getElementById('product-list');
             const filtered = productsData.filter(p => (brand === 'all' || p.brand === brand) && p.cat === cat);
             list.innerHTML = filtered.map(p => `
-                <div class="flex gap-4 border-b border-stone-100 pb-5 items-center">
-                    <div class="w-20 h-20 bg-white border rounded-xl bg-center bg-contain bg-no-repeat flex-none shadow-sm" style="background-image: url('${p.img}')"></div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-bold text-stone-800">${p.name}</h3>
-                        <div class="text-gold font-bold mt-1">HK$ ${p.price}</div>
-                        <div class="text-[9px] text-stone-300 mt-1 uppercase">Expiry: ${p.expiry}</div>
-                    </div>
-                    <button onclick="openProduct(${p.id})" class="bg-[#b08d57] text-white w-9 h-9 rounded-full shadow-lg flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
+                <div class="flex gap-4 border-b border-stone-100 pb-4 items-center">
+                    <div class="w-16 h-16 bg-white border rounded bg-center bg-contain bg-no-repeat" style="background-image: url('${p.img}')"></div>
+                    <div class="flex-1 text-sm font-bold">${p.name}<br><span class="text-gold">HK$${p.price}</span></div>
+                    <button onclick="openProduct(${p.id})" class="bg-[#b08d57] text-white w-8 h-8 rounded-full text-xs">+</button>
                 </div>
             `).join('');
         }
 
+        // --- 管理員編輯功能 ---
+        function adminLogin() {
+            if(prompt("Password:") === "5963") {
+                isAdmin = true;
+                document.body.classList.add('admin-mode');
+                alert("Manager Mode: ON");
+            }
+        }
+
+        function openAdminEditor() {
+            document.getElementById('json-editor').value = JSON.stringify(productsData, null, 4);
+            document.getElementById('admin-editor-sheet').classList.add('active');
+        }
+
+        function saveAdminData() {
+            try {
+                const newData = JSON.parse(document.getElementById('json-editor').value);
+                productsData = newData;
+                localStorage.setItem('bespoke_mall_data', JSON.stringify(newData));
+                alert("數據已更新！網頁將即時重新渲染。");
+                closeSheet(document.getElementById('admin-editor-sheet'));
+                init();
+            } catch (e) {
+                alert("JSON 格式有誤，請檢查括號或逗號。");
+            }
+        }
+
+        function resetData() {
+            if(confirm("確定要清除所有修改，恢復到原始數據嗎？")) {
+                localStorage.removeItem('bespoke_mall_data');
+                location.reload();
+            }
+        }
+
+        // --- 其他原有功能簡化版 ---
+        function filterBrand(el, brand) {
+            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            renderProducts(brand, currentCat);
+        }
         function openProduct(id) {
             cart = productsData.find(p => p.id === id);
             cart.qty = cart.min;
             document.getElementById('p-name').innerText = cart.name;
-            document.getElementById('p-price').innerText = `HK$ ${cart.price}`;
             document.getElementById('p-desc').innerText = cart.desc;
-            document.getElementById('p-expiry').innerText = `Valid Until: ${cart.expiry}`;
             document.getElementById('p-img').style.backgroundImage = `url('${cart.img}')`;
             document.getElementById('p-qty').innerText = cart.qty;
             document.getElementById('sheet-detail').classList.add('active');
         }
-
-        function adjQty(v) {
-            cart.qty = Math.max(cart.min, cart.qty + v);
-            // 處理 agnes b. 階梯定價示例
-            if(cart.brand === 'agnes') {
-                cart.price = cart.qty >= 500 ? 33.5 : 37;
-                document.getElementById('p-price').innerText = `HK$ ${cart.price}`;
-            }
-            document.getElementById('p-qty').innerText = cart.qty;
-        }
-
-        function addCart() {
-            document.getElementById('cart-total').innerText = `HK$ ${(cart.price * cart.qty).toLocaleString()}`;
-            document.getElementById('cart-bar').classList.remove('hidden');
-            closeSheet(document.getElementById('sheet-detail'));
-        }
-
-        function doSubmit() {
-            if(!document.getElementById('u-tel').value) return alert("請輸入電話");
-            const oid = 'T' + Math.floor(1000 + Math.random()*9000);
-            orders.unshift({ id: oid, ...cart, total: cart.price * cart.qty });
-            document.getElementById('final-id').innerText = oid;
-            document.getElementById('sheet-success').classList.add('active');
-        }
-
-        function renderOrders() {
-            const flow = document.getElementById('order-flow');
-            if(orders.length === 0) { flow.innerHTML = '<p class="text-center text-stone-300 py-20 italic">暫無訂單</p>'; return; }
-            flow.innerHTML = orders.map(o => `
-                <div class="bg-white p-6 rounded-2xl border border-stone-100 shadow-sm relative overflow-hidden">
-                    <div class="flex justify-between items-start">
-                        <span class="text-4xl font-mono font-black tracking-tighter">${o.id}</span>
-                        <span class="text-[10px] bg-stone-900 text-white px-2 py-1 rounded">PROCESSING</span>
-                    </div>
-                    <div class="text-xs text-stone-500 mt-4 font-bold">${o.name}</div>
-                    <div class="text-[10px] text-stone-400">數量: ${o.qty} | 金額: HK$${o.total.toLocaleString()}</div>
-                    ${isAdmin ? `<button onclick="settle('${o.id}')" class="mt-4 w-full py-2 bg-stone-900 text-white rounded-lg text-[10px] font-bold">核銷此訂單</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function settle(id) {
-            orders = orders.filter(o => o.id !== id);
-            renderOrders();
-        }
-
-        function adminLogin() {
-            if(prompt("Admin Password") === "5963") {
-                isAdmin = true;
-                alert("已切換為管理員模式，可進行核銷。");
-                renderOrders();
-            }
-        }
-
+        function adjQty(v) { cart.qty = Math.max(cart.min, cart.qty + v); document.getElementById('p-qty').innerText = cart.qty; }
+        function closeSheet(el) { el.classList.remove('active'); }
         function showPage(p) {
             const isShop = p === 'shop';
             document.getElementById('product-list').parentElement.classList.toggle('hidden', !isShop);
             document.getElementById('record-page').classList.toggle('hidden', isShop);
             document.getElementById('nav-s').className = isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
             document.getElementById('nav-r').className = !isShop ? 'flex flex-col items-center gap-1 text-gold' : 'flex flex-col items-center gap-1 text-stone-300';
-            if(!isShop) renderOrders();
-        }
-
-        function closeSheet(el) { el.classList.remove('active'); }
-        function openSheet(id) { document.getElementById(id).classList.add('active'); }
-        function closeSuccess() {
-            document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('active'));
-            document.getElementById('cart-bar').classList.add('hidden');
-            showPage('record');
-        }
-        function switchCat(c) {
-            document.getElementById('tab-v').className = c==='v'?'flex-1 py-3 active-tab cursor-pointer':'flex-1 py-3 text-stone-300 cursor-pointer';
-            document.getElementById('tab-g').className = c==='g'?'flex-1 py-3 active-tab cursor-pointer':'flex-1 py-3 text-stone-300 cursor-pointer';
         }
 
         window.onload = init;
