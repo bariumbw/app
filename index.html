@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 順序修正版</title>
+    <title>囍帖預覽器 - 名字位置偏移版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -15,7 +15,7 @@
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=5'); 
+            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=7'); 
             background-color: #A62C3E; 
             background-size: cover;
             background-position: center;
@@ -48,22 +48,36 @@
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
-        /* 姓名區域 */
+        /* 姓名區域：整體控制 */
         .name-layer {
             position: absolute;
-            top: 20%; 
-            left: 3%; 
-            width: 3%;
-            text-align: center;
+            top: 40%; 
+            left: 0; 
+            width: 50%; /* 擴大容器範圍以便名字橫向移動 */
             color: #FFFFFF;
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .name-layer h1 { line-height: 1.1; }
+
+        /* 新娘名字：向左平移 10 格 (約 100px) */
+        .bride-wrap {
+            transform: translateX(-100px);
+            line-height: 1;
+        }
+
+        /* 新郎名字：向右平移 15 格 (約 150px) */
+        .groom-wrap {
+            transform: translateX(150px);
+            line-height: 1;
+            margin-top: 0.2em;
+        }
 
         /* 日期位置 */
         .date-layer {
             position: absolute;
-            top: 68%;
+            top: 66%;
             left: 9%; 
             width: 32%;
             text-align: center;
@@ -116,10 +130,12 @@
                 </div>
 
                 <div class="name-layer font-aniyah">
-                    <h1 class="text-5xl md:text-8xl">
-                        <span id="pBride">Christian</span><br>
-                        <span id="pGroom">Benjamin</span>
-                    </h1>
+                    <div class="bride-wrap">
+                        <h1 id="pBride" class="text-4xl md:text-6xl">Christian</h1>
+                    </div>
+                    <div class="groom-wrap">
+                        <h1 id="pGroom" class="text-4xl md:text-6xl">Benjamin</h1>
+                    </div>
                 </div>
 
                 <div class="date-layer font-aloja">
@@ -150,17 +166,17 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
-                                <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-2xl focus:border-zinc-900 transition-all">
+                                <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aniyah text-2xl focus:border-zinc-900 transition-all">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
-                                <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-2xl focus:border-zinc-900 transition-all">
+                                <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aniyah text-2xl focus:border-zinc-900 transition-all">
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
-                            <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-xl text-red-900 focus:border-zinc-900 transition-all">
+                            <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aloja text-xl text-red-900 focus:border-zinc-900 transition-all">
                         </div>
 
                         <div>
@@ -202,12 +218,10 @@
     </div>
 
     <script>
-        // 禮券款式切換
         const changeVoucher = (src) => {
             document.getElementById('pVoucher').src = src;
         };
 
-        // 文字內容同步
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
@@ -216,7 +230,6 @@
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
 
-        // 綁定輸入事件
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
             document.getElementById(id).addEventListener('input', sync);
         });
