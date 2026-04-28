@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 插圖位置微調版</title>
+    <title>囍帖預覽器 - 插圖位置右移修正版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
@@ -13,7 +13,7 @@
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            /* 讀取 GitHub 根目錄背景圖 */
+            /* 讀取 GitHub 根目錄背景圖，%20 代表檔名前面的空格 */
             background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg'); 
             background-color: #A62C3E; 
             background-size: cover;
@@ -27,11 +27,11 @@
         .font-aloja { font-family: 'Patrick Hand', cursive; }
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
 
-        /* 插圖層：置頂 + 右移 3 格 + 縮放比例修正 */
+        /* 插圖層：置頂 + 右移 6 格 + 縮放比例修正 */
         .illustration-layer {
             position: absolute;
             top: 0%;      /* 置頂 */
-            left: 9.5%;   /* 已調整：右移 3 格位置 */
+            left: 13.5%;  /* 已更新：向右平移至指定位置 */
             width: 16%;   /* 維持縮減後的比例 */
             z-index: 5;
             display: flex;
@@ -44,7 +44,7 @@
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
-        /* 文字區域定位 */
+        /* 文字區域定位（保持不變） */
         .name-layer {
             position: absolute;
             top: 37.5%; 
@@ -81,7 +81,7 @@
             text-transform: uppercase;
         }
 
-        /* 水印 */
+        /* 水印層 */
         .watermark {
             position: absolute;
             inset: 0;
@@ -129,7 +129,7 @@
             
             <div class="space-y-6">
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">插圖款式 (1-8)</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">插圖款式選擇 (1-8)</label>
                     <div class="grid grid-cols-4 gap-2 border p-2 rounded-xl bg-zinc-50">
                         <button onclick="changeImg('1.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="1.png" class="h-10 mx-auto"></button>
                         <button onclick="changeImg('2.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="2.png" class="h-10 mx-auto"></button>
