@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - GitHub 本地圖片版</title>
+    <title>囍帖設計預覽器 - 完整功能版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        /* 核心畫布：鎖定 2400 x 1700 比例 */
+        /* 1. 核心畫布：鎖定 2400 x 1700 比例 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            /* 引用你上傳的背景圖，%20 代表檔名前面的空格 */
             background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg'); 
             background-color: #A62C3E; 
             background-size: cover;
@@ -27,12 +26,14 @@
         .font-aloja { font-family: 'Patrick Hand', cursive; }
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
 
-        /* 1-8 號新人插圖定位 (位於背景圖上方) */
+        /* 2. 元素定位與排版 */
+        
+        /* 1-8 號新人插圖層 */
         .illustration-layer {
             position: absolute;
-            top: 10%;    /* 根據原圖位置調整 */
-            left: 12%;   /* 向左微調 */
-            width: 25%;  /* 寬度佔比 */
+            top: 10%;
+            left: 10%; /* 向左偏移 */
+            width: 28%;
             z-index: 5;
         }
         .illustration-layer img {
@@ -41,7 +42,7 @@
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
         }
 
-        /* 姓名區域：左移並維持兩行一致大小 */
+        /* 姓名區域：下移並左移，兩行大小一致 */
         .name-layer {
             position: absolute;
             top: 37.5%; 
@@ -52,7 +53,7 @@
             z-index: 10;
         }
 
-        /* 日期：左移 */
+        /* 日期：向左微調 */
         .date-layer {
             position: absolute;
             top: 70.2%;
@@ -66,7 +67,7 @@
             justify-content: center;
         }
 
-        /* 場地與地址：Impact 字體，大小相同，強制大寫 */
+        /* 場地與地址：Impact 字體，強制大寫，大小一致 */
         .venue-layer {
             position: absolute;
             top: 77%;
@@ -89,7 +90,7 @@
             text-transform: uppercase;
         }
 
-        /* 浮水印 */
+        /* 防盜水印 */
         .watermark {
             position: absolute;
             inset: 0;
@@ -107,7 +108,7 @@
             <div class="preview-canvas font-im-fell">
                 <div class="watermark"></div>
 
-                <div class="illustration-layer" id="illustrationContainer">
+                <div class="illustration-layer">
                     <img id="pIllustration" src="1.png" alt="Couple Style">
                 </div>
 
@@ -130,62 +131,62 @@
                     <span id="pAddress" class="text-[10px] md:text-[15px] opacity-90">8 Finance Street, Central, Hong Kong</span>
                 </div>
             </div>
-            <p class="mt-4 text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-light">GitHub Local Assets | 2400:1700 Fix</p>
+            <p class="mt-4 text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-light">Customizable Design System | Fixed Ratio 2400:1700</p>
         </div>
 
-        <div class="bg-white p-8 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-y-auto max-h-[90vh]">
+        <div class="bg-white p-8 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold text-zinc-800 mb-6 border-b pb-4 font-im-fell">設計編輯器</h2>
             
             <div class="space-y-6">
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">選擇新人插圖款式 (1-8)</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">選擇新人款式 (1-8)</label>
                     <div class="grid grid-cols-4 gap-2">
-                        <button onclick="changeImg('1.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="1.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('2.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="2.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('3.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="3.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('4.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="4.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('5.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="5.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('6.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="6.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('7.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="7.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('8.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="8.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('1.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="1.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('2.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="2.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('3.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="3.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('4.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="4.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('5.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="5.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('6.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="6.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('7.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="7.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('8.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="8.png" class="h-10 mx-auto"></button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
-                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
+                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
-                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
+                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
-                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-aloja text-xl text-red-900 transition-all">
+                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-aloja text-xl text-red-900">
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (Impact)</label>
-                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-lg transition-all">
+                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-lg">
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (Impact)</label>
-                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-sm transition-all">8 Finance Street, Central, Hong Kong</textarea>
+                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-sm">8 Finance Street, Central, Hong Kong</textarea>
                 </div>
             </div>
 
-            <button class="w-full mt-8 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-700 transition uppercase shadow-lg">
+            <button class="w-full mt-8 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-700 transition shadow-lg uppercase">
                 確認設計
             </button>
         </div>
     </div>
 
     <script>
-        // 文字同步
+        // 文字即時同步
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
@@ -194,9 +195,9 @@
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
 
-        // 圖片切換
-        const changeImg = (fileName) => {
-            document.getElementById('pIllustration').src = fileName;
+        // 插圖切換
+        const changeImg = (path) => {
+            document.getElementById('pIllustration').src = path;
         };
 
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
