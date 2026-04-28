@@ -30,127 +30,46 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 姓名區域獨立排版 */
+        /* 姓名區域 */
         .bride-layer {
             position: absolute;
-            top: 20%; 
-            left: 0; 
-            width: 50%; 
-            color: #FFFFFF;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-            transform: translateX(-1.2cqw);
+            top: 20%; left: 0; width: 50%; color: #FFFFFF; z-index: 10;
+            display: flex; justify-content: center; transform: translateX(-1.2cqw);
         }
-
         .groom-layer {
             position: absolute;
-            top: 41.5%; 
-            left: 0; 
-            width: 50%; 
-            color: #FFFFFF;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-            transform: translateX(6.2cqw);
+            top: 41.5%; left: 0; width: 50%; color: #FFFFFF; z-index: 10;
+            display: flex; justify-content: center; transform: translateX(6.2cqw);
         }
+        .name-wrap { width: 80%; text-align: center; }
+        #pBride, #pGroom { font-size: 5cqw; line-height: 1; white-space: nowrap; display: inline-block; }
 
-        .name-wrap {
-            width: 80%; 
-            text-align: center;
-        }
-
-        #pBride, #pGroom {
-            font-size: 5cqw;
-            line-height: 1;
-            white-space: nowrap;
-            display: inline-block;
-        }
-
-        /* 日期地址定位 */
-        .date-layer { 
-            position: absolute; 
-            top: 64%; 
-            left: 9%; 
-            width: 32%; 
-            text-align: center; 
-            color: #FFFFFF; 
-            font-size: 2cqw; 
-            letter-spacing: 0.25em;
-        }
-        .venue-layer { 
-            position: absolute; 
-            top: 72%; 
-            left: 5.5%; 
-            width: 39%; 
-            text-align: center; 
-            color: #FFFFFF; 
-            text-transform: uppercase; 
-            font-size: 1.6cqw;
-        }
-        .address-layer { 
-            position: absolute; 
-            top: 77%; 
-            left: 2%; 
-            width: 46%; 
-            text-align: center; 
-            color: #FFFFFF; 
-            text-transform: uppercase; 
-            font-size: 1.6cqw; 
-            line-height: 1.2;
-        }
+        /* 日期地址 */
+        .date-layer { position: absolute; top: 64%; left: 9%; width: 32%; text-align: center; color: #FFFFFF; font-size: 2cqw; letter-spacing: 0.25em; }
+        .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; }
+        .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
 
         /* 產品詳情面板 */
         .info-panel {
-            position: absolute;
-            top: 5%;
-            right: 3%;
-            width: 40cqw;
-            height: 64cqw;
-            background: rgba(255,255,255,0.15);
-            padding: 2.2cqw;
-            border-radius: 2cqw;
-            display: none;
-            z-index: 20;
-            backdrop-filter: blur(7px);
-            overflow: hidden;
+            position: absolute; top: 5%; right: 3%; width: 40cqw; height: 64cqw;
+            background: rgba(255,255,255,0.15); padding: 2.2cqw; border-radius: 2cqw;
+            display: none; z-index: 20; backdrop-filter: blur(7px); overflow: hidden;
         }
-
         #pDetailTC {
-            display: -webkit-box;
-            -webkit-line-clamp: 25; 
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            word-break: break-all;
-            font-size: 1.2cqw;
+            display: -webkit-box; -webkit-line-clamp: 25; -webkit-box-orient: vertical;
+            overflow: hidden; text-overflow: ellipsis; word-break: break-all; font-size: 1.2cqw;
         }
 
-        /* 滾動條與面板行為邏輯 */
+        /* 響應式：手機版 vs 網站版 */
         @media (min-width: 1280px) {
-            /* 網站版：保留固定高度與自定義滾動條 */
-            .control-panel-wrap {
-                max-height: 90vh;
-                overflow-y: auto;
-            }
+            .control-panel-wrap { max-height: 90vh; overflow-y: auto; }
             .custom-scroll::-webkit-scrollbar { width: 6px; }
             .custom-scroll::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
         }
-
         @media (max-width: 1279px) {
-            /* 手機版：取消固定高度，讓內容自然展開（不使用滾動式） */
-            .control-panel-wrap {
-                max-height: none !important;
-                overflow-y: visible !important;
-            }
-            /* 隱藏所有潛在滾動條 */
-            .custom-scroll::-webkit-scrollbar {
-                display: none;
-            }
-            .custom-scroll {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
+            .control-panel-wrap { max-height: none !important; overflow-y: visible !important; }
+            .custom-scroll::-webkit-scrollbar { display: none; }
+            .custom-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         }
     </style>
 </head>
@@ -160,25 +79,11 @@
         
         <div class="flex flex-col items-center relative">
             <div class="preview-canvas">
-                <div class="voucher-layer"><img id="pVoucher" src="" class="hidden"></div>
-                
-                <div class="bride-layer font-aniyah">
-                    <div class="name-wrap"><h1 id="pBride">Christian</h1></div>
-                </div>
-
-                <div class="groom-layer font-aniyah">
-                    <div class="name-wrap"><h1 id="pGroom">Benjamin</h1></div>
-                </div>
-
-                <div class="date-layer font-aloja">
-                    <span id="pDate" class="uppercase">October 15, 2026</span>
-                </div>
-                <div class="venue-layer font-impact">
-                    <span id="pVenue">Four Seasons Grand Ballroom</span>
-                </div>
-                <div class="address-layer font-impact">
-                    <span id="pAddress" class="opacity-90">8 Finance Street, Central, Hong Kong</span>
-                </div>
+                <div class="bride-layer font-aniyah"><div class="name-wrap"><h1 id="pBride">Christian</h1></div></div>
+                <div class="groom-layer font-aniyah"><div class="name-wrap"><h1 id="pGroom">Benjamin</h1></div></div>
+                <div class="date-layer font-aloja"><span id="pDate" class="uppercase">October 15, 2026</span></div>
+                <div class="venue-layer font-impact"><span id="pVenue">Four Seasons Grand Ballroom</span></div>
+                <div class="address-layer font-impact"><span id="pAddress" class="opacity-90">8 Finance Street, Central, Hong Kong</span></div>
                 
                 <div id="pDetailPanel" class="info-panel shadow-2xl border border-zinc-200">
                     <img id="pDetailBrandImg" src="" class="w-full h-12 object-contain mb-3">
@@ -190,35 +95,18 @@
 
         <div class="bg-zinc-50 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-hidden flex flex-col control-panel-wrap custom-scroll">
             <div class="p-8">
-                
                 <section class="mb-8">
                     <h2 class="text-xl font-bold text-zinc-800 mb-6 flex items-center font-im-fell italic">
-                        <span class="w-7 h-7 bg-zinc-900 text-white rounded-full flex items-center justify-center text-[10px] mr-3 font-sans not-italic">01</span>
-                        設計編輯器
+                        <span class="w-7 h-7 bg-zinc-900 text-white rounded-full flex items-center justify-center text-[10px] mr-3 font-sans not-italic">01</span>設計編輯器
                     </h2>
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
-                                <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact">
-                            </div>
-                            <div>
-                                <label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
-                                <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact">
-                            </div>
+                            <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label><input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact"></div>
+                            <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label><input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact"></div>
                         </div>
-                        <div>
-                            <label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
-                            <input type="date" id="iDate" value="2026-10-15" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-red-900 font-sans font-bold">
-                        </div>
-                        <div>
-                            <label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">宴客場地</label>
-                            <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 uppercase text-xs font-impact">
-                        </div>
-                        <div>
-                            <label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">詳細地址</label>
-                            <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 uppercase text-[10px] font-impact">8 Finance Street, Central, Hong Kong</textarea>
-                        </div>
+                        <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label><input type="date" id="iDate" value="2026-10-15" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-red-900 font-sans font-bold"></div>
+                        <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">宴客場地</label><input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 uppercase text-xs font-impact"></div>
+                        <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">詳細地址</label><textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 uppercase text-[10px] font-impact">8 Finance Street, Central, Hong Kong</textarea></div>
                     </div>
                 </section>
 
@@ -226,8 +114,7 @@
 
                 <section class="mb-8">
                     <h2 class="text-xl font-bold text-zinc-800 mb-6 flex items-center font-im-fell italic">
-                        <span class="w-7 h-7 bg-zinc-900 text-white rounded-full flex items-center justify-center text-[10px] mr-3 font-sans not-italic">02</span>
-                        禮券品牌
+                        <span class="w-7 h-7 bg-zinc-900 text-white rounded-full flex items-center justify-center text-[10px] mr-3 font-sans not-italic">02</span>禮券品牌
                     </h2>
                     <div id="brandGrid" class="grid grid-cols-4 gap-2"></div>
                 </section>
@@ -237,29 +124,42 @@
                     <div id="productGrid" class="grid grid-cols-1 gap-2"></div>
                 </section>
 
-                <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg hover:bg-zinc-800 transition-all mb-4">
-                    確認並保存設計
-                </button>
-
-                <a href="admin.html" class="block text-center text-zinc-400 text-[10px] font-bold uppercase tracking-tighter hover:text-zinc-900 transition-colors">
-                    員工後台入口
-                </a>
+                <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg hover:bg-zinc-800 transition-all mb-4">確認並保存設計</button>
+                <a href="admin.html" class="block text-center text-zinc-400 text-[10px] font-bold uppercase tracking-tighter hover:text-zinc-900 transition-colors">員工後台入口</a>
             </div>
         </div>
     </div>
 
     <script>
-        // 預設載入機制
+        const agnesBTC = `e-voucher Terms & Conditions:
+The e-voucher entitles the holder a cash value of spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.
+The e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.
+The e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.
+The e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.
+Agnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.
+In case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties.`;
+
+        const godivaTC = `使用條款:
+此GODIVA電子禮券有效期由購買日起計數，最少11個月
+此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。
+此電子禮券只可使用一次並以GODIVA的系統記錄為準。
+影印本及螢幕截圖恕不接納。
+此電子禮券不適用於電話、傳真或網上購物。
+此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金
+此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。
+如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。
+分店地址︰https://www.godiva.com.hk/boutiques.html`;
+
         const defaultBrands = [
             { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
             { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" }
         ];
 
         const defaultProducts = [
-            { brandName: "agnès b.", product: "$50 心意禮券", tc: "e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$50 spending..." },
-            { brandName: "agnès b.", product: "$100 心意禮券", tc: "e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$100 spending..." },
-            { brandName: "Godiva", product: "HK$50 禮券", tc: "使用條款:\n此GODIVA電子禮券有效期由購買日起計數..." },
-            { brandName: "Godiva", product: "HK$100 禮券", tc: "使用條款:\n此禮券持有人可在本券有效期內於任何香港GODIVA專門店..." }
+            { brandName: "agnès b.", product: "$50 心意禮券", tc: agnesBTC },
+            { brandName: "agnès b.", product: "$100 心意禮券", tc: agnesBTC },
+            { brandName: "Godiva", product: "HK$50 禮券", tc: godivaTC },
+            { brandName: "Godiva", product: "HK$100 禮券", tc: godivaTC }
         ];
 
         const brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || defaultBrands;
@@ -267,11 +167,9 @@
 
         function autoScaleText(element) {
             const parent = element.parentElement;
-            let fontSizeCqw = 5; 
-            element.style.fontSize = fontSizeCqw + 'cqw';
+            let fontSizeCqw = 5; element.style.fontSize = fontSizeCqw + 'cqw';
             while (element.scrollWidth > parent.offsetWidth && fontSizeCqw > 1) {
-                fontSizeCqw -= 0.1;
-                element.style.fontSize = fontSizeCqw + 'cqw';
+                fontSizeCqw -= 0.1; element.style.fontSize = fontSizeCqw + 'cqw';
             }
         }
 
@@ -285,11 +183,7 @@
                 btn.innerHTML = `<img src="${brand.img}" class="max-h-full max-w-full object-contain" alt="${brand.name}">`;
                 grid.appendChild(btn);
             });
-            setTimeout(() => {
-                autoScaleText(document.getElementById('pBride'));
-                autoScaleText(document.getElementById('pGroom'));
-                sync();
-            }, 100);
+            setTimeout(() => { sync(); }, 100);
         }
 
         function showProducts(bName, bImg) {
@@ -299,8 +193,7 @@
             section.classList.remove('hidden');
             title.innerText = `${bName} 產品選擇`;
             grid.innerHTML = '';
-            const filteredProds = productsDB.filter(p => p.brandName === bName);
-            filteredProds.forEach(p => {
+            productsDB.filter(p => p.brandName === bName).forEach(p => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-3 border border-zinc-100 rounded-xl hover:bg-zinc-900 hover:text-white text-xs font-bold transition-all shadow-sm";
                 btn.innerText = p.product;
