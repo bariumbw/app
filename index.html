@@ -188,7 +188,7 @@
 
             brandsDB.forEach(brand => {
                 const btn = document.createElement('button');
-                btn.className = "aspect-square border-2 border-zinc-50 bg-bg-zinc-400 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
+                btn.className = "aspect-square border-2 border-zinc-50 bg-zinc-400 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
                 btn.onclick = () => showProducts(brand.name, brand.img);
                 btn.innerHTML = `<img src="${brand.img}" class="max-h-full max-w-full object-contain" alt="${brand.name}">`;
                 grid.appendChild(btn);
