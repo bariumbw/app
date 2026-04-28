@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 位置比例修正版</title>
+    <title>囍帖預覽器 - 位置精確修正版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        /* 1. 核心畫布：鎖定 2400 x 1700 比例 */
+        /* 核心畫布：鎖定 2400 x 1700 比例 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
+            /* 引用 GitHub 倉庫中的背景圖 */
             background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg'); 
             background-color: #A62C3E; 
             background-size: cover;
@@ -26,15 +27,12 @@
         .font-aloja { font-family: 'Patrick Hand', cursive; }
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
 
-        /* 2. 元素定位與排版 */
-        
-        /* 1-8 號插圖層：精確對齊黃框位置，縮小比例 */
+        /* 插圖層：置頂、左移 4 格、縮小至 80% (5分之4) */
         .illustration-layer {
             position: absolute;
-            top: 3%;    /* 向上微調，對齊原背景位置 */
-            left: 5%;   /* 水平位置微調 */
-            width: 22%;  /* 按比例縮小插圖，與原背景一致 */
-            padding-right: 2%; /* 內部微調對齊 */
+            top: 0%;      /* 置頂 */
+            left: 2%;     /* 配合你要求的左移 4 格（從原本中心點大幅向左） */
+            width: 20%;    /* 縮減大小：原本約 25%，5分之4 即 20% */
             z-index: 5;
             display: flex;
             justify-content: center;
@@ -43,7 +41,7 @@
             width: 100%;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
         /* 姓名區域 */
@@ -57,7 +55,7 @@
             z-index: 10;
         }
 
-        /* 日期區域 */
+        /* 日期、場地與地址 */
         .date-layer {
             position: absolute;
             top: 70.2%;
@@ -65,13 +63,7 @@
             width: 32%;
             text-align: center;
             color: #FFFFFF;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-
-        /* 場地與地址 (Impact) */
         .venue-layer {
             position: absolute;
             top: 77%;
@@ -80,10 +72,7 @@
             text-align: center;
             color: #FFFFFF;
             text-transform: uppercase;
-            white-space: nowrap;
-            overflow: hidden;
         }
-
         .address-layer {
             position: absolute;
             top: 82.5%;
@@ -94,7 +83,7 @@
             text-transform: uppercase;
         }
 
-        /* 防盜水印 */
+        /* 水印 */
         .watermark {
             position: absolute;
             inset: 0;
@@ -135,63 +124,60 @@
                     <span id="pAddress" class="text-[10px] md:text-[15px] opacity-90">8 Finance Street, Central, Hong Kong</span>
                 </div>
             </div>
-            
-            <p class="mt-4 text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-light">Illustration Re-scaled & Realigned | Ratio 2400:1700</p>
         </div>
 
         <div class="bg-white p-8 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 max-h-[90vh] overflow-y-auto">
-            <h2 class="text-2xl font-bold text-zinc-800 mb-6 border-b pb-4 font-im-fell tracking-tight">設計編輯器</h2>
+            <h2 class="text-2xl font-bold text-zinc-800 mb-6 border-b pb-4 font-im-fell">設計編輯器</h2>
             
             <div class="space-y-6">
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">選擇新人款式 (1-8)</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">插圖款式選擇</label>
                     <div class="grid grid-cols-4 gap-2 border p-2 rounded-xl bg-zinc-50">
-                        <button onclick="changeImg('1.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="1.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('2.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="2.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('3.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="3.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('4.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="4.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('5.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="5.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('6.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="6.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('7.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="7.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('8.png')" class="border p-1 hover:bg-zinc-100 rounded transition focus:ring-2 focus:ring-red-500"><img src="8.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('1.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="1.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('2.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="2.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('3.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="3.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('4.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="4.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('5.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="5.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('6.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="6.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('7.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="7.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('8.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="8.png" class="h-10 mx-auto"></button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 border-t pt-5">
+                <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
-                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
+                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
-                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
+                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
-                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-aloja text-xl text-red-900 transition-all">
+                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-aloja text-xl text-red-900">
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (Impact, 單行)</label>
-                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-lg transition-all uppercase">
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地</label>
+                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-lg uppercase">
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (Impact)</label>
-                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-sm transition-all uppercase">8 Finance Street, Central, Hong Kong</textarea>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址</label>
+                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-sm uppercase">8 Finance Street, Central, Hong Kong</textarea>
                 </div>
             </div>
 
-            <button class="w-full mt-10 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-700 transition shadow-lg uppercase">
-                確認並保存設計
+            <button class="w-full mt-8 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-700 transition shadow-lg uppercase">
+                確認設計
             </button>
         </div>
     </div>
 
     <script>
-        // 文字即時同步邏輯
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
@@ -200,12 +186,10 @@
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
 
-        // 插圖款式切換邏輯
         const changeImg = (path) => {
             document.getElementById('pIllustration').src = path;
         };
 
-        // 綁定輸入監聽
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
             document.getElementById(id).addEventListener('input', sync);
         });
