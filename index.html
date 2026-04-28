@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 插圖位置縮放最終版</title>
+    <title>囍帖預覽器 - 插圖位置微調版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
@@ -22,19 +22,17 @@
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
         }
 
-        /* 字體 */
+        /* 字體定義 */
         .font-im-fell { font-family: 'IM Fell English', serif; }
         .font-aloja { font-family: 'Patrick Hand', cursive; }
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
 
-        /* 插圖層：置頂、右移 9 格、大小再縮減至 5 分之 4 */
+        /* 插圖層：置頂 + 右移 3 格 + 縮放比例修正 */
         .illustration-layer {
             position: absolute;
             top: 0%;      /* 置頂 */
-            /* 右移 9 格：從原本的左側大幅向右調整 */
-            left: 14%;    
-            /* 寬度再縮減：從 20% 縮減 5分之4 變為 16% */
-            width: 16%;   
+            left: 9.5%;   /* 已調整：右移 3 格位置 */
+            width: 16%;   /* 維持縮減後的比例 */
             z-index: 5;
             display: flex;
             justify-content: center;
@@ -46,7 +44,7 @@
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
-        /* 姓名、日期、地址定位（保持不變） */
+        /* 文字區域定位 */
         .name-layer {
             position: absolute;
             top: 37.5%; 
@@ -147,27 +145,27 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
-                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg">
+                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
-                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg">
+                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
-                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-aloja text-xl text-red-900">
+                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-aloja text-xl text-red-900 transition-all">
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地</label>
-                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-lg uppercase">
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (Impact)</label>
+                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-lg transition-all uppercase">
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址</label>
-                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-sm uppercase">8 Finance Street, Central, Hong Kong</textarea>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (Impact)</label>
+                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-sm transition-all uppercase">8 Finance Street, Central, Hong Kong</textarea>
                 </div>
             </div>
 
