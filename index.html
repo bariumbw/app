@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖設計預覽器 - 精確佈局版</title>
+    <title>囍帖設計預覽器 - 位置修正版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        /* 1. 核心畫布：鎖定 2400 x 1700 比例 */
+        /* 核心畫布：鎖定 2400 x 1700 比例 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            /* GitHub 檔案路徑編碼，處理檔名開頭空格 */
             background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg'); 
             background-color: #A62C3E; 
             background-size: cover;
@@ -27,23 +26,23 @@
         .font-aloja { font-family: 'Patrick Hand', cursive; }
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
 
-        /* 2. 定位與排版控制 */
+        /* 所有字體層向左平移，並微調姓名高度 */
         
-        /* 姓名區域：下移至 39%，增加與上方字句距離 */
+        /* 姓名區域：向左移 2% (5->3)，向上移 1.5% (39->37.5) */
         .name-layer {
             position: absolute;
-            top: 39%; 
-            left: 5%;
+            top: 37.5%; 
+            left: 3%; 
             width: 44%;
             text-align: center;
             color: #FFFFFF;
         }
 
-        /* 日期：縮小至 3/4 比例 */
+        /* 日期：向左移 2% (11->9) */
         .date-layer {
             position: absolute;
             top: 70.2%;
-            left: 11%;
+            left: 9%; 
             width: 32%;
             text-align: center;
             color: #FFFFFF;
@@ -53,11 +52,11 @@
             justify-content: center;
         }
 
-        /* 場地：使用 Impact 字體，與地址大小一致，強制單行 */
+        /* 場地：向左移 2% (7.5->5.5)，Impact 字體，強制單行 */
         .venue-layer {
             position: absolute;
             top: 77%;
-            left: 7.5%;
+            left: 5.5%; 
             width: 39%;
             text-align: center;
             color: #FFFFFF;
@@ -66,18 +65,17 @@
             overflow: hidden;
         }
 
-        /* 地址：使用 Impact 字體，與場地大小一致 */
+        /* 地址：向左移 2% (4->2)，Impact 字體 */
         .address-layer {
             position: absolute;
             top: 82.5%;
-            left: 4%;
+            left: 2%; 
             width: 46%;
             text-align: center;
             color: #FFFFFF;
             text-transform: uppercase;
         }
 
-        /* 浮水印保護 */
         .watermark {
             position: absolute;
             inset: 0;
@@ -114,8 +112,7 @@
                     <span id="pAddress" class="text-[10px] md:text-[15px] opacity-90">8 Finance Street, Central, Hong Kong</span>
                 </div>
             </div>
-            
-            <p class="mt-4 text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-light">2400x1700 Design Spec | Layout Balanced</p>
+            <p class="mt-4 text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-light">Left Alignment Adjusted | Name Elevation Fixed</p>
         </div>
 
         <div class="bg-white p-8 rounded-[2rem] shadow-2xl h-fit border border-zinc-100">
@@ -139,26 +136,25 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (Impact, 強制大寫/單行)</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (Impact, 大寫/單行)</label>
                     <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-impact text-lg transition-all">
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (Impact, 強制大寫)</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (Impact, 大寫)</label>
                     <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-impact text-sm transition-all">8 Finance Street, Central, Hong Kong</textarea>
                 </div>
             </div>
 
             <div class="mt-10 pt-6 border-t border-zinc-50">
                 <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-700 transition shadow-lg uppercase">
-                    完成設計並預覽
+                    確認設計
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // 即時同步邏輯
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
@@ -167,7 +163,6 @@
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
 
-        // 綁定輸入監聽
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
             document.getElementById(id).addEventListener('input', sync);
         });
