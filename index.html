@@ -3,163 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽 - 2400x1700 完整比例</title>
+    <title>囍帖設計預覽 - 頁一</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Patrick+Hand&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --wedding-red: #A62C3E;
-        }
-
-        /* 核心預覽容器：鎖定 2400x1700 比例 */
-        .card-ratio-box {
+        /* 1. 畫布基礎設定 */
+        .canvas-container {
             width: 100%;
-            max-width: 900px; /* 控制在網頁上的顯示寬度 */
-            aspect-ratio: 2400 / 1700;
-            background-color: var(--wedding-red);
+            max-width: 900px; /* 網頁顯示寬度 */
+            aspect-ratio: 2400 / 1700; /* 強制鎖定比例 */
+            background-color: #A62C3E;
             position: relative;
-            color: #FFFFFF;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            color: #FFFFFF;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        /* 模擬星光背景 */
-        .bg-sparkle {
+        /* 2. 背景與噴砂 (模擬圖2設計) */
+        .design-background {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.15) 0%, transparent 60%);
+            background-image: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.2) 0%, transparent 40%);
             pointer-events: none;
         }
+        .sand-texture {
+            position: absolute;
+            top: 10%;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 70%);
+            filter: blur(2px);
+        }
 
-        /* 字體定義 */
+        /* 3. 字體應用 */
         .font-im-fell { font-family: 'IM Fell English', serif; }
-        .font-aloja-alt { font-family: 'Patrick Hand', cursive; } /* 模擬 Aloja 的手寫感 */
-        .font-script { font-family: 'Great Vibes', cursive; }
+        .font-aloja { font-family: 'Patrick Hand', cursive; } /* 模擬 Aloja */
 
-        /* 保護浮水印 */
-        .protection-overlay {
+        /* 4. 浮水印 Logo 保護 */
+        .watermark {
             position: absolute;
             inset: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="6" fill="white" fill-opacity="0.1" text-anchor="middle" transform="rotate(-30 50 50)">SAMPLE PREVIEW</text></svg>');
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="5" fill="white" fill-opacity="0.12" text-anchor="middle" transform="rotate(-35 50 50)">DESIGN PREVIEW - DO NOT PRINT</text></svg>');
             z-index: 100;
             pointer-events: none;
         }
 
-        /* 裝飾線條 */
-        .deco-line-container {
-            display: flex;
-            align-items: center;
-            width: 80%;
-            gap: 15px;
-            margin: 1rem 0;
+        /* 5. 固定比例的飾線 (圖2底部) */
+        .footer-deco {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            opacity: 0.8;
         }
-        .deco-line { height: 1px; background: rgba(255,255,255,0.6); flex: 1; }
-        .deco-symbol { font-size: 1.2rem; transform: rotate(45deg); border: 1px solid white; width: 8px; height: 8px; }
     </style>
 </head>
-<body class="bg-stone-100 min-h-screen py-12 px-4">
+<body class="bg-zinc-800 min-h-screen flex items-center justify-center p-4">
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[1fr,400px] gap-12">
+    <div class="max-w-7xl w-full grid grid-cols-1 xl:grid-cols-[1fr,380px] gap-10">
         
         <div class="flex flex-col items-center">
-            <h2 class="text-xl font-bold text-gray-800 mb-6 font-im-fell uppercase tracking-widest">Design Preview (2400 x 1700 Scale)</h2>
+            <div id="captureArea" class="canvas-container font-im-fell">
+                <div class="design-background"></div>
+                <div class="sand-texture"></div>
+                <div class="watermark"></div>
+
+                <div class="relative z-10 h-full flex flex-col items-start justify-center pl-[8%] pt-[5%]">
+                    
+                    <div class="mb-6">
+                        <img id="previewImg" src="https://img.icons8.com/plasticine/400/wedding-couple.png" class="h-40 md:h-64 object-contain">
+                    </div>
+
+                    <p class="text-[10px] md:text-sm tracking-[0.4em] uppercase opacity-90 mb-4">Together with their parents</p>
+
+                    <div class="mb-4 text-left">
+                        <h1 id="pName1" class="text-5xl md:text-8xl italic leading-none">Christian</h1>
+                        <p class="text-2xl md:text-4xl italic my-1 opacity-80">and</p>
+                        <h1 id="pName2" class="text-5xl md:text-8xl italic leading-none">Benjamin</h1>
+                    </div>
+
+                    <p class="text-[9px] md:text-xs tracking-widest leading-relaxed mb-6 opacity-70">
+                        REQUEST THE HONOUR OF YOUR PRESENCE AT<br>THEIR WEDDING CELEBRATION
+                    </p>
+
+                    <div class="flex items-center gap-4 mb-6 w-[80%]">
+                        <div class="h-[1px] bg-white/40 flex-grow"></div>
+                        <span id="pDate" class="font-aloja text-2xl md:text-5xl text-white">October 15, 2026</span>
+                        <div class="h-[1px] bg-white/40 flex-grow"></div>
+                    </div>
+
+                    <div class="text-left space-y-1">
+                        <h3 id="pVenue" class="text-base md:text-2xl font-bold tracking-[0.2em] uppercase">Four Seasons Grand Ballroom</h3>
+                        <p id="pAddress" class="text-[10px] md:text-sm opacity-80 tracking-widest">8 Finance Street, Central, Hong Kong</p>
+                    </div>
+                </div>
+
+                <img src="https://img.icons8.com/ios/100/ffffff/wedding-rings.png" class="footer-deco h-10 object-contain">
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-2xl h-fit">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-3 font-im-fell tracking-widest uppercase">Customization</h2>
             
-            <div class="card-ratio-box p-12 text-center">
-                <div class="bg-sparkle"></div>
-                <div class="protection-overlay"></div>
-
-                <div class="mb-6">
-                    <img id="previewImg" src="https://img.icons8.com/plasticine/400/wedding-couple.png" class="h-48 md:h-64 object-contain z-10 relative">
+            <div class="space-y-5">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Name 1 (IM Fell)</label>
+                    <input type="text" id="iName1" value="Christian" class="w-full mt-1 p-2 border-b-2 border-gray-100 focus:border-red-500 outline-none font-im-fell text-lg">
                 </div>
-
-                <p class="font-im-fell tracking-[0.4em] text-xs md:text-sm mb-4 opacity-90 uppercase">Together with their parents</p>
-
-                <div class="mb-4">
-                    <h1 id="previewName1" class="font-im-fell italic text-5xl md:text-7xl">Christian</h1>
-                    <p class="font-script text-2xl md:text-3xl my-[-5px] opacity-80">and</p>
-                    <h1 id="previewName2" class="font-im-fell italic text-5xl md:text-7xl">Benjamin</h1>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Name 2 (IM Fell)</label>
+                    <input type="text" id="iName2" value="Benjamin" class="w-full mt-1 p-2 border-b-2 border-gray-100 focus:border-red-500 outline-none font-im-fell text-lg">
                 </div>
-
-                <p class="font-im-fell tracking-widest text-[10px] md:text-xs mb-6 opacity-70">
-                    REQUEST THE HONOUR OF YOUR PRESENCE AT<br>THEIR WEDDING CELEBRATION
-                </p>
-
-                <div class="deco-line-container">
-                    <div class="deco-line"></div>
-                    <div class="deco-symbol"></div>
-                    <span id="previewDate" class="font-aloja-alt text-2xl md:text-4xl px-4 whitespace-nowrap">October 15, 2026</span>
-                    <div class="deco-symbol"></div>
-                    <div class="deco-line"></div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Date (Aloja Style)</label>
+                    <input type="text" id="iDate" value="October 15, 2026" class="w-full mt-1 p-2 border-b-2 border-gray-100 focus:border-red-500 outline-none font-aloja text-xl text-red-700">
                 </div>
-
-                <div class="font-im-fell mt-4">
-                    <h3 id="previewVenue" class="text-lg md:text-2xl font-bold tracking-[0.15em] uppercase mb-1">Four Seasons Grand Ballroom</h3>
-                    <p id="previewAddress" class="text-xs md:text-sm opacity-80 tracking-widest">8 Finance Street, Central, Hong Kong</p>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Venue (IM Fell)</label>
+                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full mt-1 p-2 border-b-2 border-gray-100 focus:border-red-500 outline-none font-im-fell">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Location (IM Fell)</label>
+                    <textarea id="iAddress" rows="2" class="w-full mt-1 p-2 border-b-2 border-gray-100 focus:border-red-500 outline-none font-im-fell text-sm">8 Finance Street, Central, Hong Kong</textarea>
+                </div>
+                
+                <div class="pt-4">
+                    <p class="text-[10px] text-gray-400 italic leading-tight">
+                        * 此預覽區嚴格遵循 2400x1700 設計規範。<br>所有修改將即時同步於左側設計圖中。
+                    </p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-3xl shadow-2xl border border-gray-200 h-fit">
-            <h3 class="text-2xl font-bold mb-8 text-red-900 border-b pb-4 font-im-fell">EDIT DETAILS</h3>
-            
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-tighter">Groom / Bride Name 1 (IM Fell)</label>
-                    <input type="text" id="inName1" value="Christian" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-im-fell text-xl">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Groom / Bride Name 2 (IM Fell)</label>
-                    <input type="text" id="inName2" value="Benjamin" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-im-fell text-xl">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Wedding Date (Aloja Style)</label>
-                    <input type="text" id="inDate" value="October 15, 2026" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-aloja-alt text-2xl text-red-700">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Venue (IM Fell)</label>
-                    <input type="text" id="inVenue" value="Four Seasons Grand Ballroom" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-im-fell text-lg">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Location (IM Fell)</label>
-                    <textarea id="inAddress" rows="2" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-im-fell">8 Finance Street, Central, Hong Kong</textarea>
-                </div>
-            </div>
-            
-            <div class="mt-10 p-4 bg-red-50 rounded-xl border border-red-100">
-                <p class="text-xs text-red-800 leading-relaxed">
-                    <strong>注意：</strong> 此預覽圖之比例已固定為 2400x1700。請確保文字內容長度適中，以維持最佳視覺美感。
-                </p>
-            </div>
-        </div>
     </div>
 
     <script>
-        // 雙向綁定更新
-        const inputs = [
-            { id: 'inName1', target: 'previewName1' },
-            { id: 'inName2', target: 'targetName2' }, // 修正對應
-            { id: 'inDate', target: 'previewDate' },
-            { id: 'inVenue', target: 'previewVenue' },
-            { id: 'inAddress', target: 'previewAddress' }
-        ];
+        // 即時同步函數
+        const sync = (inputId, previewId) => {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            input.addEventListener('input', () => {
+                preview.innerText = input.value;
+            });
+        };
 
-        // 重新對應 Name2 並綁定所有事件
-        document.getElementById('inName1').addEventListener('input', e => document.getElementById('previewName1').innerText = e.target.value);
-        document.getElementById('inName2').addEventListener('input', e => document.getElementById('previewName2').innerText = e.target.value);
-        document.getElementById('inDate').addEventListener('input', e => document.getElementById('previewDate').innerText = e.target.value);
-        document.getElementById('inVenue').addEventListener('input', e => document.getElementById('previewVenue').innerText = e.target.value);
-        document.getElementById('inAddress').addEventListener('input', e => document.getElementById('previewAddress').innerText = e.target.value);
+        sync('iName1', 'pName1');
+        sync('iName2', 'pName2');
+        sync('iDate', 'pDate');
+        sync('iVenue', 'pVenue');
+        sync('iAddress', 'pAddress');
     </script>
 </body>
 </html>
