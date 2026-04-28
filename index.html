@@ -29,8 +29,8 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 姓名區域排版 */
-        .name-layer {
+        /* 姓名區域獨立排版 - 核心修改處 */
+        .bride-layer {
             position: absolute;
             top: 20%; 
             left: 0; 
@@ -38,29 +38,29 @@
             color: #FFFFFF;
             z-index: 10;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* 調整：寬度放寬至 90%，移除 hidden 和 ellipsis，確保字體縮放 */
-        .bride-wrap {
+            justify-content: center;
+            /* 保持你原本要求的位移 */
             transform: translateX(-11px);
-            width: 90%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .groom-wrap {
-            transform: translateX(60px);
-            width: 90%;
-            margin-top: 1.9em; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        /* 初始字體大小設定 */
+        .groom-layer {
+            position: absolute;
+            top: 38.5%; /* 根據原本 margin-top 1.9em 推算的垂直位置 */
+            left: 0; 
+            width: 50%; 
+            color: #FFFFFF;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            /* 保持你原本要求的位移 */
+            transform: translateX(60px);
+        }
+
+        .name-wrap {
+            width: 80%; /* 限制縮放區域寬度，避免撞邊 */
+            text-align: center;
+        }
+
         #pBride, #pGroom {
             font-size: 45px;
             line-height: 1;
@@ -110,9 +110,12 @@
             <div class="preview-canvas">
                 <div class="voucher-layer"><img id="pVoucher" src="" class="hidden"></div>
                 
-                <div class="name-layer font-aniyah">
-                    <div class="bride-wrap"><h1 id="pBride">Christian</h1></div>
-                    <div class="groom-wrap"><h1 id="pGroom">Benjamin</h1></div>
+                <div class="bride-layer font-aniyah">
+                    <div class="name-wrap"><h1 id="pBride">Christian</h1></div>
+                </div>
+
+                <div class="groom-layer font-aniyah">
+                    <div class="name-wrap"><h1 id="pGroom">Benjamin</h1></div>
                 </div>
 
                 <div class="date-layer font-aloja">
@@ -200,7 +203,7 @@
             let fontSize = 45; // 起始最大字級
             element.style.fontSize = fontSize + 'px';
 
-            // 如果文字寬度大於父容器寬度，就不斷縮小字級直到放得下為止
+            // 嚴格檢核：只要超出父容器寬度，就縮小
             while (element.scrollWidth > parent.offsetWidth && fontSize > 10) {
                 fontSize--;
                 element.style.fontSize = fontSize + 'px';
@@ -227,9 +230,11 @@
                 grid.appendChild(btn);
             });
             
-            // 初始化時也執行一次縮放
-            autoScaleText(document.getElementById('pBride'));
-            autoScaleText(document.getElementById('pGroom'));
+            // 初始化縮放
+            setTimeout(() => {
+                autoScaleText(document.getElementById('pBride'));
+                autoScaleText(document.getElementById('pGroom'));
+            }, 100);
         }
 
         function showProducts(bName, bImg) {
@@ -275,7 +280,6 @@
             document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
 
-            // 每次輸入時自動調整字體
             autoScaleText(bride);
             autoScaleText(groom);
         };
