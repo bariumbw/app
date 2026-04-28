@@ -42,17 +42,29 @@
             align-items: center;
         }
 
+        /* 修改處：使用 clamp 確保字數多時自動縮小，並防止溢出 */
         .bride-wrap {
             transform: translateX(-11px);
-            font-size: 45px; 
-            line-height: 1;
+            /* 最大 45px，根據容器寬度自動縮小，最小不低於 20px */
+            font-size: clamp(20px, 5vw, 45px); 
+            line-height: 1.1;
+            width: 80%;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .groom-wrap {
             transform: translateX(60px);
-            font-size: 45px; 
-            line-height: 1;
+            font-size: clamp(20px, 5vw, 45px); 
+            line-height: 1.1;
             margin-top: 1.9em; 
+            width: 80%;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* 日期地址定位 */
@@ -60,28 +72,25 @@
         .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; }
         .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; }
 
-        /* 產品詳情面板 - 已修改為固定大小且無滾動條 */
+        /* 產品詳情面板 */
         .info-panel {
             position: absolute;
             top: 7%;
             right: 3%;
-            /* 設定固定寬高 */
             width: 360px;
             height: 500px;
-            background: rgba(255,255,255,0.15); /* 稍微調高不透明度增加文字可讀性 */
+            background: rgba(255,255,255,0.15);
             padding: 20px;
             border-radius: 20px;
             display: none;
             z-index: 20;
             backdrop-filter: blur(7px);
-            /* 強制隱藏滾動條 */
             overflow: hidden;
         }
 
-        /* 針對 T&C 文字的縮小與自動截斷處理 */
         #pDetailTC {
             display: -webkit-box;
-            -webkit-line-clamp: 25; /* 最多顯示 12 行，防止內容溢出 */
+            -webkit-line-clamp: 25; 
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
