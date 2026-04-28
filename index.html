@@ -3,167 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽 - 頁一</title>
+    <title>囍帖預覽 - 2400x1700 完整比例</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,500&family=Great+Vibes&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Patrick+Hand&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
         :root {
             --wedding-red: #A62C3E;
         }
-        
-        .card-container {
-            background-color: var(--wedding-red);
-            /* 模擬背景的星光/漸層效果 */
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 50%),
-                url('https://www.transparenttextures.com/patterns/stardust.png');
+
+        /* 核心預覽容器：鎖定 2400x1700 比例 */
+        .card-ratio-box {
             width: 100%;
-            max-width: 800px;
-            aspect-ratio: 1.414 / 1;
+            max-width: 900px; /* 控制在網頁上的顯示寬度 */
+            aspect-ratio: 2400 / 1700;
+            background-color: var(--wedding-red);
             position: relative;
             color: #FFFFFF;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .font-serif-elegant { font-family: 'Cormorant Garamond', serif; }
-        .font-script { font-family: 'Great Vibes', cursive; }
-        .font-chinese { font-family: 'Noto Serif TC', serif; }
-
-        /* 防止選取文字/保護圖層 */
-        .watermark-layer {
+        /* 模擬星光背景 */
+        .bg-sparkle {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="8" fill="white" fill-opacity="0.15" text-anchor="middle" transform="rotate(-35 50 50)">PREVIEW ONLY</text></svg>');
+            background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.15) 0%, transparent 60%);
             pointer-events: none;
-            z-index: 50;
         }
 
-        .decoration-line {
+        /* 字體定義 */
+        .font-im-fell { font-family: 'IM Fell English', serif; }
+        .font-aloja-alt { font-family: 'Patrick Hand', cursive; } /* 模擬 Aloja 的手寫感 */
+        .font-script { font-family: 'Great Vibes', cursive; }
+
+        /* 保護浮水印 */
+        .protection-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="6" fill="white" fill-opacity="0.1" text-anchor="middle" transform="rotate(-30 50 50)">SAMPLE PREVIEW</text></svg>');
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* 裝飾線條 */
+        .deco-line-container {
             display: flex;
             align-items: center;
-            justify-content: center;
+            width: 80%;
             gap: 15px;
-            width: 100%;
+            margin: 1rem 0;
         }
-        .line { height: 1px; background: rgba(255,255,255,0.5); flex-grow: 1; max-width: 100px; }
-        .diamond { transform: rotate(45deg); width: 6px; height: 6px; border: 1px solid white; }
+        .deco-line { height: 1px; background: rgba(255,255,255,0.6); flex: 1; }
+        .deco-symbol { font-size: 1.2rem; transform: rotate(45deg); border: 1px solid white; width: 8px; height: 8px; }
     </style>
 </head>
-<body class="bg-gray-200 min-h-screen py-10 px-4">
+<body class="bg-stone-100 min-h-screen py-12 px-4">
 
-    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[1fr,400px] gap-12">
         
         <div class="flex flex-col items-center">
-            <div id="captureArea" class="card-container flex flex-col items-center justify-center p-8 text-center overflow-hidden">
-                <div class="watermark-layer"></div>
-
-                <div class="mb-6 z-10">
-                    <img id="previewImg" src="https://i.ibb.co/LzNfS8D/couple-placeholder.png" alt="Couple" class="h-40 md:h-52 object-contain drop-shadow-lg">
-                </div>
-
-                <p class="font-serif-elegant tracking-[0.3em] text-xs md:text-sm mb-4 opacity-90 uppercase">Together with their parents</p>
+            <h2 class="text-xl font-bold text-gray-800 mb-6 font-im-fell uppercase tracking-widest">Design Preview (2400 x 1700 Scale)</h2>
+            
+            <div class="card-ratio-box p-12 text-center">
+                <div class="bg-sparkle"></div>
+                <div class="protection-overlay"></div>
 
                 <div class="mb-6">
-                    <h1 class="font-script text-5xl md:text-7xl leading-tight">
-                        <span id="previewName1">Christian</span>
-                    </h1>
-                    <p class="font-serif-elegant italic text-2xl md:text-3xl my-[-10px]">and</p>
-                    <h1 class="font-script text-5xl md:text-7xl leading-tight">
-                        <span id="previewName2">Benjamin</span>
-                    </h1>
+                    <img id="previewImg" src="https://img.icons8.com/plasticine/400/wedding-couple.png" class="h-48 md:h-64 object-contain z-10 relative">
                 </div>
 
-                <p class="font-serif-elegant tracking-widest text-[10px] md:text-xs mb-6 opacity-80">
+                <p class="font-im-fell tracking-[0.4em] text-xs md:text-sm mb-4 opacity-90 uppercase">Together with their parents</p>
+
+                <div class="mb-4">
+                    <h1 id="previewName1" class="font-im-fell italic text-5xl md:text-7xl">Christian</h1>
+                    <p class="font-script text-2xl md:text-3xl my-[-5px] opacity-80">and</p>
+                    <h1 id="previewName2" class="font-im-fell italic text-5xl md:text-7xl">Benjamin</h1>
+                </div>
+
+                <p class="font-im-fell tracking-widest text-[10px] md:text-xs mb-6 opacity-70">
                     REQUEST THE HONOUR OF YOUR PRESENCE AT<br>THEIR WEDDING CELEBRATION
                 </p>
 
-                <div class="decoration-line mb-4 px-10">
-                    <div class="line"></div>
-                    <div class="diamond"></div>
-                    <span id="previewDate" class="font-serif-elegant font-bold text-xl md:text-3xl tracking-tighter whitespace-nowrap">OCTOBER 15, 2026</span>
-                    <div class="diamond"></div>
-                    <div class="line"></div>
+                <div class="deco-line-container">
+                    <div class="deco-line"></div>
+                    <div class="deco-symbol"></div>
+                    <span id="previewDate" class="font-aloja-alt text-2xl md:text-4xl px-4 whitespace-nowrap">October 15, 2026</span>
+                    <div class="deco-symbol"></div>
+                    <div class="deco-line"></div>
                 </div>
 
-                <div class="font-serif-elegant space-y-1">
-                    <h3 id="previewVenue" class="text-sm md:text-lg font-bold tracking-[0.2em] uppercase">Four Seasons Grand Ballroom</h3>
-                    <p id="previewAddress" class="text-[10px] md:text-xs opacity-70 tracking-wider font-light uppercase">8 Finance Street, Central, Hong Kong</p>
-                </div>
-
-                <div class="mt-8 opacity-40">
-                    <img src="https://img.icons8.com/ios/100/ffffff/wedding-rings.png" class="h-6">
+                <div class="font-im-fell mt-4">
+                    <h3 id="previewVenue" class="text-lg md:text-2xl font-bold tracking-[0.15em] uppercase mb-1">Four Seasons Grand Ballroom</h3>
+                    <p id="previewAddress" class="text-xs md:text-sm opacity-80 tracking-widest">8 Finance Street, Central, Hong Kong</p>
                 </div>
             </div>
-            <p class="mt-4 text-gray-500 text-sm">※ 版權所有：預覽圖僅供校對內容使用</p>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-xl">
-            <h2 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-4">自訂您的婚禮資訊</h2>
+        <div class="bg-white p-8 rounded-3xl shadow-2xl border border-gray-200 h-fit">
+            <h3 class="text-2xl font-bold mb-8 text-red-900 border-b pb-4 font-im-fell">EDIT DETAILS</h3>
             
             <div class="space-y-6">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-3">1. 選擇插圖風格 (參考圖1)</label>
-                    <div class="flex gap-4">
-                        <button onclick="updateImg('https://img.icons8.com/plasticine/200/wedding-couple.png')" class="w-16 h-16 border-2 rounded-lg hover:border-red-500 focus:border-red-500 p-1">
-                            <img src="https://img.icons8.com/plasticine/200/wedding-couple.png" class="w-full h-full object-contain">
-                        </button>
-                        <button onclick="updateImg('https://img.icons8.com/color/200/traditional-chinese-dress.png')" class="w-16 h-16 border-2 rounded-lg hover:border-red-500 p-1">
-                            <img src="https://img.icons8.com/color/200/traditional-chinese-dress.png" class="w-full h-full object-contain">
-                        </button>
-                        <p class="text-xs text-gray-400 self-end">可以更換為您提供的 1.jpg 中的切割圖</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-600 uppercase">First Name</label>
-                        <input type="text" id="inName1" value="Christian" class="w-full mt-1 p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-400 outline-none font-serif">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-600 uppercase">Second Name</label>
-                        <input type="text" id="inName2" value="Benjamin" class="w-full mt-1 p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-400 outline-none font-serif">
-                    </div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-tighter">Groom / Bride Name 1 (IM Fell)</label>
+                    <input type="text" id="inName1" value="Christian" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-im-fell text-xl">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-600 uppercase">Wedding Date</label>
-                    <input type="text" id="inDate" value="OCTOBER 15, 2026" class="w-full mt-1 p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-400 outline-none">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Groom / Bride Name 2 (IM Fell)</label>
+                    <input type="text" id="inName2" value="Benjamin" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-im-fell text-xl">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-600 uppercase">Venue Name</label>
-                    <input type="text" id="inVenue" value="Four Seasons Grand Ballroom" class="w-full mt-1 p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-400 outline-none">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Wedding Date (Aloja Style)</label>
+                    <input type="text" id="inDate" value="October 15, 2026" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-aloja-alt text-2xl text-red-700">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-600 uppercase">Location Address</label>
-                    <textarea id="inAddress" rows="2" class="w-full mt-1 p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-400 outline-none">8 Finance Street, Central, Hong Kong</textarea>
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Venue (IM Fell)</label>
+                    <input type="text" id="inVenue" value="Four Seasons Grand Ballroom" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-im-fell text-lg">
                 </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Location (IM Fell)</label>
+                    <textarea id="inAddress" rows="2" class="w-full mt-1 p-3 border-b-2 border-gray-100 focus:border-red-400 outline-none font-im-fell">8 Finance Street, Central, Hong Kong</textarea>
+                </div>
+            </div>
+            
+            <div class="mt-10 p-4 bg-red-50 rounded-xl border border-red-100">
+                <p class="text-xs text-red-800 leading-relaxed">
+                    <strong>注意：</strong> 此預覽圖之比例已固定為 2400x1700。請確保文字內容長度適中，以維持最佳視覺美感。
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        const mappings = [
-            { input: 'inName1', output: 'previewName1' },
-            { input: 'inName2', output: 'previewName2' },
-            { input: 'inDate', output: 'previewDate' },
-            { input: 'inVenue', output: 'previewVenue' },
-            { input: 'inAddress', output: 'previewAddress' }
+        // 雙向綁定更新
+        const inputs = [
+            { id: 'inName1', target: 'previewName1' },
+            { id: 'inName2', target: 'targetName2' }, // 修正對應
+            { id: 'inDate', target: 'previewDate' },
+            { id: 'inVenue', target: 'previewVenue' },
+            { id: 'inAddress', target: 'previewAddress' }
         ];
 
-        mappings.forEach(m => {
-            document.getElementById(m.input).addEventListener('input', (e) => {
-                document.getElementById(m.output).innerText = e.target.value;
-            });
-        });
-
-        function updateImg(url) {
-            document.getElementById('previewImg').src = url;
-        }
+        // 重新對應 Name2 並綁定所有事件
+        document.getElementById('inName1').addEventListener('input', e => document.getElementById('previewName1').innerText = e.target.value);
+        document.getElementById('inName2').addEventListener('input', e => document.getElementById('previewName2').innerText = e.target.value);
+        document.getElementById('inDate').addEventListener('input', e => document.getElementById('previewDate').innerText = e.target.value);
+        document.getElementById('inVenue').addEventListener('input', e => document.getElementById('previewVenue').innerText = e.target.value);
+        document.getElementById('inAddress').addEventListener('input', e => document.getElementById('previewAddress').innerText = e.target.value);
     </script>
 </body>
 </html>
