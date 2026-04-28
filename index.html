@@ -71,16 +71,16 @@
             text-align: left;
         }
 
-        /* 條碼樣式 */
+        /* 條碼樣式 - 已縮小 1/2 */
         .barcode-area {
-            margin-top: 1.5cqw;
-            padding-top: 1.5cqw;
+            margin-top: 0.75cqw;
+            padding-top: 0.75cqw;
             border-top: 1px solid rgba(255,255,255,0.2);
             text-align: center;
         }
         .barcode-img {
-            width: 80%;
-            height: 6cqw;
+            width: 60%; /* 寬度也適度縮減更協調 */
+            height: 3cqw; /* 原本 6cqw -> 3cqw */
             background: linear-gradient(90deg, 
                 #000 5%, transparent 5%, transparent 8%, 
                 #000 8%, #000 12%, transparent 12%, 
@@ -97,14 +97,14 @@
             );
             background-color: #fff;
             margin: 0 auto;
-            border-radius: 2px;
+            border-radius: 1px;
         }
         .barcode-num {
             color: #fff;
-            font-size: 1.2cqw;
+            font-size: 0.8cqw; /* 原本 1.2cqw -> 0.8cqw */
             font-family: monospace;
-            margin-top: 0.5cqw;
-            letter-spacing: 0.2em;
+            margin-top: 0.25cqw;
+            letter-spacing: 0.15em;
         }
 
         /* 響應式：手機版 vs 網站版 */
@@ -133,8 +133,8 @@
                 <div class="address-layer font-impact"><span id="pAddress" class="opacity-90">8 Finance Street, Central, Hong Kong</span></div>
                 
                 <div id="pDetailPanel" class="info-panel shadow-2xl border border-zinc-200" style="display: none;">
-                    <img id="pDetailBrandImg" src="" class="w-full h-12 object-contain mb-3">
-                    <h4 id="pDetailProdName" class="font-bold text-orange-500 mb-2 leading-tight text-[2cqw]"></h4>
+                    <img id="pDetailBrandImg" src="" class="w-full h-10 object-contain mb-2">
+                    <h4 id="pDetailProdName" class="font-bold text-orange-500 mb-1 leading-tight text-[1.8cqw]"></h4>
                     
                     <div id="pDetailTCContainer">
                         <p id="pDetailTC"></p>
@@ -220,15 +220,12 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
         const brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || defaultBrands;
         const productsDB = JSON.parse(localStorage.getItem('wedding_products')) || defaultProducts;
 
-        // 文字自動縮放邏輯 (修正版)
         function autoScaleText(element, maxFontSize = 5, minFontSize = 1) {
             const parent = element.parentElement;
             let fontSizeCqw = maxFontSize;
             element.style.fontSize = fontSizeCqw + 'cqw';
-            
-            // 如果內容高度或寬度超過容器，就縮小
             while ((element.scrollHeight > parent.offsetHeight || element.scrollWidth > parent.offsetWidth) && fontSizeCqw > minFontSize) {
-                fontSizeCqw -= 0.1;
+                fontSizeCqw -= 0.05;
                 element.style.fontSize = fontSizeCqw + 'cqw';
             }
         }
@@ -264,17 +261,12 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
 
         function applySelection(img, name, tc) {
             const panel = document.getElementById('pDetailPanel');
-            panel.style.display = 'flex'; // 使用 flex 以維持布局
+            panel.style.display = 'flex';
             document.getElementById('pDetailBrandImg').src = img;
             document.getElementById('pDetailProdName').innerText = name;
-            
             const tcEl = document.getElementById('pDetailTC');
             tcEl.innerText = tc;
-            
-            // 延遲一點點執行縮放，確保 DOM 已正確計算
-            setTimeout(() => {
-                autoScaleText(tcEl, 1.2, 0.5); 
-            }, 10);
+            setTimeout(() => { autoScaleText(tcEl, 1.2, 0.4); }, 10);
         }
 
         const sync = () => {
@@ -287,7 +279,6 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             }
             document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
-            
             autoScaleText(document.getElementById('pBride'), 5, 1);
             autoScaleText(document.getElementById('pGroom'), 5, 1);
         };
