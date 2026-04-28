@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 字體縮小與大間距版</title>
+    <title>囍帖預覽器 - 旗艦版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
     
     <style>
-        /* 1. 核心畫布：2400 x 1700 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
@@ -23,16 +22,14 @@
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
         }
 
-        /* 字體定義 */
         .font-im-fell { font-family: 'IM Fell English', serif; }
         .font-aloja { font-family: 'Patrick Hand', cursive; }
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 姓名區域：精確像素控制 */
         .name-layer {
             position: absolute;
-            top: 19%; /* 向上微調以容納 3 行間距 */
+            top: 19%; 
             left: 0; 
             width: 50%; 
             color: #FFFFFF;
@@ -42,22 +39,19 @@
             align-items: center;
         }
 
-        /* 新娘名字：左移並設定精確字體大小 */
         .bride-wrap {
             transform: translateX(-9px);
-            font-size: 45px; /* 這裡直接控制縮小後的大小 */
+            font-size: 45px; 
             line-height: 1;
         }
 
-        /* 新郎名字：右移、縮小字體、並隔開 3 行 (約 5em) */
         .groom-wrap {
             transform: translateX(60px);
             font-size: 45px; 
             line-height: 1;
-            margin-top: 1.9em; /* 這裡產生約 3 行的空白間距 */
+            margin-top: 1.9em; 
         }
 
-        /* 2. 元素定位 */
         .voucher-layer {
             position: absolute;
             top: 0%; left: 65%; width: 16%; z-index: 5;
@@ -95,31 +89,14 @@
         <div class="flex flex-col items-center">
             <div class="preview-canvas">
                 <div class="watermark"></div>
-
-                <div class="voucher-layer">
-                    <img id="pVoucher" src="1.png" alt="Style">
-                </div>
-
+                <div class="voucher-layer"><img id="pVoucher" src="1.png" alt="Style"></div>
                 <div class="name-layer font-aniyah">
-                    <div class="bride-wrap">
-                        <h1 id="pBride">Christian</h1>
-                    </div>
-                    <div class="groom-wrap">
-                        <h1 id="pGroom">Benjamin</h1>
-                    </div>
+                    <div class="bride-wrap"><h1 id="pBride">Christian</h1></div>
+                    <div class="groom-wrap"><h1 id="pGroom">Benjamin</h1></div>
                 </div>
-
-                <div class="date-layer font-aloja">
-                    <span id="pDate" class="text-lg md:text-[18px] uppercase tracking-[0.25em]">October 15, 2026</span>
-                </div>
-
-                <div class="venue-layer font-impact">
-                    <span id="pVenue" class="text-[10px] md:text-[15px]">Four Seasons Grand Ballroom</span>
-                </div>
-
-                <div class="address-layer font-impact tracking-widest leading-snug">
-                    <span id="pAddress" class="text-[10px] md:text-[15px] opacity-90">8 Finance Street, Central, Hong Kong</span>
-                </div>
+                <div class="date-layer font-aloja"><span id="pDate" class="text-lg md:text-[18px] uppercase tracking-[0.25em]">October 15, 2026</span></div>
+                <div class="venue-layer font-impact"><span id="pVenue" class="text-[10px] md:text-[15px]">Four Seasons Grand Ballroom</span></div>
+                <div class="address-layer font-impact tracking-widest leading-snug"><span id="pAddress" class="text-[10px] md:text-[15px] opacity-90">8 Finance Street, Central, Hong Kong</span></div>
             </div>
         </div>
 
@@ -134,31 +111,27 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
-                                <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aniyah text-2xl focus:border-zinc-900 transition-all">
+                                <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-2xl focus:border-zinc-900">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
-                                <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aniyah text-2xl focus:border-zinc-900 transition-all">
+                                <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-2xl focus:border-zinc-900">
                             </div>
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
-                            <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aloja text-xl text-red-900 focus:border-zinc-900 transition-all">
+                            <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-xl text-red-900 focus:border-zinc-900">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地</label>
-                            <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-lg uppercase focus:border-zinc-900 transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址</label>
-                            <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-sm uppercase focus:border-zinc-900 transition-all">8 Finance Street, Central, Hong Kong</textarea>
+                            <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-lg uppercase focus:border-zinc-900">
                         </div>
                     </div>
                 </section>
 
                 <hr class="mb-10 border-zinc-100">
 
-                <section>
+                <section class="mb-10">
                     <h2 class="text-xl font-bold text-zinc-800 mb-6 flex items-center font-im-fell tracking-tight">
                         <span class="w-8 h-8 bg-zinc-900 text-white rounded-full flex items-center justify-center text-sm mr-3 font-sans">02</span>
                         禮券選擇
@@ -168,16 +141,17 @@
                         <button onclick="changeVoucher('2.png')" class="border bg-white p-1 hover:border-zinc-900 rounded-lg transition-all"><img src="2.png" class="h-8 mx-auto"></button>
                         <button onclick="changeVoucher('3.png')" class="border bg-white p-1 hover:border-zinc-900 rounded-lg transition-all"><img src="3.png" class="h-8 mx-auto"></button>
                         <button onclick="changeVoucher('4.png')" class="border bg-white p-1 hover:border-zinc-900 rounded-lg transition-all"><img src="4.png" class="h-8 mx-auto"></button>
-                        <button onclick="changeVoucher('5.png')" class="border bg-white p-1 hover:border-zinc-900 rounded-lg transition-all"><img src="5.png" class="h-8 mx-auto"></button>
-                        <button onclick="changeVoucher('6.png')" class="border bg-white p-1 hover:border-zinc-900 rounded-lg transition-all"><img src="6.png" class="h-8 mx-auto"></button>
-                        <button onclick="changeVoucher('7.png')" class="border bg-white p-1 hover:border-zinc-900 rounded-lg transition-all"><img src="7.png" class="h-8 mx-auto"></button>
-                        <button onclick="changeVoucher('8.png')" class="border bg-white p-1 hover:border-zinc-900 rounded-lg transition-all"><img src="8.png" class="h-8 mx-auto"></button>
                     </div>
                 </section>
 
-                <button class="w-full mt-10 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-800 transition shadow-lg uppercase text-sm">
+                <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-800 transition shadow-lg uppercase text-sm mb-4">
                     確認並保存設計
                 </button>
+
+                <a href="admin.html" class="flex items-center justify-center w-full py-3 border-2 border-zinc-100 text-zinc-400 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-50 hover:text-zinc-900 transition">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    員工專屬後台頁面
+                </a>
             </div>
         </div>
     </div>
@@ -189,9 +163,8 @@
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
             document.getElementById('pDate').innerText = document.getElementById('iDate').value;
             document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
-            document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
-        ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
+        ['iBride', 'iGroom', 'iDate', 'iVenue'].forEach(id => {
             document.getElementById(id).addEventListener('input', sync);
         });
     </script>
