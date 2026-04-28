@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 名字位置偏移版</title>
+    <title>囍帖預覽器 - 比例與間距優化版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -15,7 +15,7 @@
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=7'); 
+            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=8'); 
             background-color: #A62C3E; 
             background-size: cover;
             background-position: center;
@@ -51,9 +51,9 @@
         /* 姓名區域：整體控制 */
         .name-layer {
             position: absolute;
-            top: 30%; 
+            top: 38%; /* 微調高度使其更平衡 */
             left: 0; 
-            width: 30%; /* 擴大容器範圍以便名字橫向移動 */
+            width: 50%; 
             color: #FFFFFF;
             z-index: 10;
             display: flex;
@@ -61,17 +61,17 @@
             align-items: center;
         }
 
-        /* 新娘名字：向左平移 10 格 (約 90px) */
+        /* 新娘名字：向左平移 100px */
         .bride-wrap {
-            transform: translateX(-90px);
-            line-height: 1;
+            transform: translateX(-100px);
+            line-height: 1.2;
         }
 
-        /* 新郎名字：向右平移 15 格 (約 100px) */
+        /* 新郎名字：向右平移 150px，並加上間距（隔一行） */
         .groom-wrap {
-            transform: translateX(100px);
-            line-height: 1;
-            margin-top: 0.2em;
+            transform: translateX(150px);
+            line-height: 1.2;
+            margin-top: 1.5em; /* 這裡產生「隔一行」的距離 */
         }
 
         /* 日期位置 */
@@ -131,10 +131,10 @@
 
                 <div class="name-layer font-aniyah">
                     <div class="bride-wrap">
-                        <h1 id="pBride" class="text-4xl md:text-6xl">Christian</h1>
+                        <h1 id="pBride" class="text-3xl md:text-5xl">Christian</h1>
                     </div>
                     <div class="groom-wrap">
-                        <h1 id="pGroom" class="text-4xl md:text-6xl">Benjamin</h1>
+                        <h1 id="pGroom" class="text-3xl md:text-5xl">Benjamin</h1>
                     </div>
                 </div>
 
