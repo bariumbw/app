@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖自訂預覽 (圖 2 對齊版)</title>
+    <title>囍帖預覽器 - GitHub 版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
@@ -13,13 +13,10 @@
             aspect-ratio: 2400 / 1700;
             position: relative;
             
-            /* --- 核心底圖設定 --- */
-            /* 我完全保留了您指定的預設圖路徑 */
-            background-image: url('DESIGN PREVIEW 圖.jpg'); 
+            /* 修正細節：根據上傳紀錄，檔名前方包含一個空格 */
+            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg'); 
             
-            /* 如果圖片沒載入，我「未自行決定」更換圖片路徑，而是將底色設為您的設計紅 */
-            background-color: #A62C3E; 
-            
+            background-color: #A62C3E; /* 設計底色，防止圖片載入中顯示黑色 */
             background-size: cover;
             background-position: center;
             overflow: hidden;
@@ -29,16 +26,7 @@
         .font-im-fell { font-family: 'IM Fell English', serif; }
         .font-aloja { font-family: 'Patrick Hand', cursive; }
 
-        /* 防盜保護層 */
-        .watermark {
-            position: absolute;
-            inset: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="5" fill="white" fill-opacity="0.1" text-anchor="middle" transform="rotate(-30 50 50)">DESIGN PREVIEW ONLY</text></svg>');
-            z-index: 50;
-            pointer-events: none;
-        }
-
-        /* 根據「圖 2 / 可供更改的地方」精確定位 */
+        /* 根據「可供更改的地方.jpg」精確定位 */
         .name-layer { position: absolute; top: 36%; left: 5%; width: 44%; text-align: center; color: white; }
         .date-layer { position: absolute; top: 70.2%; left: 11%; width: 32%; text-align: center; color: white; }
         .venue-layer { position: absolute; top: 77%; left: 7.5%; width: 39%; text-align: center; color: white; }
@@ -48,64 +36,50 @@
 <body class="bg-zinc-800 min-h-screen flex items-center justify-center p-4">
 
     <div class="max-w-7xl w-full grid grid-cols-1 xl:grid-cols-[1fr,380px] gap-8">
-        
         <div class="flex flex-col items-center">
             <div class="preview-canvas font-im-fell">
-                <div class="watermark"></div>
-
                 <div class="name-layer italic">
                     <h1 id="pNames" class="text-4xl md:text-7xl leading-tight">Christian<br><span class="text-2xl md:text-4xl opacity-80">and</span><br>Benjamin</h1>
                 </div>
-
                 <div class="date-layer font-aloja">
                     <span id="pDate" class="text-2xl md:text-4xl uppercase tracking-widest">October 15, 2026</span>
                 </div>
-
                 <div class="venue-layer font-bold uppercase tracking-[0.2em]">
                     <span id="pVenue" class="text-sm md:text-xl">Four Seasons Grand Ballroom</span>
                 </div>
-                <div class="address-layer uppercase tracking-widest leading-relaxed">
+                <div class="address-layer uppercase tracking-widest">
                     <span id="pAddress" class="text-[10px] md:text-sm">8 Finance Street, Central, Hong Kong</span>
                 </div>
             </div>
-            
-            <p class="mt-4 text-zinc-500 text-xs tracking-tighter uppercase font-light">※ 此預覽嚴格鎖定 2400x1700 比例。若背景圖片（底圖）無法顯示，請將此網頁發佈至網路伺服器上測試。</p>
+            <p class="mt-4 text-zinc-500 text-xs uppercase font-light">GitHub Pages Preview | 2400x1700</p>
         </div>
 
         <div class="bg-white p-8 rounded-3xl shadow-2xl h-fit">
-            <h2 class="text-xl font-bold mb-6 text-zinc-800 font-im-fell uppercase tracking-widest border-b pb-4">DESIGN EDITOR</h2>
-            
+            <h2 class="text-xl font-bold mb-6 text-zinc-800 font-im-fell uppercase tracking-widest border-b pb-4">Design Editor</h2>
             <div class="space-y-5 font-im-fell">
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Names (IM Fell Italic)</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Names</label>
                     <textarea id="iNames" rows="3" class="w-full mt-1 p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-xl italic leading-tight">Christian
 and
 Benjamin</textarea>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Date (Aloja Font)</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Date</label>
                     <input type="text" id="iDate" value="October 15, 2026" class="w-full mt-1 p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-aloja text-xl text-red-800">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Venue Name</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Venue</label>
                     <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full mt-1 p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none uppercase font-bold text-lg">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Location Address</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Address</label>
                     <textarea id="iAddress" rows="2" class="w-full mt-1 p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none uppercase text-sm tracking-widest leading-tight">8 Finance Street, Central, Hong Kong</textarea>
                 </div>
-            </div>
-            
-            <div class="mt-8 pt-6 border-t border-zinc-100">
-                <button class="w-full py-3 bg-zinc-900 text-white rounded-lg font-bold tracking-widest hover:bg-zinc-700 transition">
-                    CONFIRM DESIGN
-                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // 即時預覽更新
         const sync = (idIn, idOut, isHTML = false) => {
             const input = document.getElementById(idIn);
             const preview = document.getElementById(idOut);
