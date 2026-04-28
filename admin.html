@@ -3,163 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖系統 - 員工管理後台</title>
+    <title>員工後台 - 數據同步中心</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&display=swap" rel="stylesheet">
-    <style>
-        .font-im-fell { font-family: 'IM Fell English', serif; }
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
-        #adminContent { display: none; } /* 初始隱藏，驗證後顯示 */
-    </style>
+    <style>.font-im-fell { font-family: 'IM Fell English', serif; } #adminContent { display: none; }</style>
 </head>
-<body class="bg-zinc-50 min-h-screen text-zinc-800">
+<body class="bg-zinc-50 min-h-screen">
 
-    <div id="loginOverlay" class="fixed inset-0 bg-zinc-900 z-[100] flex items-center justify-center p-6">
-        <div class="bg-white p-8 rounded-[2rem] shadow-2xl max-w-sm w-full text-center">
-            <h1 class="text-2xl font-bold mb-6 font-im-fell tracking-tight">員工身分驗證</h1>
-            <p class="text-sm text-zinc-500 mb-6">請輸入管理員授權碼以進入後台</p>
-            <input type="password" id="authCode" placeholder="授權碼" class="w-full p-4 bg-zinc-100 border-none rounded-xl mb-4 outline-none focus:ring-2 focus:ring-zinc-900 transition-all text-center tracking-widest">
-            <button onclick="verifyStaff()" class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold hover:bg-zinc-800 transition shadow-lg uppercase text-sm">
-                進入管理系統
-            </button>
-            <p id="loginError" class="text-red-500 text-xs mt-4 hidden">驗證碼錯誤，請重新輸入</p>
+    <div id="loginOverlay" class="fixed inset-0 bg-zinc-900 z-[100] flex items-center justify-center text-white">
+        <div class="max-w-sm w-full text-center p-6">
+            <h1 class="text-3xl font-im-fell mb-6 italic">Staff Portal</h1>
+            <input type="password" id="authCode" placeholder="授權碼" class="w-full p-4 bg-zinc-800 rounded-xl mb-4 text-center outline-none focus:ring-1 focus:ring-white">
+            <button onclick="verifyStaff()" class="w-full py-4 bg-white text-black rounded-xl font-bold uppercase text-xs">進入</button>
         </div>
     </div>
 
-    <div id="adminContent" class="max-w-6xl mx-auto p-6 md:p-12">
+    <div id="adminContent" class="max-w-6xl mx-auto p-12">
         <header class="flex justify-between items-center mb-12">
-            <div>
-                <h1 class="text-3xl font-bold font-im-fell tracking-tighter text-zinc-900">後台管理中心</h1>
-                <p class="text-zinc-500 text-sm mt-1">管理品牌、產品及禮券配置</p>
-            </div>
-            <button onclick="location.reload()" class="text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-900 transition">登出系統</button>
+            <h1 class="text-3xl font-bold font-im-fell">Voucher Manager</h1>
+            <a href="index.html" class="text-xs font-bold border-b-2 border-zinc-900">返回預覽頁</a>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-[380px,1fr] gap-10">
-            
-            <aside class="space-y-8">
-                <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-zinc-100">
-                    <h2 class="text-lg font-bold mb-6 flex items-center">
-                        <span class="w-6 h-6 bg-zinc-900 text-white rounded-full flex items-center justify-center text-[10px] mr-3">ADD</span>
-                        新增產品/品牌
-                    </h2>
-                    
-                    <div class="space-y-5">
-                        <div>
-                            <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">品牌名稱</label>
-                            <input type="text" id="brandName" placeholder="例如: Godiva" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none focus:border-zinc-900 transition-all">
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">品牌圖片 (Logo URL)</label>
-                            <input type="text" id="brandImg" placeholder="圖片網址或檔名" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none focus:border-zinc-900 transition-all">
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">產品名稱</label>
-                            <input type="text" id="productName" placeholder="例如: 婚禮禮券 $50" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none focus:border-zinc-900 transition-all">
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">產品 T&C (條款細則)</label>
-                            <textarea id="productTC" rows="4" placeholder="請輸入使用限制、期限等..." class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none focus:border-zinc-900 transition-all text-sm"></textarea>
-                        </div>
-
-                        <button onclick="addItem()" class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold hover:bg-zinc-800 transition shadow-lg uppercase text-sm">
-                            確認新增項目
-                        </button>
-                    </div>
+        <div class="grid grid-cols-1 lg:grid-cols-[350px,1fr] gap-10">
+            <aside class="bg-white p-8 rounded-[2rem] shadow-xl h-fit">
+                <h2 class="text-lg font-bold mb-6 italic">新增品牌產品</h2>
+                <div class="space-y-4">
+                    <select id="inCat" class="w-full p-3 bg-zinc-100 rounded-xl outline-none">
+                        <option value="西式禮餅">西式禮餅</option>
+                        <option value="中式唐餅">中式唐餅</option>
+                        <option value="美食餐飲">美食餐飲</option>
+                    </select>
+                    <input type="text" id="inBrand" placeholder="品牌 (如: Godiva)" class="w-full p-3 bg-zinc-100 rounded-xl outline-none">
+                    <input type="text" id="inImg" placeholder="品牌圖片 URL" class="w-full p-3 bg-zinc-100 rounded-xl outline-none">
+                    <input type="text" id="inProd" placeholder="產品 (如: 禮券 $50)" class="w-full p-3 bg-zinc-100 rounded-xl outline-none">
+                    <textarea id="inTC" placeholder="產品 T&C" rows="4" class="w-full p-3 bg-zinc-100 rounded-xl outline-none text-sm"></textarea>
+                    <button onclick="saveData()" class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold uppercase text-xs">儲存數據</button>
                 </div>
             </aside>
 
-            <main>
-                <div class="bg-white rounded-[2rem] shadow-xl border border-zinc-100 overflow-hidden">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em]">
-                                <th class="p-6">品牌</th>
-                                <th class="p-6">產品資訊</th>
-                                <th class="p-6">T&C</th>
-                                <th class="p-6 text-right">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="itemList" class="divide-y divide-zinc-100">
-                            <tr>
-                                <td class="p-6 flex items-center">
-                                    <div class="w-10 h-10 bg-zinc-100 rounded-lg mr-4 flex items-center justify-center text-[10px] text-zinc-400 overflow-hidden">
-                                        <img src="1.png" class="object-contain" alt="Logo">
-                                    </div>
-                                    <span class="font-bold">Godiva</span>
-                                </td>
-                                <td class="p-6 text-sm">金裝巧克力禮券</td>
-                                <td class="p-6 text-[10px] text-zinc-400 max-w-[200px] truncate">此券只適用於香港指定門市...</td>
-                                <td class="p-6 text-right">
-                                    <button class="text-zinc-300 hover:text-red-500 transition">刪除</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <main class="bg-white rounded-[2rem] shadow-xl overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-zinc-900 text-white text-[10px] uppercase">
+                        <tr>
+                            <th class="p-4">分類</th>
+                            <th class="p-4">品牌</th>
+                            <th class="p-4">產品</th>
+                            <th class="p-4 text-right">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dbList" class="divide-y divide-zinc-100"></tbody>
+                </table>
             </main>
         </div>
     </div>
 
     <script>
-        // 簡易驗證邏輯
         function verifyStaff() {
-            const code = document.getElementById('authCode').value;
-            const staffKey = "staff888"; // 設定您的後台密碼
-
-            if(code === staffKey) {
+            if(document.getElementById('authCode').value === "staff888") {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
-            } else {
-                const error = document.getElementById('loginError');
-                error.classList.remove('hidden');
-                setTimeout(() => error.classList.add('hidden'), 2000);
+                loadList();
             }
         }
 
-        // 新增項目邏輯
-        function addItem() {
-            const brand = document.getElementById('brandName').value;
-            const img = document.getElementById('brandImg').value;
-            const product = document.getElementById('productName').value;
-            const tc = document.getElementById('productTC').value;
+        function saveData() {
+            let db = JSON.parse(localStorage.getItem('weddingVouchers')) || [];
+            const newItem = {
+                id: Date.now(),
+                category: document.getElementById('inCat').value,
+                brand: document.getElementById('inBrand').value,
+                brandImg: document.getElementById('inImg').value || '1.png',
+                product: document.getElementById('inProd').value,
+                tc: document.getElementById('inTC').value
+            };
+            db.push(newItem);
+            localStorage.setItem('weddingVouchers', JSON.stringify(db));
+            loadList();
+            alert("數據已同步至前台");
+        }
 
-            if(!brand || !product) {
-                alert("請填寫基本品牌與產品資訊");
-                return;
-            }
+        function deleteItem(id) {
+            let db = JSON.parse(localStorage.getItem('weddingVouchers')) || [];
+            db = db.filter(item => item.id !== id);
+            localStorage.setItem('weddingVouchers', JSON.stringify(db));
+            loadList();
+        }
 
-            const tbody = document.getElementById('itemList');
-            const tr = document.createElement('tr');
-            tr.className = "hover:bg-zinc-50 transition-colors";
-            
-            tr.innerHTML = `
-                <td class="p-6 flex items-center">
-                    <div class="w-10 h-10 bg-zinc-100 rounded-lg mr-4 flex items-center justify-center text-[10px] text-zinc-400 overflow-hidden">
-                        ${img ? `<img src="${img}" class="object-contain">` : 'NO IMG'}
-                    </div>
-                    <span class="font-bold">${brand}</span>
-                </td>
-                <td class="p-6 text-sm">${product}</td>
-                <td class="p-6 text-[10px] text-zinc-400 max-w-[200px] truncate">${tc}</td>
-                <td class="p-6 text-right">
-                    <button onclick="this.closest('tr').remove()" class="text-zinc-300 hover:text-red-500 transition">刪除</button>
-                </td>
-            `;
-
-            tbody.prepend(tr);
-            
-            // 清空表單
-            document.getElementById('brandName').value = '';
-            document.getElementById('brandImg').value = '';
-            document.getElementById('productName').value = '';
-            document.getElementById('productTC').value = '';
-            
-            alert("成功新增品牌產品項目！");
+        function loadList() {
+            const db = JSON.parse(localStorage.getItem('weddingVouchers')) || [];
+            const list = document.getElementById('dbList');
+            list.innerHTML = db.map(i => `
+                <tr class="text-sm">
+                    <td class="p-4"><span class="bg-zinc-100 px-2 py-1 rounded text-[10px]">${i.category}</span></td>
+                    <td class="p-4 font-bold">${i.brand}</td>
+                    <td class="p-4">${i.product}</td>
+                    <td class="p-4 text-right"><button onclick="deleteItem(${i.id})" class="text-red-400 font-bold hover:text-red-600 transition">刪除</button></td>
+                </tr>
+            `).join('');
         }
     </script>
 </body>
