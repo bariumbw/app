@@ -71,7 +71,7 @@
             text-align: left;
         }
 
-        /* 條碼樣式 - 已縮小 1/2 */
+        /* 條碼樣式 */
         .barcode-area {
             margin-top: 0.75cqw;
             padding-top: 0.75cqw;
@@ -79,8 +79,8 @@
             text-align: center;
         }
         .barcode-img {
-            width: 60%; /* 寬度也適度縮減更協調 */
-            height: 3cqw; /* 原本 6cqw -> 3cqw */
+            width: 60%;
+            height: 3cqw;
             background: linear-gradient(90deg, 
                 #000 5%, transparent 5%, transparent 8%, 
                 #000 8%, #000 12%, transparent 12%, 
@@ -101,13 +101,13 @@
         }
         .barcode-num {
             color: #fff;
-            font-size: 0.8cqw; /* 原本 1.2cqw -> 0.8cqw */
+            font-size: 0.8cqw;
             font-family: monospace;
             margin-top: 0.25cqw;
             letter-spacing: 0.15em;
         }
 
-        /* 響應式：手機版 vs 網站版 */
+        /* 響應式佈局 */
         @media (min-width: 1280px) {
             .control-panel-scroll { max-height: 90vh; overflow-y: auto; }
             .control-panel-scroll::-webkit-scrollbar { width: 6px; }
@@ -126,20 +126,16 @@
         
         <div class="flex flex-col items-center relative">
             <div class="preview-canvas">
-                <div class="bride-layer font-aniyah"><div class="name-wrap"><h1 id="pBride">Rosesalina</h1></div></div>
+                <div class="bride-layer font-aniyah"><div class="name-wrap"><h1 id="pBride">Christian</h1></div></div>
                 <div class="groom-layer font-aniyah"><div class="name-wrap"><h1 id="pGroom">Benjamin</h1></div></div>
                 <div class="date-layer font-aloja"><span id="pDate" class="uppercase">October 15, 2026</span></div>
                 <div class="venue-layer font-impact"><span id="pVenue">Four Seasons Grand Ballroom</span></div>
                 <div class="address-layer font-impact"><span id="pAddress" class="opacity-90">8 Finance Street, Central, Hong Kong</span></div>
                 
-                <div id="pDetailPanel" class="info-panel shadow-2xl border border-zinc-200" style="display: none;">
+                <div id="pDetailPanel" class="info-panel shadow-2xl border border-zinc-200">
                     <img id="pDetailBrandImg" src="" class="w-full h-10 object-contain mb-2">
                     <h4 id="pDetailProdName" class="font-bold text-orange-500 mb-1 leading-tight text-[1.8cqw]"></h4>
-                    
-                    <div id="pDetailTCContainer">
-                        <p id="pDetailTC"></p>
-                    </div>
-
+                    <div id="pDetailTCContainer"><p id="pDetailTC"></p></div>
                     <div class="barcode-area">
                         <div class="barcode-img"></div>
                         <div class="barcode-num">8888888888</div>
@@ -150,13 +146,14 @@
 
         <div class="bg-zinc-50 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-hidden flex flex-col">
             <div class="control-panel-scroll p-8">
+                
                 <section class="mb-8">
                     <h2 class="text-xl font-bold text-zinc-800 mb-6 flex items-center font-im-fell italic">
                         <span class="w-7 h-7 bg-zinc-900 text-white rounded-full flex items-center justify-center text-[10px] mr-3 font-sans not-italic">01</span>設計編輯器
                     </h2>
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-3">
-                            <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label><input type="text" id="iBride" value="Rosesalina" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact"></div>
+                            <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label><input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact"></div>
                             <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label><input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact"></div>
                         </div>
                         <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label><input type="date" id="iDate" value="2026-10-15" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-red-900 font-sans font-bold"></div>
@@ -171,6 +168,12 @@
                     <h2 class="text-xl font-bold text-zinc-800 mb-6 flex items-center font-im-fell italic">
                         <span class="w-7 h-7 bg-zinc-900 text-white rounded-full flex items-center justify-center text-[10px] mr-3 font-sans not-italic">02</span>禮券品牌
                     </h2>
+                    
+                    <div class="flex gap-2 mb-4 bg-zinc-200 p-1 rounded-xl">
+                        <button onclick="switchPage('official')" id="tab-official" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-zinc-900 shadow-sm">官方合作</button>
+                        <button onclick="switchPage('custom')" id="tab-custom" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-zinc-500 hover:text-zinc-900">自定義品牌</button>
+                    </div>
+
                     <div id="brandGrid" class="grid grid-cols-4 gap-2"></div>
                 </section>
 
@@ -205,11 +208,13 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
 如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。
 分店地址︰https://www.godiva.com.hk/boutiques.html`;
 
-        const defaultBrands = [
+        // 預設品牌 (官方)
+        const officialBrands = [
             { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
-            { name: "Godiva", img: "https://www.godiva.com.hk/media/logo/default/logo_full_2025.png" }
+            { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" }
         ];
 
+        // 產品資料
         const defaultProducts = [
             { brandName: "agnès b.", product: "$50 心意禮券", tc: agnesBTC },
             { brandName: "agnès b.", product: "$100 心意禮券", tc: agnesBTC.replace("HK$50", "HK$100") },
@@ -217,8 +222,7 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             { brandName: "Godiva", product: "HK$100 禮券", tc: godivaTC }
         ];
 
-        const brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || defaultBrands;
-        const productsDB = JSON.parse(localStorage.getItem('wedding_products')) || defaultProducts;
+        let currentPage = 'official';
 
         function autoScaleText(element, maxFontSize = 5, minFontSize = 1) {
             const parent = element.parentElement;
@@ -230,17 +234,37 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             }
         }
 
-        function init() {
+        function switchPage(page) {
+            currentPage = page;
+            const tabOff = document.getElementById('tab-official');
+            const tabCust = document.getElementById('tab-custom');
+            
+            if (page === 'official') {
+                tabOff.className = "flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-zinc-900 shadow-sm";
+                tabCust.className = "flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-zinc-500 hover:text-zinc-900";
+                renderBrands(officialBrands);
+            } else {
+                tabCust.className = "flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-zinc-900 shadow-sm";
+                tabOff.className = "flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-zinc-500 hover:text-zinc-900";
+                const customBrands = JSON.parse(localStorage.getItem('wedding_brands')) || [];
+                renderBrands(customBrands);
+            }
+        }
+
+        function renderBrands(brands) {
             const grid = document.getElementById('brandGrid');
             grid.innerHTML = '';
-            brandsDB.forEach(brand => {
+            if (brands.length === 0) {
+                grid.innerHTML = '<p class="col-span-4 text-[9px] text-zinc-400 text-center py-4 italic">暫無自定義品牌</p>';
+                return;
+            }
+            brands.forEach(brand => {
                 const btn = document.createElement('button');
                 btn.className = "aspect-square border-2 border-zinc-50 bg-zinc-200 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
                 btn.onclick = () => showProducts(brand.name, brand.img);
                 btn.innerHTML = `<img src="${brand.img}" class="max-h-full max-w-full object-contain" alt="${brand.name}">`;
                 grid.appendChild(btn);
             });
-            setTimeout(() => { sync(); }, 100);
         }
 
         function showProducts(bName, bImg) {
@@ -250,7 +274,8 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             section.classList.remove('hidden');
             title.innerText = `${bName} 產品選擇`;
             grid.innerHTML = '';
-            productsDB.filter(p => p.brandName === bName).forEach(p => {
+            const allProducts = [...defaultProducts, ...(JSON.parse(localStorage.getItem('wedding_products')) || [])];
+            allProducts.filter(p => p.brandName === bName).forEach(p => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-3 border border-zinc-100 rounded-xl hover:bg-zinc-900 hover:text-white text-xs font-bold transition-all shadow-sm";
                 btn.innerText = p.product;
@@ -287,7 +312,10 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             document.getElementById(id).addEventListener('input', sync);
         });
 
-        window.onload = init;
+        window.onload = () => {
+            switchPage('official');
+            sync();
+        };
     </script>
 </body>
 </html>
