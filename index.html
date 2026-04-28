@@ -29,7 +29,7 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 姓名區域獨立排版 - 核心修改處 */
+        /* 姓名區域獨立排版 */
         .bride-layer {
             position: absolute;
             top: 20%; 
@@ -39,25 +39,23 @@
             z-index: 10;
             display: flex;
             justify-content: center;
-            /* 保持你原本要求的位移 */
             transform: translateX(-11px);
         }
 
         .groom-layer {
             position: absolute;
-            top: 38.5%; /* 根據原本 margin-top 1.9em 推算的垂直位置 */
+            top: 38.5%; 
             left: 0; 
             width: 50%; 
             color: #FFFFFF;
             z-index: 10;
             display: flex;
             justify-content: center;
-            /* 保持你原本要求的位移 */
             transform: translateX(60px);
         }
 
         .name-wrap {
-            width: 80%; /* 限制縮放區域寬度，避免撞邊 */
+            width: 80%; 
             text-align: center;
         }
 
@@ -157,7 +155,7 @@
                         </div>
                         <div>
                             <label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
-                            <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-red-900 font-impact">
+                            <input type="date" id="iDate" value="2026-10-15" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none focus:border-zinc-900 text-red-900 font-sans font-bold">
                         </div>
                         <div>
                             <label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">宴客場地</label>
@@ -197,13 +195,10 @@
     </div>
 
     <script>
-        // 自動縮放文字函式
         function autoScaleText(element) {
             const parent = element.parentElement;
-            let fontSize = 45; // 起始最大字級
+            let fontSize = 45; 
             element.style.fontSize = fontSize + 'px';
-
-            // 嚴格檢核：只要超出父容器寬度，就縮小
             while (element.scrollWidth > parent.offsetWidth && fontSize > 10) {
                 fontSize--;
                 element.style.fontSize = fontSize + 'px';
@@ -230,10 +225,10 @@
                 grid.appendChild(btn);
             });
             
-            // 初始化縮放
             setTimeout(() => {
                 autoScaleText(document.getElementById('pBride'));
                 autoScaleText(document.getElementById('pGroom'));
+                sync(); // 初始化同步日期顯示格式
             }, 100);
         }
 
@@ -241,18 +236,14 @@
             const section = document.getElementById('productSection');
             const grid = document.getElementById('productGrid');
             const title = document.getElementById('selectedBrandTitle');
-            
             section.classList.remove('hidden');
             title.innerText = `${bName} 產品選擇`;
             grid.innerHTML = '';
-
             const filteredProds = productsDB.filter(p => p.brandName === bName);
-            
             if(filteredProds.length === 0) {
                 grid.innerHTML = '<p class="text-[10px] text-zinc-400 italic">此品牌暫無可選產品</p>';
                 return;
             }
-
             filteredProds.forEach(p => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-3 border border-zinc-100 rounded-xl hover:bg-zinc-900 hover:text-white text-xs font-bold transition-all shadow-sm";
@@ -272,11 +263,17 @@
         const sync = () => {
             const bride = document.getElementById('pBride');
             const groom = document.getElementById('pGroom');
-            
             bride.innerText = document.getElementById('iBride').value;
             groom.innerText = document.getElementById('iGroom').value;
+
+            // 日期格式化邏輯：將 2026-10-15 轉為 October 15, 2026
+            const dateVal = document.getElementById('iDate').value;
+            if (dateVal) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = new Date(dateVal).toLocaleDateString('en-US', options);
+                document.getElementById('pDate').innerText = formattedDate;
+            }
             
-            document.getElementById('pDate').innerText = document.getElementById('iDate').value;
             document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
 
