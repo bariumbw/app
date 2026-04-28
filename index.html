@@ -3,194 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自訂囍帖預覽器 - 頁一圖片選擇版</title>
+    <title>囍帖預覽器 - GitHub 本地圖片版</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
-        
-        .wedding-card {
-            background-color: #A62C3E; /* 喜慶紅 */
-            aspect-ratio: 1.4 / 1;
-            position: relative;
-            color: white;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        /* 設定字體為中文襯線，接近原圖風格 */
-        .font-card { font-family: 'Noto Serif TC', serif; }
-
-        /* 防盜浮水印 (SAMPLE / PREVIEW) */
-        .watermark-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* 核心畫布：鎖定 2400 x 1700 比例 */
+        .preview-canvas {
             width: 100%;
-            height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="8" fill="white" fill-opacity="0.12" text-anchor="middle" transform="rotate(-30 50 50)">SAMPLE / PREVIEW</text></svg>');
-            background-repeat: repeat;
-            pointer-events: none; /* 確保浮水印不會擋住下方編輯區 */
-            z-index: 20; /* 置於最上層 */
+            max-width: 900px;
+            aspect-ratio: 2400 / 1700;
+            position: relative;
+            /* 引用你上傳的背景圖，%20 代表檔名前面的空格 */
+            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg'); 
+            background-color: #A62C3E; 
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
         }
 
-        /* 插畫圖片的預設樣式 */
-        #previewIllustration img {
-            max-height: 200px; /* 控制最大高度 */
-            width: auto;
-            object-contain;
-            drop-shadow: 0 4px 10px rgba(0,0,0,0.3); /* 為插畫加上一點陰影 */
+        /* 字體定義 */
+        .font-im-fell { font-family: 'IM Fell English', serif; }
+        .font-aloja { font-family: 'Patrick Hand', cursive; }
+        .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
+
+        /* 1-8 號新人插圖定位 (位於背景圖上方) */
+        .illustration-layer {
+            position: absolute;
+            top: 10%;    /* 根據原圖位置調整 */
+            left: 12%;   /* 向左微調 */
+            width: 25%;  /* 寬度佔比 */
+            z-index: 5;
+        }
+        .illustration-layer img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+        }
+
+        /* 姓名區域：左移並維持兩行一致大小 */
+        .name-layer {
+            position: absolute;
+            top: 37.5%; 
+            left: 3%; 
+            width: 44%;
+            text-align: center;
+            color: #FFFFFF;
+            z-index: 10;
+        }
+
+        /* 日期：左移 */
+        .date-layer {
+            position: absolute;
+            top: 70.2%;
+            left: 9%; 
+            width: 32%;
+            text-align: center;
+            color: #FFFFFF;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 場地與地址：Impact 字體，大小相同，強制大寫 */
+        .venue-layer {
+            position: absolute;
+            top: 77%;
+            left: 5.5%; 
+            width: 39%;
+            text-align: center;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .address-layer {
+            position: absolute;
+            top: 82.5%;
+            left: 2%; 
+            width: 46%;
+            text-align: center;
+            color: #FFFFFF;
+            text-transform: uppercase;
+        }
+
+        /* 浮水印 */
+        .watermark {
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="5" fill="white" fill-opacity="0.1" text-anchor="middle" transform="rotate(-30 50 50)">DESIGN PREVIEW ONLY</text></svg>');
+            z-index: 50;
+            pointer-events: none;
         }
     </style>
 </head>
-<body class="bg-zinc-100 p-4 md:p-8">
+<body class="bg-zinc-900 min-h-screen flex items-center justify-center p-4">
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[1fr,minmax(380px,auto)] gap-8">
+    <div class="max-w-7xl w-full grid grid-cols-1 xl:grid-cols-[1fr,400px] gap-10">
         
-        <div class="sticky top-10 flex flex-col items-center">
-            <h2 class="text-xl font-bold mb-4 text-zinc-700">囍帖頁一 即時預覽 (含 SAMPLE 保護)</h2>
-            
-            <div id="invitationCard" class="wedding-card p-10 flex flex-col items-start justify-center shadow-2xl rounded-xl">
-                
-                <div class="watermark-overlay"></div>
+        <div class="flex flex-col items-center">
+            <div class="preview-canvas font-im-fell">
+                <div class="watermark"></div>
 
-                <div id="previewIllustration" class="mb-6 self-start z-10 relative">
-                    <img src="https://i.ibb.co/6P0j7zM/1.png" alt="Wedding Couple Style 1" class="h-36 md:h-52">
+                <div class="illustration-layer" id="illustrationContainer">
+                    <img id="pIllustration" src="1.png" alt="Couple Style">
                 </div>
 
-                <p class="text-[10px] md:text-sm tracking-widest opacity-80 uppercase mb-3 font-card z-10 relative">TOGETHER WITH THEIR PARENTS</p>
-                
-                <div class="text-3xl md:text-5xl font-serif italic mb-4 font-card z-10 relative flex flex-wrap gap-x-3">
-                    <span id="previewName1">Christian</span>
-                    <span class="opacity-70">and</span>
-                    <span id="previewName2">Benjamin</span>
-                </div>
-                
-                <p class="text-[10px] md:text-sm mb-4 font-card z-10 relative">REQUEST THE HONOUR OF YOUR PRESENCE AT<br>THEIR WEDDING CELEBRATION</p>
-                
-                <div class="border-t border-b border-white/20 py-2 mb-4 w-full z-10 relative">
-                    <p id="previewDate" class="text-xl md:text-3xl font-bold tracking-tighter text-center font-card">OCTOBER 15, 2026</p>
+                <div class="name-layer italic">
+                    <h1 class="text-4xl md:text-7xl leading-tight tracking-tight">
+                        <span id="pBride">Christian</span><br>
+                        <span class="opacity-95">and <span id="pGroom">Benjamin</span></span>
+                    </h1>
                 </div>
 
-                <div class="text-left w-full space-y-1 z-10 relative">
-                    <p id="previewVenue" class="text-xs md:text-base font-bold uppercase tracking-widest font-card">Four Seasons Grand Ballroom</p>
-                    <p id="previewAddress" class="text-[10px] md:text-xs opacity-70 font-card">8 Finance Street, Central, Hong Kong</p>
+                <div class="date-layer font-aloja">
+                    <span id="pDate" class="text-lg md:text-[18px] uppercase tracking-[0.25em]">October 15, 2026</span>
                 </div>
 
-                <div class="mt-6 self-center w-32 opacity-60 z-10 relative">
-                    <img src="https://img.icons8.com/ios/100/ffffff/wedding-rings.png" alt="Rings Decor" class="h-8 mx-auto">
+                <div class="venue-layer font-impact">
+                    <span id="pVenue" class="text-[10px] md:text-[15px]">Four Seasons Grand Ballroom</span>
+                </div>
+
+                <div class="address-layer font-impact tracking-widest leading-snug">
+                    <span id="pAddress" class="text-[10px] md:text-[15px] opacity-90">8 Finance Street, Central, Hong Kong</span>
                 </div>
             </div>
-            <p class="text-sm text-red-600 mt-4 font-bold">* 此圖疊加有 SAMPLE 水印，不適用於直接印製。</p>
+            <p class="mt-4 text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-light">GitHub Local Assets | 2400:1700 Fix</p>
         </div>
 
-        <div class="bg-white p-8 rounded-3xl shadow-lg border border-zinc-100 h-fit">
-            <h2 class="text-2xl font-bold text-zinc-800 mb-8 border-b pb-4">自訂您的囍帖</h2>
+        <div class="bg-white p-8 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-y-auto max-h-[90vh]">
+            <h2 class="text-2xl font-bold text-zinc-800 mb-6 border-b pb-4 font-im-fell">設計編輯器</h2>
             
             <div class="space-y-6">
-                
                 <div>
-                    <label class="block text-sm font-semibold text-zinc-700 mb-3 uppercase tracking-wider">更改上方新人插畫</label>
-                    <div class="grid grid-cols-4 gap-3">
-                        <button onclick="changeIllustration(1)" class="p-1 border-2 border-gray-200 rounded-lg hover:border-red-300 focus:border-red-500 transition h-20">
-                            <img src="https://i.ibb.co/6P0j7zM/1.png" alt="Style 1" class="h-full mx-auto object-contain">
-                        </button>
-                        <button onclick="changeIllustration(2)" class="p-1 border-2 border-gray-200 rounded-lg hover:border-red-300 focus:border-red-500 transition h-20">
-                            <img src="https://i.ibb.co/g8X2g3V/2.png" alt="Style 2" class="h-full mx-auto object-contain">
-                        </button>
-                        <button onclick="changeIllustration(3)" class="p-1 border-2 border-gray-200 rounded-lg hover:border-red-300 focus:border-red-500 transition h-20">
-                            <img src="https://i.ibb.co/L5k6Yt1/3.png" alt="Style 3" class="h-full mx-auto object-contain">
-                        </button>
-                        <button onclick="changeIllustration(4)" class="p-1 border-2 border-gray-200 rounded-lg hover:border-red-300 focus:border-red-500 transition h-20">
-                            <img src="https://i.ibb.co/xH3wYxN/4.png" alt="Style 4" class="h-full mx-auto object-contain">
-                        </button>
-                        <button onclick="changeIllustration(5)" class="p-1 border-2 border-gray-200 rounded-lg hover:border-red-300 focus:border-red-500 transition h-20">
-                            <img src="https://i.ibb.co/C060Z8B/5.png" alt="Style 5" class="h-full mx-auto object-contain">
-                        </button>
-                        <button onclick="changeIllustration(6)" class="p-1 border-2 border-gray-200 rounded-lg hover:border-red-300 focus:border-red-500 transition h-20">
-                            <img src="https://i.ibb.co/0Xg6XgP/6.png" alt="Style 6" class="h-full mx-auto object-contain">
-                        </button>
-                        <button onclick="changeIllustration(7)" class="p-1 border-2 border-gray-200 rounded-lg hover:border-red-300 focus:border-red-500 transition h-20">
-                            <img src="https://i.ibb.co/sK6J4mP/7.png" alt="Style 7" class="h-full mx-auto object-contain">
-                        </button>
-                        <button onclick="changeIllustration(8)" class="p-1 border-2 border-gray-200 rounded-lg hover:border-red-300 focus:border-red-500 transition h-20">
-                            <img src="https://i.ibb.co/9v9wYnP/8.png" alt="Style 8" class="h-full mx-auto object-contain">
-                        </button>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">選擇新人插圖款式 (1-8)</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="changeImg('1.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="1.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('2.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="2.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('3.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="3.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('4.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="4.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('5.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="5.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('6.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="6.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('7.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="7.png" class="h-10 mx-auto"></button>
+                        <button onclick="changeImg('8.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="8.png" class="h-10 mx-auto"></button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-6">
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">新郎名字</label>
-                        <input type="text" id="inputName1" value="Christian" 
-                            class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none">
+                        <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
+                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">新娘名字</label>
-                        <input type="text" id="inputName2" value="Benjamin" 
-                            class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none">
+                        <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
+                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">婚禮日期 (大寫英文)</label>
-                    <input type="text" id="inputDate" value="OCTOBER 15, 2026" 
-                        class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none uppercase">
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
+                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-aloja text-xl text-red-900 transition-all">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">宴客場地</label>
-                    <input type="text" id="inputVenue" value="Four Seasons Grand Ballroom" 
-                        class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none uppercase">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">詳細地址</label>
-                    <textarea id="inputAddress" rows="2" class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none">8 Finance Street, Central, Hong Kong</textarea>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (Impact)</label>
+                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-lg transition-all">
                 </div>
 
+                <div>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (Impact)</label>
+                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-sm transition-all">8 Finance Street, Central, Hong Kong</textarea>
+                </div>
             </div>
-        </div>
 
+            <button class="w-full mt-8 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-700 transition uppercase shadow-lg">
+                確認設計
+            </button>
+        </div>
     </div>
 
     <script>
-        // 即時文字同步功能
-        const textInputs = [
-            { id: 'inputName1', preview: 'previewName1' },
-            { id: 'inputName2', preview: 'previewName2' },
-            { id: 'inputDate', preview: 'previewDate' },
-            { id: 'inputVenue', preview: 'previewVenue' },
-            { id: 'inputAddress', preview: 'previewAddress' }
-        ];
+        // 文字同步
+        const sync = () => {
+            document.getElementById('pBride').innerText = document.getElementById('iBride').value;
+            document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
+            document.getElementById('pDate').innerText = document.getElementById('iDate').value;
+            document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
+            document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
+        };
 
-        textInputs.forEach(item => {
-            document.getElementById(item.id).addEventListener('input', (e) => {
-                document.getElementById(item.preview).innerText = e.target.value;
-            });
+        // 圖片切換
+        const changeImg = (fileName) => {
+            document.getElementById('pIllustration').src = fileName;
+        };
+
+        ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
+            document.getElementById(id).addEventListener('input', sync);
         });
-
-        // 功能：更改插畫圖片
-        function changeIllustration(styleNumber) {
-            const imgElement = document.querySelector('#previewIllustration img');
-            const baseUrl = 'https://i.ibb.co/6P0j7zM/'; // 這是我將圖1小圖單獨切出來的基礎網址
-            
-            // 我已經將你提供的 1-8 對新人圖单独切割為透明 PNG，並儲存為 1.png - 8.png
-            // 這裡直接對應檔名進行更換
-            const styles = {
-                1: 'https://i.ibb.co/6P0j7zM/1.png', // 西式1 (Lean)
-                2: 'https://i.ibb.co/g8X2g3V/2.png', // 西式2 (Hug/Casual)
-                3: 'https://i.ibb.co/L5k6Yt1/3.png', // 中式裙褂1 (Hold Hands)
-                4: 'https://i.ibb.co/xH3wYxN/4.png', // 中式裙褂2 (Walk)
-                5: 'https://i.ibb.co/C060Z8B/5.png', // 中式便裝1 (Arm link)
-                6: 'https://i.ibb.co/0Xg6XgP/6.png', // 旗袍 (Lean)
-                7: 'https://i.ibb.co/sK6J4mP/7.png', // 韓式/Casual (Kiss/Holding hands)
-                8: 'https://i.ibb.co/9v9wYnP/8.png'  // 西式婚紗 (Face to Face/Hug)
-            };
-
-            if (styles[styleNumber]) {
-                imgElement.src = styles[styleNumber];
-                imgElement.alt = `Wedding Couple Style ${styleNumber}`;
-            }
-        }
     </script>
 </body>
 </html>
