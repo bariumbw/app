@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 位置精確修正版</title>
+    <title>囍帖預覽器 - 插圖位置縮放最終版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        /* 核心畫布：鎖定 2400 x 1700 比例 */
+        /* 核心畫布：2400 x 1700 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            /* 引用 GitHub 倉庫中的背景圖 */
+            /* 讀取 GitHub 根目錄背景圖 */
             background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg'); 
             background-color: #A62C3E; 
             background-size: cover;
@@ -22,17 +22,19 @@
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
         }
 
-        /* 字體定義 */
+        /* 字體 */
         .font-im-fell { font-family: 'IM Fell English', serif; }
         .font-aloja { font-family: 'Patrick Hand', cursive; }
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
 
-        /* 插圖層：置頂、左移 4 格、縮小至 80% (5分之4) */
+        /* 插圖層：置頂、右移 9 格、大小再縮減至 5 分之 4 */
         .illustration-layer {
             position: absolute;
             top: 0%;      /* 置頂 */
-            left: 2%;     /* 配合你要求的左移 4 格（從原本中心點大幅向左） */
-            width: 20%;    /* 縮減大小：原本約 25%，5分之4 即 20% */
+            /* 右移 9 格：從原本的左側大幅向右調整 */
+            left: 14%;    
+            /* 寬度再縮減：從 20% 縮減 5分之4 變為 16% */
+            width: 16%;   
             z-index: 5;
             display: flex;
             justify-content: center;
@@ -44,7 +46,7 @@
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
-        /* 姓名區域 */
+        /* 姓名、日期、地址定位（保持不變） */
         .name-layer {
             position: absolute;
             top: 37.5%; 
@@ -54,8 +56,6 @@
             color: #FFFFFF;
             z-index: 10;
         }
-
-        /* 日期、場地與地址 */
         .date-layer {
             position: absolute;
             top: 70.2%;
@@ -131,7 +131,7 @@
             
             <div class="space-y-6">
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">插圖款式選擇</label>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">插圖款式 (1-8)</label>
                     <div class="grid grid-cols-4 gap-2 border p-2 rounded-xl bg-zinc-50">
                         <button onclick="changeImg('1.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="1.png" class="h-10 mx-auto"></button>
                         <button onclick="changeImg('2.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="2.png" class="h-10 mx-auto"></button>
