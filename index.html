@@ -60,18 +60,32 @@
         .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; }
         .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; }
 
-        /* 產品詳情面板 */
+        /* 產品詳情面板 - 已修改為固定大小且無滾動條 */
         .info-panel {
             position: absolute;
             top: 10%;
             right: 3%;
-            width: 45%;
-            background: rgba(255,255,255,0.15);
-            padding: 60px;
-            border-radius: 40px;
+            /* 設定固定寬高 */
+            width: 200px;
+            height: 240px;
+            background: rgba(255,255,255,0.95); /* 稍微調高不透明度增加文字可讀性 */
+            padding: 20px;
+            border-radius: 20px;
             display: none;
             z-index: 20;
             backdrop-filter: blur(7px);
+            /* 強制隱藏滾動條 */
+            overflow: hidden;
+        }
+
+        /* 針對 T&C 文字的縮小與自動截斷處理 */
+        #pDetailTC {
+            display: -webkit-box;
+            -webkit-line-clamp: 12; /* 最多顯示 12 行，防止內容溢出 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
         }
 
         .custom-scroll::-webkit-scrollbar { width: 6px; }
@@ -84,7 +98,7 @@
         
         <div class="flex flex-col items-center relative">
             <div class="preview-canvas">
-                                <div class="voucher-layer"><img id="pVoucher" src="" class="hidden"></div>
+                <div class="voucher-layer"><img id="pVoucher" src="" class="hidden"></div>
                 
                 <div class="name-layer font-aniyah">
                     <div class="bride-wrap"><h1 id="pBride">Christian</h1></div>
@@ -102,8 +116,8 @@
                 </div>
                 
                 <div id="pDetailPanel" class="info-panel shadow-2xl border border-zinc-200">
-                    <img id="pDetailBrandImg" src="" class="w-full h-20 object-contain mb-3">
-                    <h4 id="pDetailProdName" class="font-bold text-[20px] text-orange-500 mb-1 leading-tight"></h4>
+                    <img id="pDetailBrandImg" src="" class="w-full h-12 object-contain mb-3">
+                    <h4 id="pDetailProdName" class="font-bold text-[16px] text-orange-500 mb-2 leading-tight"></h4>
                     <p id="pDetailTC" class="text-[7px] text-zinc-400 leading-tight"></p>
                 </div>
             </div>
@@ -172,17 +186,15 @@
     </div>
 
     <script>
-        // 讀取後台數據
         const brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || [];
         const productsDB = JSON.parse(localStorage.getItem('wedding_products')) || [];
 
-        // 初始化：渲染品牌圖片
         function init() {
             const grid = document.getElementById('brandGrid');
             grid.innerHTML = '';
             
             if(brandsDB.length === 0) {
-                grid.innerHTML = '<p class="col-span-4 text-center text-[10px] text-zinc-100 py-4 italic border-2 border-dashed rounded-xl">請先前往後台登記品牌</p>';
+                grid.innerHTML = '<p class="col-span-4 text-center text-[10px] text-zinc-400 py-4 italic border-2 border-dashed rounded-xl">請先前往後台登記品牌</p>';
                 return;
             }
 
@@ -195,7 +207,6 @@
             });
         }
 
-        // 點擊品牌後顯示產品清單
         function showProducts(bName, bImg) {
             const section = document.getElementById('productSection');
             const grid = document.getElementById('productGrid');
@@ -221,17 +232,13 @@
             });
         }
 
-        // 應用選擇到預覽圖
         function applySelection(img, name, tc) {
-
-            // 更新右側詳細面板
             document.getElementById('pDetailPanel').style.display = 'block';
             document.getElementById('pDetailBrandImg').src = img;
             document.getElementById('pDetailProdName').innerText = name;
             document.getElementById('pDetailTC').innerText = tc;
         }
 
-        // 實時同步輸入框數據到預覽圖
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
@@ -240,7 +247,6 @@
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
 
-        // 監聽所有輸入框
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
             document.getElementById(id).addEventListener('input', sync);
         });
