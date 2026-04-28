@@ -84,6 +84,7 @@
         
         <div class="flex flex-col items-center relative">
             <div class="preview-canvas">
+                                <div class="voucher-layer"><img id="pVoucher" src="" class="hidden"></div>
                 
                 <div class="name-layer font-aniyah">
                     <div class="bride-wrap"><h1 id="pBride">Christian</h1></div>
@@ -222,10 +223,6 @@
 
         // 應用選擇到預覽圖
         function applySelection(img, name, tc) {
-            // 更新預覽圖中央的禮券插圖
-            const pVoucher = document.getElementById('pVoucher');
-            pVoucher.src = img;
-            pVoucher.classList.remove('hidden');
 
             // 更新右側詳細面板
             document.getElementById('pDetailPanel').style.display = 'block';
