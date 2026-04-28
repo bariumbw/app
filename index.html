@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 插圖位置右移修正版</title>
+    <title>囍帖預覽器 - 增加禮券選擇功能</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
+    
     <style>
-        /* 核心畫布：2400 x 1700 */
+        /* 1. 核心畫布：鎖定 2400 x 1700 比例 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            /* 讀取 GitHub 根目錄背景圖，%20 代表檔名前面的空格 */
-            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg'); 
+            /* 使用 ?v=4 確保讀取最新的 GitHub 背景圖 */
+            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=4'); 
             background-color: #A62C3E; 
             background-size: cover;
             background-position: center;
@@ -26,34 +28,38 @@
         .font-im-fell { font-family: 'IM Fell English', serif; }
         .font-aloja { font-family: 'Patrick Hand', cursive; }
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
+        .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 插圖層：置頂 + 右移 6 格 + 縮放比例修正 */
-        .illustration-layer {
+        /* 2. 元素定位控制 */
+        
+        /* 禮券插圖顯示層 (位於左上角或指定位置) */
+        .voucher-layer {
             position: absolute;
-            top: 0%;      /* 置頂 */
-            left: 17%;  /* 已更新：向右平移至指定位置 */
-            width: 16%;   /* 維持縮減後的比例 */
+            top: 5%;
+            left: 17%;
+            width: 25%;
             z-index: 5;
-            display: flex;
-            justify-content: center;
+            pointer-events: none;
         }
-        .illustration-layer img {
+        .voucher-layer img {
             width: 100%;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
-        /* 文字區域定位（保持不變） */
+        /* 姓名區域 */
         .name-layer {
             position: absolute;
-            top: 37.5%; 
+            top: 40%; 
             left: 3%; 
             width: 44%;
             text-align: center;
             color: #FFFFFF;
             z-index: 10;
         }
+        .name-layer h1 { line-height: 1.1; }
+
+        /* 日期位置 */
         .date-layer {
             position: absolute;
             top: 70.2%;
@@ -61,7 +67,10 @@
             width: 32%;
             text-align: center;
             color: #FFFFFF;
+            white-space: nowrap;
         }
+
+        /* 場地與地址 (Impact) */
         .venue-layer {
             position: absolute;
             top: 77%;
@@ -81,7 +90,7 @@
             text-transform: uppercase;
         }
 
-        /* 水印層 */
+        /* 防盜水印 */
         .watermark {
             position: absolute;
             inset: 0;
@@ -89,6 +98,10 @@
             z-index: 50;
             pointer-events: none;
         }
+
+        /* 自定義捲軸 */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-zinc-900 min-h-screen flex items-center justify-center p-4">
@@ -96,17 +109,17 @@
     <div class="max-w-7xl w-full grid grid-cols-1 xl:grid-cols-[1fr,400px] gap-10">
         
         <div class="flex flex-col items-center">
-            <div class="preview-canvas font-im-fell">
+            <div class="preview-canvas">
                 <div class="watermark"></div>
 
-                <div class="illustration-layer">
-                    <img id="pIllustration" src="1.png" alt="Couple Style">
+                <div class="voucher-layer">
+                    <img id="pVoucher" src="" alt="" class="hidden">
                 </div>
 
-                <div class="name-layer italic">
-                    <h1 class="text-4xl md:text-7xl leading-tight tracking-tight">
-                        <span id="pBride">Christian</span><br>
-                        <span class="opacity-95">and <span id="pGroom">Benjamin</span></span>
+                <div class="name-layer font-aniyah">
+                    <h1 class="text-5xl md:text-8xl tracking-normal">
+                        <span id="pBride">Aniyah</span><br>
+                        <span id="pGroom">Script</span>
                     </h1>
                 </div>
 
@@ -124,58 +137,80 @@
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 max-h-[90vh] overflow-y-auto">
-            <h2 class="text-2xl font-bold text-zinc-800 mb-6 border-b pb-4 font-im-fell">設計編輯器</h2>
+        <div class="bg-white rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-hidden flex flex-col max-h-[90vh]">
             
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-2">插圖款式選擇 (1-8)</label>
-                    <div class="grid grid-cols-4 gap-2 border p-2 rounded-xl bg-zinc-50">
-                        <button onclick="changeImg('1.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="1.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('2.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="2.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('3.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="3.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('4.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="4.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('5.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="5.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('6.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="6.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('7.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="7.png" class="h-10 mx-auto"></button>
-                        <button onclick="changeImg('8.png')" class="border p-1 hover:bg-zinc-100 rounded transition"><img src="8.png" class="h-10 mx-auto"></button>
+            <div class="p-8 custom-scroll overflow-y-auto">
+                
+                <section class="mb-10">
+                    <h2 class="text-xl font-bold text-zinc-800 mb-5 flex items-center font-im-fell tracking-tight">
+                        <span class="w-8 h-8 bg-zinc-900 text-white rounded-full flex items-center justify-center text-sm mr-3">01</span>
+                        禮券選擇
+                    </h2>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="changeVoucher('v1.png')" class="border-2 border-zinc-100 p-2 rounded-xl hover:border-zinc-900 transition-all text-[10px] font-bold text-zinc-400 uppercase">款式 A</button>
+                        <button onclick="changeVoucher('v2.png')" class="border-2 border-zinc-100 p-2 rounded-xl hover:border-zinc-900 transition-all text-[10px] font-bold text-zinc-400 uppercase">款式 B</button>
+                        <button onclick="changeVoucher('v3.png')" class="border-2 border-zinc-100 p-2 rounded-xl hover:border-zinc-900 transition-all text-[10px] font-bold text-zinc-400 uppercase">款式 C</button>
+                        <button onclick="changeVoucher('')" class="border-2 border-zinc-100 p-2 rounded-xl hover:border-red-500 transition-all text-[10px] font-bold text-red-400 uppercase">不使用</button>
                     </div>
-                </div>
+                </section>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
-                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
+                <hr class="mb-10 border-zinc-100">
+
+                <section>
+                    <h2 class="text-xl font-bold text-zinc-800 mb-5 flex items-center font-im-fell tracking-tight">
+                        <span class="w-8 h-8 bg-zinc-900 text-white rounded-full flex items-center justify-center text-sm mr-3">02</span>
+                        設計編輯器
+                    </h2>
+                    
+                    <div class="space-y-5">
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1 tracking-widest">新娘姓名 (Aniyah)</label>
+                                <input type="text" id="iBride" value="Aniyah" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aniyah text-2xl focus:border-zinc-900 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1 tracking-widest">新郎姓名 (Aniyah)</label>
+                                <input type="text" id="iGroom" value="Script" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aniyah text-2xl focus:border-zinc-900 transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1 tracking-widest">婚禮日期</label>
+                            <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aloja text-xl text-red-900 focus:border-zinc-900 transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1 tracking-widest">宴客場地 (Impact)</label>
+                            <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-lg uppercase focus:border-zinc-900 transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1 tracking-widest">詳細地址 (Impact)</label>
+                            <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-sm uppercase focus:border-zinc-900 transition-all">8 Finance Street, Central, Hong Kong</textarea>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
-                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-im-fell italic text-lg transition-all">
-                    </div>
-                </div>
+                </section>
 
-                <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
-                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-aloja text-xl text-red-900 transition-all">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (Impact)</label>
-                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-lg transition-all uppercase">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (Impact)</label>
-                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl outline-none font-impact text-sm transition-all uppercase">8 Finance Street, Central, Hong Kong</textarea>
-                </div>
+                <button class="w-full mt-10 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-800 transition shadow-lg uppercase text-sm">
+                    保存當前設計
+                </button>
             </div>
-
-            <button class="w-full mt-8 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-700 transition shadow-lg uppercase">
-                確認設計
-            </button>
         </div>
     </div>
 
     <script>
+        // 禮券切換邏輯
+        const changeVoucher = (src) => {
+            const img = document.getElementById('pVoucher');
+            if(src) {
+                img.src = src;
+                img.classList.remove('hidden');
+            } else {
+                img.classList.add('hidden');
+            }
+        };
+
+        // 文字同步邏輯
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
@@ -184,10 +219,7 @@
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
 
-        const changeImg = (path) => {
-            document.getElementById('pIllustration').src = path;
-        };
-
+        // 監聽輸入
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
             document.getElementById(id).addEventListener('input', sync);
         });
