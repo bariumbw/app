@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖設計預覽器 - 最終修正版</title>
+    <title>囍帖設計預覽器 - 比例修正版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        /* 核心預覽畫布：鎖定 2400 x 1700 比例 */
+        /* 1. 核心畫布：鎖定 2400 x 1700 比例 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
@@ -24,19 +24,19 @@
         .font-im-fell { font-family: 'IM Fell English', serif; }
         .font-aloja { font-family: 'Patrick Hand', cursive; }
 
-        /* 定位與排版 */
+        /* 2. 定位與排版 */
         
-        /* 姓名區域：新娘一行，and + 新郎一行 */
+        /* 姓名區域：第一行新娘，第二行 and 新郎，大小相同 */
         .name-layer {
             position: absolute;
-            top: 34%; /* 稍微往上微調以容納兩行較大文字 */
+            top: 34%; 
             left: 5%;
             width: 44%;
             text-align: center;
             color: #FFFFFF;
         }
 
-        /* 日期區域：縮小至約 3 分之 2 (從 36px 降至約 24px) */
+        /* 日期區域：縮小至 3/4 (約 18px) */
         .date-layer {
             position: absolute;
             top: 70.2%;
@@ -50,7 +50,7 @@
             justify-content: center;
         }
 
-        /* 場地與地址區域：強制大寫與單行 */
+        /* 場地與地址：強制大寫與單行限制 */
         .venue-layer {
             position: absolute;
             top: 77%;
@@ -58,8 +58,8 @@
             width: 39%;
             text-align: center;
             color: #FFFFFF;
-            text-transform: uppercase; /* 強制大寫 */
-            white-space: nowrap; /* 強制單行 */
+            text-transform: uppercase;
+            white-space: nowrap;
             overflow: hidden;
         }
 
@@ -70,7 +70,7 @@
             width: 46%;
             text-align: center;
             color: #FFFFFF;
-            text-transform: uppercase; /* 強制大寫 */
+            text-transform: uppercase;
         }
 
         .watermark {
@@ -93,12 +93,12 @@
                 <div class="name-layer italic">
                     <h1 class="text-4xl md:text-7xl leading-tight tracking-tight">
                         <span id="pBride">Christian</span><br>
-                        <span class="text-xl md:text-3xl opacity-80 normal-case" style="margin: 5px 0; display: block;">and <span id="pGroom" class="italic">Benjamin</span></span>
+                        <span class="opacity-95">and <span id="pGroom">Benjamin</span></span>
                     </h1>
                 </div>
 
                 <div class="date-layer font-aloja">
-                    <span id="pDate" class="text-xl md:text-[24px] uppercase tracking-widest">October 15, 2026</span>
+                    <span id="pDate" class="text-lg md:text-[18px] uppercase tracking-[0.25em]">October 15, 2026</span>
                 </div>
 
                 <div class="venue-layer font-bold tracking-[0.15em]">
@@ -109,58 +109,61 @@
                     <span id="pAddress" class="text-[9px] md:text-[13px] opacity-90">8 Finance Street, Central, Hong Kong</span>
                 </div>
             </div>
-            <p class="mt-4 text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-light">Final Design Standard | Ratio 2400:1700</p>
+            <p class="mt-4 text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-light">Final Specification | GitHub Pages Ready</p>
         </div>
 
-        <div class="bg-white p-8 rounded-[2rem] shadow-2xl h-fit">
+        <div class="bg-white p-8 rounded-[2rem] shadow-2xl h-fit border border-zinc-100">
             <h2 class="text-2xl font-bold text-zinc-800 mb-8 border-b pb-4 font-im-fell tracking-tight">設計編輯器</h2>
             
             <div class="space-y-6">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label>
-                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-im-fell italic text-lg">
+                        <input type="text" id="iBride" value="Christian" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-im-fell italic text-lg">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label>
-                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-im-fell italic text-lg">
+                        <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-im-fell italic text-lg">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期 (縮小版)</label>
-                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-aloja text-xl text-red-900">
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期 (精緻縮小版)</label>
+                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-aloja text-xl text-red-900">
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (將轉為大寫並單行)</label>
-                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-bold text-lg">
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地 (強制大寫/單行)</label>
+                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-bold text-lg">
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (將轉為大寫)</label>
-                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-sm">8 Finance Street, Central, Hong Kong</textarea>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址 (強制大寫)</label>
+                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-sm">8 Finance Street, Central, Hong Kong</textarea>
                 </div>
             </div>
 
-            <button class="w-full mt-10 py-4 bg-zinc-900 text-white rounded-xl font-bold tracking-[0.2em] hover:bg-zinc-700 transition">
-                確認並保存設計
-            </button>
+            <div class="mt-8 p-4 bg-zinc-50 rounded-xl">
+                <p class="text-[10px] text-zinc-400 italic">
+                    * 預覽圖已鎖定 2400x1700 比例。<br>
+                    * 日期與場地均設有溢出保護，以維持設計美感。
+                </p>
+            </div>
         </div>
     </div>
 
     <script>
-        const inputs = ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'];
-        const previews = ['pBride', 'pGroom', 'pDate', 'pVenue', 'pAddress'];
-
         const sync = () => {
-            inputs.forEach((id, index) => {
-                const val = document.getElementById(id).value;
-                document.getElementById(previews[index]).innerText = val;
-            });
+            document.getElementById('pBride').innerText = document.getElementById('iBride').value;
+            document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
+            document.getElementById('pDate').innerText = document.getElementById('iDate').value;
+            document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
+            document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
 
-        inputs.forEach(id => document.getElementById(id).addEventListener('input', sync));
+        ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
+            document.getElementById(id).addEventListener('input', sync);
+        });
     </script>
 </body>
 </html>
