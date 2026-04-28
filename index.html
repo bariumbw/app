@@ -9,7 +9,7 @@
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
     
     <style>
-        /* 核心畫布設定 - 使用 cqw 確保手機比例一致 */
+        /* 核心畫布設定 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
@@ -126,8 +126,32 @@
             font-size: 1.2cqw;
         }
 
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
+        /* 滾動條與面板行為邏輯 */
+        @media (min-width: 1280px) {
+            /* 網站版：保留固定高度與自定義滾動條 */
+            .control-panel-wrap {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            .custom-scroll::-webkit-scrollbar { width: 6px; }
+            .custom-scroll::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
+        }
+
+        @media (max-width: 1279px) {
+            /* 手機版：取消固定高度，讓內容自然展開（不使用滾動式） */
+            .control-panel-wrap {
+                max-height: none !important;
+                overflow-y: visible !important;
+            }
+            /* 隱藏所有潛在滾動條 */
+            .custom-scroll::-webkit-scrollbar {
+                display: none;
+            }
+            .custom-scroll {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-zinc-900 min-h-screen flex items-center justify-center p-4">
@@ -164,8 +188,8 @@
             </div>
         </div>
 
-        <div class="bg-zinc-50 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-8 custom-scroll overflow-y-auto">
+        <div class="bg-zinc-50 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-hidden flex flex-col control-panel-wrap custom-scroll">
+            <div class="p-8">
                 
                 <section class="mb-8">
                     <h2 class="text-xl font-bold text-zinc-800 mb-6 flex items-center font-im-fell italic">
@@ -225,20 +249,19 @@
     </div>
 
     <script>
-        // 1. 預設資料載入機制
+        // 預設載入機制
         const defaultBrands = [
             { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
             { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" }
         ];
 
         const defaultProducts = [
-            { brandName: "agnès b.", product: "$50 心意禮券", tc: "e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$50 spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.\nThe e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.\nThe e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.\nThe e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.\nAgnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.\nIn case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties." },
-            { brandName: "agnès b.", product: "$100 心意禮券", tc: "e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$100 spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.\nThe e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.\nThe e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.\nThe e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.\nAgnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.\nIn case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties." },
-            { brandName: "Godiva", product: "HK$50 禮券", tc: "使用條款:\n此GODIVA電子禮券有效期由購買日起計數，最少11個月\n此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。\n此電子禮券只可使用一次並以GODIVA的系統記錄為準。\n影印本及螢幕截圖恕不接納。\n此電子禮券不適用於電話、傳真或網上購物。\n此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金\n此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。\n如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。\n分店地址︰https://www.godiva.com.hk/boutiques.html" },
-            { brandName: "Godiva", product: "HK$100 禮券", tc: "使用條款:\n此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。\n此電子禮券只可使用一次並以GODIVA的系統記錄為準。\n影印本及螢幕截圖恕不接納。\n此電子禮券不適用於電話、傳真或網上購物。\n此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金\n此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。\n如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。\n分店地址︰https://www.godiva.com.hk/boutiques.html" }
+            { brandName: "agnès b.", product: "$50 心意禮券", tc: "e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$50 spending..." },
+            { brandName: "agnès b.", product: "$100 心意禮券", tc: "e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$100 spending..." },
+            { brandName: "Godiva", product: "HK$50 禮券", tc: "使用條款:\n此GODIVA電子禮券有效期由購買日起計數..." },
+            { brandName: "Godiva", product: "HK$100 禮券", tc: "使用條款:\n此禮券持有人可在本券有效期內於任何香港GODIVA專門店..." }
         ];
 
-        // 讀取資料：若 LocalStorage 無資料，則使用預設資料
         const brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || defaultBrands;
         const productsDB = JSON.parse(localStorage.getItem('wedding_products')) || defaultProducts;
 
@@ -255,7 +278,6 @@
         function init() {
             const grid = document.getElementById('brandGrid');
             grid.innerHTML = '';
-            
             brandsDB.forEach(brand => {
                 const btn = document.createElement('button');
                 btn.className = "aspect-square border-2 border-zinc-50 bg-zinc-200 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
@@ -263,7 +285,6 @@
                 btn.innerHTML = `<img src="${brand.img}" class="max-h-full max-w-full object-contain" alt="${brand.name}">`;
                 grid.appendChild(btn);
             });
-            
             setTimeout(() => {
                 autoScaleText(document.getElementById('pBride'));
                 autoScaleText(document.getElementById('pGroom'));
@@ -296,23 +317,17 @@
         }
 
         const sync = () => {
-            const bride = document.getElementById('pBride');
-            const groom = document.getElementById('pGroom');
-            bride.innerText = document.getElementById('iBride').value;
-            groom.innerText = document.getElementById('iGroom').value;
-
+            document.getElementById('pBride').innerText = document.getElementById('iBride').value;
+            document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
             const dateVal = document.getElementById('iDate').value;
             if (dateVal) {
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                const formattedDate = new Date(dateVal).toLocaleDateString('en-US', options);
-                document.getElementById('pDate').innerText = formattedDate;
+                document.getElementById('pDate').innerText = new Date(dateVal).toLocaleDateString('en-US', options);
             }
-            
             document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
-
-            autoScaleText(bride);
-            autoScaleText(groom);
+            autoScaleText(document.getElementById('pBride'));
+            autoScaleText(document.getElementById('pGroom'));
         };
 
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
