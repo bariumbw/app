@@ -3,127 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自訂囍帖預覽器</title>
+    <title>自訂囍帖預覽器 - 頁一 (含 Logo 保護)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
         
         .wedding-card {
             background-color: #A62C3E; /* 喜慶紅 */
-            aspect-ratio: 1.4 / 1;
+            aspect-ratio: 1.4 / 1; /* 設定比例接近A5 size 橫向 */
             position: relative;
             color: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
-        .font-chinese { font-family: 'Noto Serif TC', serif; }
-        .font-cursive { font-family: 'Ma Shan Zheng', cursive; }
+        /* 設定英文字體接近原圖風格 */
+        .font-card { font-family: 'Noto Serif TC', serif; }
+
+        /* 防盜浮水印樣式 */
+        .watermark-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="12" fill="white" fill-opacity="0.1" text-anchor="middle" transform="rotate(-30 50 50)">SAMPLE / PREVIEW</text></svg>');
+            background-repeat: repeat;
+            pointer-events: none; /* 確保浮水印不會擋住下方編輯區 */
+            z-index: 10; /* 置於最上層 */
+        }
     </style>
 </head>
-<body class="bg-gray-100 p-4 md:p-10">
+<body class="bg-gray-100 p-4 md:p-8">
 
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr,minmax(350px,auto)] gap-8">
         
-        <div class="sticky top-10">
-            <h2 class="text-xl font-bold mb-4 text-gray-700">即時預覽</h2>
-            <div id="invitationCard" class="wedding-card p-8 flex flex-col items-start justify-center">
+        <div class="sticky top-10 flex flex-col items-center">
+            <h2 class="text-xl font-bold mb-4 text-gray-700">婚禮邀請函 頁一 即時預覽</h2>
+            
+            <div id="invitationCard" class="wedding-card p-6 md:p-10 flex flex-col items-start justify-center shadow-2xl rounded-lg">
                 
-                <div id="previewIllustration" class="mb-4">
-                    <img src="https://img.icons8.com/plasticine/200/wedding-couple.png" alt="Couple" class="h-32 md:h-48 object-contain">
+                <div class="watermark-overlay"></div>
+
+                <div id="previewIllustration" class="mb-4 self-start">
+                    <img src="https://img.icons8.com/plasticine/200/wedding-couple.png" alt="Couple" class="h-28 md:h-40 object-contain">
                 </div>
 
-                <p class="text-xs md:text-sm tracking-widest opacity-80 uppercase mb-2">Together with their parents</p>
+                <p class="text-[10px] md:text-xs tracking-widest opacity-80 uppercase mb-2 font-card">TOGETHER WITH THEIR PARENTS</p>
                 
-                <h1 id="previewNames" class="text-3xl md:text-5xl font-serif italic mb-4">Christian & Benjamin</h1>
+                <div class="text-3xl md:text-5xl font-serif italic mb-3 font-card flex flex-wrap gap-x-3 gap-y-1">
+                    <span id="previewName1">Christian</span>
+                    <span class="opacity-70">and</span>
+                    <span id="previewName2">Benjamin</span>
+                </div>
                 
-                <p class="text-xs md:text-sm mb-4">REQUEST THE HONOUR OF YOUR PRESENCE AT<br>THEIR WEDDING CELEBRATION</p>
+                <p class="text-[10px] md:text-xs mb-3 font-card">REQUEST THE HONOUR OF YOUR PRESENCE AT<br>THEIR WEDDING CELEBRATION</p>
                 
-                <div class="border-t border-b border-white/30 py-2 mb-4 w-full">
-                    <p id="previewDate" class="text-lg md:text-2xl font-bold tracking-tighter text-center">OCTOBER 15, 2026</p>
+                <div class="border-t border-b border-white/20 py-1.5 mb-3 w-full">
+                    <p id="previewDate" class="text-xl md:text-3xl font-bold tracking-tighter text-center font-card">OCTOBER 15, 2026</p>
                 </div>
 
-                <div class="text-left w-full">
-                    <p id="previewVenue" class="text-xs md:text-sm font-bold uppercase tracking-widest">Four Seasons Grand Ballroom</p>
-                    <p id="previewAddress" class="text-[10px] md:text-xs opacity-70">8 Finance Street, Central, Hong Kong</p>
+                <div class="text-left w-full space-y-1">
+                    <p id="previewVenue" class="text-xs md:text-sm font-bold uppercase tracking-widest font-card">Four Seasons Grand Ballroom</p>
+                    <p id="previewAddress" class="text-[10px] md:text-xs opacity-70 font-card">8 Finance Street, Central, Hong Kong</p>
                 </div>
 
-                <div class="absolute bottom-6 right-8 text-4xl opacity-50 font-cursive text-yellow-200">囍</div>
+                <div class="mt-4 self-center w-24 opacity-60">
+                    <img src="https://img.icons8.com/ios/100/ffffff/wedding-rings.png" alt="Rings" class="h-6 mx-auto">
+                </div>
             </div>
+            
+            <p class="text-sm text-red-600 mt-4 font-bold">* 此圖僅供預覽，不適用於直接印製。下載權限將在完成確認後開放。</p>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">自訂內容</h2>
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold mb-6 text-gray-800 border-b pb-3">編輯您的設計</h2>
             
-            <div class="space-y-4">
+            <div class="space-y-5">
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">新人姓名</label>
-                    <input type="text" id="inputNames" value="Christian & Benjamin" 
-                        class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-red-500 outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">婚禮日期</label>
-                    <input type="text" id="inputDate" value="OCTOBER 15, 2026" 
-                        class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-red-500 outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">宴客場地</label>
-                    <input type="text" id="inputVenue" value="Four Seasons Grand Ballroom" 
-                        class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-red-500 outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">詳細地址</label>
-                    <textarea id="inputAddress" class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-red-500 outline-none">8 Finance Street, Central, Hong Kong</textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">選擇插畫風格</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">更改上方新人圖</label>
                     <div class="grid grid-cols-4 gap-2">
-                        <button onclick="changeImg('classic')" class="p-2 border rounded hover:bg-gray-50 focus:border-red-500">西式</button>
-                        <button onclick="changeImg('chinese')" class="p-2 border rounded hover:bg-gray-50">中式裙褂</button>
-                        <button onclick="changeImg('qipao')" class="p-2 border rounded hover:bg-gray-50">旗袍</button>
-                        <button onclick="changeImg('casual')" class="p-2 border rounded hover:bg-gray-50">便裝</button>
+                        <button onclick="changeImg('classic')" class="p-1 border-2 border-gray-200 rounded hover:border-red-300 focus:border-red-500">
+                            <img src="https://img.icons8.com/plasticine/100/wedding-couple.png" alt="Classic" class="h-10 mx-auto">
+                        </button>
+                        <button onclick="changeImg('chinese')" class="p-1 border-2 border-gray-200 rounded hover:border-red-300 focus:border-red-500">
+                            <img src="https://img.icons8.com/color/100/traditional-chinese-dress.png" alt="Chinese" class="h-10 mx-auto">
+                        </button>
+                        <button onclick="changeImg('casual')" class="p-1 border-2 border-gray-200 rounded hover:border-red-300 focus:border-red-500">
+                            <img src="https://img.icons8.com/plasticine/100/couple-love.png" alt="Casual" class="h-10 mx-auto">
+                        </button>
+                        <button onclick="changeImg('qipao')" class="p-1 border-2 border-gray-200 rounded hover:border-red-300 focus:border-red-500">
+                            <img src="https://img.icons8.com/color/100/cheongsam.png" alt="Qipao" class="h-10 mx-auto">
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">您可以從預設風格中選擇，或上傳您自己的插畫(.png)。</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">姓名 1</label>
+                        <input type="text" id="inputName1" value="Christian" 
+                            class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">姓名 2</label>
+                        <input type="text" id="inputName2" value="Benjamin" 
+                            class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none">
                     </div>
                 </div>
-                
-                <div class="pt-6">
-                    <button onclick="window.print()" class="w-full bg-red-700 text-white font-bold py-3 rounded-lg hover:bg-red-800 transition">
-                        儲存並下載預覽圖
-                    </button>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">婚禮日期 (大寫英文)</label>
+                    <input type="text" id="inputDate" value="OCTOBER 15, 2026" 
+                        class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none uppercase">
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">宴客場地</label>
+                    <input type="text" id="inputVenue" value="Four Seasons Grand Ballroom" 
+                        class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none uppercase">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">詳細地址</label>
+                    <textarea id="inputAddress" rows="2" class="w-full mt-1 p-2.5 border border-gray-300 rounded focus:ring-1 focus:ring-red-500 outline-none">8 Finance Street, Central, Hong Kong</textarea>
+                </div>
+
             </div>
         </div>
 
     </div>
 
     <script>
-        // 即時監聽輸入並更新預覽
-        const inputs = [
-            { id: 'inputNames', preview: 'previewNames' },
+        // 設定需要即時更新的文字對應表
+        const textInputs = [
+            { id: 'inputName1', preview: 'previewName1' },
+            { id: 'inputName2', preview: 'previewName2' },
             { id: 'inputDate', preview: 'previewDate' },
             { id: 'inputVenue', preview: 'previewVenue' },
             { id: 'inputAddress', preview: 'previewAddress' }
         ];
 
-        inputs.forEach(item => {
-            document.getElementById(item.id).addEventListener('input', (e) => {
-                document.getElementById(item.preview).innerText = e.target.value;
+        // 為所有輸入框添加監聽器
+        textInputs.forEach(item => {
+            const inputEl = document.getElementById(item.id);
+            const previewEl = document.getElementById(item.preview);
+            
+            inputEl.addEventListener('input', (e) => {
+                previewEl.innerText = e.target.value;
             });
         });
 
-        // 切換圖片功能 (這裡用 Placeholder 代替，你可以換成你 1.jpg 切割後的圖片連結)
+        // 功能：更改上方插畫 (圖1的功能實現)
+        // 注意：这里的 URL 需要替換成您自己的圖片網址。
         function changeImg(type) {
-            const imgElement = document.querySelector('#previewIllustration img');
+            const imgPreview = document.querySelector('#previewIllustration img');
             const images = {
                 'classic': 'https://img.icons8.com/plasticine/200/wedding-couple.png',
                 'chinese': 'https://img.icons8.com/color/200/traditional-chinese-dress.png',
-                'qipao': 'https://img.icons8.com/color/200/cheongsam.png',
-                'casual': 'https://img.icons8.com/color/200/couple-love.png'
+                'casual': 'https://img.icons8.com/plasticine/200/couple-love.png',
+                'qipao': 'https://img.icons8.com/color/200/cheongsam.png'
             };
-            imgElement.src = images[type] || images['classic'];
+            imgPreview.src = images[type] || images['classic'];
         }
     </script>
 </body>
