@@ -9,7 +9,7 @@
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
     
     <style>
-        /* 核心修改：使用容器查詢單位 (cqw) 確保手機與電腦比例完全一致 */
+        /* 核心畫布設定 - 使用 cqw 確保手機比例一致 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
@@ -21,7 +21,7 @@
             background-position: center;
             overflow: hidden;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-            container-type: inline-size; /* 啟用容器查詢 */
+            container-type: inline-size;
         }
 
         /* 字體定義 */
@@ -30,7 +30,7 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 姓名區域獨立排版 - 改用 cqw 確保等比例縮放 */
+        /* 姓名區域獨立排版 */
         .bride-layer {
             position: absolute;
             top: 20%; 
@@ -40,7 +40,7 @@
             z-index: 10;
             display: flex;
             justify-content: center;
-            transform: translateX(-1.2cqw); /* 相對比例位移 */
+            transform: translateX(-1.2cqw);
         }
 
         .groom-layer {
@@ -52,7 +52,7 @@
             z-index: 10;
             display: flex;
             justify-content: center;
-            transform: translateX(6.2cqw); /* 相對比例位移 */
+            transform: translateX(6.2cqw);
         }
 
         .name-wrap {
@@ -61,13 +61,13 @@
         }
 
         #pBride, #pGroom {
-            font-size: 5cqw; /* 改用容器寬度單位 */
+            font-size: 5cqw;
             line-height: 1;
             white-space: nowrap;
             display: inline-block;
         }
 
-        /* 日期地址定位 - 全部改用 cqw 確保手機比例不跑掉 */
+        /* 日期地址定位 */
         .date-layer { 
             position: absolute; 
             top: 64%; 
@@ -75,7 +75,7 @@
             width: 32%; 
             text-align: center; 
             color: #FFFFFF; 
-            font-size: 2cqw;
+            font-size: 2cqw; 
             letter-spacing: 0.25em;
         }
         .venue-layer { 
@@ -96,7 +96,7 @@
             text-align: center; 
             color: #FFFFFF; 
             text-transform: uppercase; 
-            font-size: 1.6cqw;
+            font-size: 1.6cqw; 
             line-height: 1.2;
         }
 
@@ -105,10 +105,10 @@
             position: absolute;
             top: 7%;
             right: 3%;
-            width: 40cqw; /* 改用相對寬度 */
+            width: 40cqw;
             height: 55cqw;
             background: rgba(255,255,255,0.15);
-            padding: 2cqw;
+            padding: 2.2cqw;
             border-radius: 2cqw;
             display: none;
             z-index: 20;
@@ -135,7 +135,7 @@
     <div class="max-w-7xl w-full grid grid-cols-1 xl:grid-cols-[1fr,400px] gap-10">
         
         <div class="flex flex-col items-center relative">
-            <div class="preview-canvas" id="mainCanvas">
+            <div class="preview-canvas">
                 <div class="voucher-layer"><img id="pVoucher" src="" class="hidden"></div>
                 
                 <div class="bride-layer font-aniyah">
@@ -225,35 +225,37 @@
     </div>
 
     <script>
-        // 核心修改：autoScale 現在基於 cqw 容器寬度計算，確保手機版不會字體過大
+        // 1. 預設資料載入機制
+        const defaultBrands = [
+            { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
+            { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" }
+        ];
+
+        const defaultProducts = [
+            { brandName: "agnès b.", product: "$50 心意禮券", tc: "e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$50 spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.\nThe e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.\nThe e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.\nThe e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.\nAgnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.\nIn case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties." },
+            { brandName: "agnès b.", product: "$100 心意禮券", tc: "e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$100 spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.\nThe e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.\nThe e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.\nThe e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.\nAgnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.\nIn case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties." },
+            { brandName: "Godiva", product: "HK$50 禮券", tc: "使用條款:\n此GODIVA電子禮券有效期由購買日起計數，最少11個月\n此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。\n此電子禮券只可使用一次並以GODIVA的系統記錄為準。\n影印本及螢幕截圖恕不接納。\n此電子禮券不適用於電話、傳真或網上購物。\n此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金\n此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。\n如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。\n分店地址︰https://www.godiva.com.hk/boutiques.html" },
+            { brandName: "Godiva", product: "HK$100 禮券", tc: "使用條款:\n此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。\n此電子禮券只可使用一次並以GODIVA的系統記錄為準。\n影印本及螢幕截圖恕不接納。\n此電子禮券不適用於電話、傳真或網上購物。\n此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金\n此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。\n如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。\n分店地址︰https://www.godiva.com.hk/boutiques.html" }
+        ];
+
+        // 讀取資料：若 LocalStorage 無資料，則使用預設資料
+        const brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || defaultBrands;
+        const productsDB = JSON.parse(localStorage.getItem('wedding_products')) || defaultProducts;
+
         function autoScaleText(element) {
             const parent = element.parentElement;
-            let fontSizeInCqw = 5; // 初始字體大小 (5cqw)
-            element.style.fontSize = fontSizeInCqw + 'cqw';
-
-            // 只要文字寬度超過容器寬度，就縮小 cqw 數值
-            while (element.scrollWidth > parent.offsetWidth && fontSizeInCqw > 1) {
-                fontSizeInCqw -= 0.1;
-                element.style.fontSize = fontSizeInCqw + 'cqw';
+            let fontSizeCqw = 5; 
+            element.style.fontSize = fontSizeCqw + 'cqw';
+            while (element.scrollWidth > parent.offsetWidth && fontSizeCqw > 1) {
+                fontSizeCqw -= 0.1;
+                element.style.fontSize = fontSizeCqw + 'cqw';
             }
         }
-
-        // 品牌資料處理邏輯
-        let brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || [];
-        let productsDB = JSON.parse(localStorage.getItem('wedding_products')) || [];
-
-        // 重要提示：localStorage 無法跨瀏覽器分享。
-        // 若要讓「所有人」看到，未來需將此處改為 fetch API 讀取伺服器資料。
 
         function init() {
             const grid = document.getElementById('brandGrid');
             grid.innerHTML = '';
             
-            if(brandsDB.length === 0) {
-                grid.innerHTML = '<p class="col-span-4 text-center text-[10px] text-zinc-400 py-4 italic border-2 border-dashed rounded-xl">請前往後台登記品牌以供所有人瀏覽</p>';
-                return;
-            }
-
             brandsDB.forEach(brand => {
                 const btn = document.createElement('button');
                 btn.className = "aspect-square border-2 border-zinc-50 bg-zinc-200 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
@@ -265,7 +267,7 @@
             setTimeout(() => {
                 autoScaleText(document.getElementById('pBride'));
                 autoScaleText(document.getElementById('pGroom'));
-                sync(); 
+                sync();
             }, 100);
         }
 
@@ -277,10 +279,6 @@
             title.innerText = `${bName} 產品選擇`;
             grid.innerHTML = '';
             const filteredProds = productsDB.filter(p => p.brandName === bName);
-            if(filteredProds.length === 0) {
-                grid.innerHTML = '<p class="text-[10px] text-zinc-400 italic">此品牌暫無可選產品</p>';
-                return;
-            }
             filteredProds.forEach(p => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-3 border border-zinc-100 rounded-xl hover:bg-zinc-900 hover:text-white text-xs font-bold transition-all shadow-sm";
