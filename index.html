@@ -42,29 +42,30 @@
             align-items: center;
         }
 
-        /* 修改處：使用 clamp 確保字數多時自動縮小，並防止溢出 */
+        /* 調整：寬度放寬至 90%，移除 hidden 和 ellipsis，確保字體縮放 */
         .bride-wrap {
             transform: translateX(-11px);
-            /* 最大 45px，根據容器寬度自動縮小，最小不低於 20px */
-            font-size: clamp(20px, 5vw, 45px); 
-            line-height: 1.1;
-            width: 80%;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            width: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-
+        
         .groom-wrap {
             transform: translateX(60px);
-            font-size: clamp(20px, 5vw, 45px); 
-            line-height: 1.1;
+            width: 90%;
             margin-top: 1.9em; 
-            width: 80%;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 初始字體大小設定 */
+        #pBride, #pGroom {
+            font-size: 45px;
+            line-height: 1;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            display: inline-block;
         }
 
         /* 日期地址定位 */
@@ -173,14 +174,12 @@
                         <span class="w-7 h-7 bg-zinc-900 text-white rounded-full flex items-center justify-center text-[10px] mr-3 font-sans not-italic">02</span>
                         禮券品牌
                     </h2>
-                    <div id="brandGrid" class="grid grid-cols-4 gap-2">
-                        </div>
+                    <div id="brandGrid" class="grid grid-cols-4 gap-2"></div>
                 </section>
 
                 <section id="productSection" class="mb-8 hidden animate-fade-in">
                     <h3 id="selectedBrandTitle" class="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-3 border-b pb-1">產品列表</h3>
-                    <div id="productGrid" class="grid grid-cols-1 gap-2">
-                        </div>
+                    <div id="productGrid" class="grid grid-cols-1 gap-2"></div>
                 </section>
 
                 <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg hover:bg-zinc-800 transition-all mb-4">
@@ -195,6 +194,19 @@
     </div>
 
     <script>
+        // 自動縮放文字函式
+        function autoScaleText(element) {
+            const parent = element.parentElement;
+            let fontSize = 45; // 起始最大字級
+            element.style.fontSize = fontSize + 'px';
+
+            // 如果文字寬度大於父容器寬度，就不斷縮小字級直到放得下為止
+            while (element.scrollWidth > parent.offsetWidth && fontSize > 10) {
+                fontSize--;
+                element.style.fontSize = fontSize + 'px';
+            }
+        }
+
         const brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || [];
         const productsDB = JSON.parse(localStorage.getItem('wedding_products')) || [];
 
@@ -214,6 +226,10 @@
                 btn.innerHTML = `<img src="${brand.img}" class="max-h-full max-w-full object-contain" alt="${brand.name}">`;
                 grid.appendChild(btn);
             });
+            
+            // 初始化時也執行一次縮放
+            autoScaleText(document.getElementById('pBride'));
+            autoScaleText(document.getElementById('pGroom'));
         }
 
         function showProducts(bName, bImg) {
@@ -249,11 +265,19 @@
         }
 
         const sync = () => {
-            document.getElementById('pBride').innerText = document.getElementById('iBride').value;
-            document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
+            const bride = document.getElementById('pBride');
+            const groom = document.getElementById('pGroom');
+            
+            bride.innerText = document.getElementById('iBride').value;
+            groom.innerText = document.getElementById('iGroom').value;
+            
             document.getElementById('pDate').innerText = document.getElementById('iDate').value;
             document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
+
+            // 每次輸入時自動調整字體
+            autoScaleText(bride);
+            autoScaleText(groom);
         };
 
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
