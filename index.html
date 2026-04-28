@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 間距優化版</title>
+    <title>囍帖預覽器 - 字體縮小與大間距版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -15,7 +15,7 @@
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=9'); 
+            background-image: url('%20DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=10'); 
             background-color: #A62C3E; 
             background-size: cover;
             background-position: center;
@@ -29,29 +29,10 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 2. 元素定位 */
-        
-        /* 禮券/插圖顯示層 */
-        .voucher-layer {
-            position: absolute;
-            top: 0%;      
-            left: 65%;    
-            width: 16%;   
-            z-index: 5;
-            display: flex;
-            justify-content: center;
-        }
-        .voucher-layer img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-        }
-
-        /* 姓名區域：整體控制 */
+        /* 姓名區域：精確像素控制 */
         .name-layer {
             position: absolute;
-            top: 38%; 
+            top: 35%; /* 向上微調以容納 3 行間距 */
             left: 0; 
             width: 50%; 
             color: #FFFFFF;
@@ -61,56 +42,46 @@
             align-items: center;
         }
 
-        /* 新娘名字：向左平移 100px */
+        /* 新娘名字：左移並設定精確字體大小 */
         .bride-wrap {
             transform: translateX(-100px);
-            line-height: 1.2;
+            font-size: 80px; /* 這裡直接控制縮小後的大小 */
+            line-height: 1;
         }
 
-        /* 新郎名字：向右平移 150px，並增加間距實現「隔一行」效果 */
+        /* 新郎名字：右移、縮小字體、並隔開 3 行 (約 5em) */
         .groom-wrap {
             transform: translateX(150px);
-            line-height: 1.2;
-            margin-top: 1.5em; /* 這裡產生隔行間距 */
+            font-size: 80px; 
+            line-height: 1;
+            margin-top: 5em; /* 這裡產生約 3 行的空白間距 */
         }
 
-        /* 日期位置 */
+        /* 2. 元素定位 */
+        .voucher-layer {
+            position: absolute;
+            top: 0%; left: 65%; width: 16%; z-index: 5;
+            display: flex; justify-content: center;
+        }
+        .voucher-layer img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); }
+
         .date-layer {
-            position: absolute;
-            top: 66%;
-            left: 9%; 
-            width: 32%;
-            text-align: center;
-            color: #FFFFFF;
+            position: absolute; top: 66%; left: 9%; width: 32%;
+            text-align: center; color: #FFFFFF;
         }
-
-        /* 場地與地址 */
         .venue-layer {
-            position: absolute;
-            top: 72%;
-            left: 5.5%; 
-            width: 39%;
-            text-align: center;
-            color: #FFFFFF;
-            text-transform: uppercase;
+            position: absolute; top: 72%; left: 5.5%; width: 39%;
+            text-align: center; color: #FFFFFF; text-transform: uppercase;
         }
         .address-layer {
-            position: absolute;
-            top: 77%;
-            left: 2%; 
-            width: 46%;
-            text-align: center;
-            color: #FFFFFF;
-            text-transform: uppercase;
+            position: absolute; top: 77%; left: 2%; width: 46%;
+            text-align: center; color: #FFFFFF; text-transform: uppercase;
         }
 
-        /* 水印 */
         .watermark {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="5" fill="white" fill-opacity="0.1" text-anchor="middle" transform="rotate(-30 50 50)">DESIGN PREVIEW ONLY</text></svg>');
-            z-index: 50;
-            pointer-events: none;
+            z-index: 50; pointer-events: none;
         }
 
         .custom-scroll::-webkit-scrollbar { width: 6px; }
@@ -131,10 +102,10 @@
 
                 <div class="name-layer font-aniyah">
                     <div class="bride-wrap">
-                        <h1 id="pBride" class="text-3xl md:text-5xl">Christian</h1>
+                        <h1 id="pBride">Christian</h1>
                     </div>
                     <div class="groom-wrap">
-                        <h1 id="pGroom" class="text-3xl md:text-5xl">Benjamin</h1>
+                        <h1 id="pGroom">Benjamin</h1>
                     </div>
                 </div>
 
@@ -153,15 +124,12 @@
         </div>
 
         <div class="bg-white rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-hidden flex flex-col max-h-[90vh]">
-            
             <div class="p-8 custom-scroll overflow-y-auto">
-                
                 <section class="mb-10">
                     <h2 class="text-xl font-bold text-zinc-800 mb-6 flex items-center font-im-fell tracking-tight">
                         <span class="w-8 h-8 bg-zinc-900 text-white rounded-full flex items-center justify-center text-sm mr-3 font-sans">01</span>
                         設計編輯器
                     </h2>
-                    
                     <div class="space-y-5">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -173,17 +141,14 @@
                                 <input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aniyah text-2xl focus:border-zinc-900 transition-all">
                             </div>
                         </div>
-
                         <div>
                             <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">婚禮日期</label>
                             <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-aloja text-xl text-red-900 focus:border-zinc-900 transition-all">
                         </div>
-
                         <div>
                             <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">宴客場地</label>
                             <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-lg uppercase focus:border-zinc-900 transition-all">
                         </div>
-
                         <div>
                             <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">詳細地址</label>
                             <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-impact text-sm uppercase focus:border-zinc-900 transition-all">8 Finance Street, Central, Hong Kong</textarea>
@@ -218,10 +183,7 @@
     </div>
 
     <script>
-        const changeVoucher = (src) => {
-            document.getElementById('pVoucher').src = src;
-        };
-
+        const changeVoucher = (src) => { document.getElementById('pVoucher').src = src; };
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
@@ -229,7 +191,6 @@
             document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
         };
-
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
             document.getElementById(id).addEventListener('input', sync);
         });
