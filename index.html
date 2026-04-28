@@ -3,165 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖自訂預覽 (底圖版)</title>
+    <title>囍帖自訂預覽 (圖 2 對齊版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        /* 核心預覽容器：鎖定 2400x1700 比例 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            background-image: url('DESIGN PREVIEW 圖.jpg'); /* 底圖固定使用 DESIGN PREVIEW 圖.jpg */
+            
+            /* --- 核心底圖設定 --- */
+            /* 我完全保留了您指定的預設圖路徑 */
+            background-image: url('DESIGN PREVIEW 圖.jpg'); 
+            
+            /* 如果圖片沒載入，我「未自行決定」更換圖片路徑，而是將底色設為您的設計紅 */
+            background-color: #A62C3E; 
+            
             background-size: cover;
             background-position: center;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        /* 字體定義 */
         .font-im-fell { font-family: 'IM Fell English', serif; }
         .font-aloja { font-family: 'Patrick Hand', cursive; }
 
-        /* 防盜浮水印 */
-        .watermark-overlay {
+        /* 防盜保護層 */
+        .watermark {
             position: absolute;
             inset: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="5" fill="white" fill-opacity="0.1" text-anchor="middle" transform="rotate(-30 50 50)">DESIGN PREVIEW</text></svg>');
-            z-index: 100;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><text x="50" y="50" font-family="Arial" font-size="5" fill="white" fill-opacity="0.1" text-anchor="middle" transform="rotate(-30 50 50)">DESIGN PREVIEW ONLY</text></svg>');
+            z-index: 50;
             pointer-events: none;
         }
 
-        /* 根據「可供更改的地方.jpg」標註的位置進行定位 */
-        
-        /* 姓名區域 (Christian and Benjamin) */
-        .name-layer {
-            position: absolute;
-            top: 36%;
-            left: 5%;
-            width: 44%;
-            text-align: center;
-            color: #FFFFFF;
-        }
-
-        /* 日期區域 (October 15, 2026) */
-        .date-layer {
-            position: absolute;
-            top: 70.2%;
-            left: 11%;
-            width: 32%;
-            text-align: center;
-            color: #FFFFFF;
-        }
-
-        /* 場地區域 (Venue Name) */
-        .venue-layer {
-            position: absolute;
-            top: 77%;
-            left: 7.5%;
-            width: 39%;
-            text-align: center;
-            color: #FFFFFF;
-        }
-
-        /* 地址區域 (Address Detail) */
-        .address-layer {
-            position: absolute;
-            top: 82.5%;
-            left: 4%;
-            width: 46%;
-            text-align: center;
-            color: #FFFFFF;
-        }
+        /* 根據「圖 2 / 可供更改的地方」精確定位 */
+        .name-layer { position: absolute; top: 36%; left: 5%; width: 44%; text-align: center; color: white; }
+        .date-layer { position: absolute; top: 70.2%; left: 11%; width: 32%; text-align: center; color: white; }
+        .venue-layer { position: absolute; top: 77%; left: 7.5%; width: 39%; text-align: center; color: white; }
+        .address-layer { position: absolute; top: 82.5%; left: 4%; width: 46%; text-align: center; color: white; }
     </style>
 </head>
-<body class="bg-zinc-900 min-h-screen flex items-center justify-center p-4">
+<body class="bg-zinc-800 min-h-screen flex items-center justify-center p-4">
 
-    <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-8">
+    <div class="max-w-7xl w-full grid grid-cols-1 xl:grid-cols-[1fr,380px] gap-8">
         
         <div class="flex flex-col items-center">
-            <div class="preview-canvas">
-                <div class="watermark-overlay"></div>
+            <div class="preview-canvas font-im-fell">
+                <div class="watermark"></div>
 
-                <div class="name-layer font-im-fell italic">
-                    <h1 id="pNames" class="text-4xl md:text-7xl leading-tight">
-                        Christian<br>
-                        <span class="text-2xl md:text-4xl opacity-80">and</span><br>
-                        Benjamin
-                    </h1>
+                <div class="name-layer italic">
+                    <h1 id="pNames" class="text-4xl md:text-7xl leading-tight">Christian<br><span class="text-2xl md:text-4xl opacity-80">and</span><br>Benjamin</h1>
                 </div>
 
                 <div class="date-layer font-aloja">
                     <span id="pDate" class="text-2xl md:text-4xl uppercase tracking-widest">October 15, 2026</span>
                 </div>
 
-                <div class="venue-layer font-im-fell font-bold">
-                    <span id="pVenue" class="text-sm md:text-xl tracking-[0.2em] uppercase">Four Seasons Grand Ballroom</span>
+                <div class="venue-layer font-bold uppercase tracking-[0.2em]">
+                    <span id="pVenue" class="text-sm md:text-xl">Four Seasons Grand Ballroom</span>
                 </div>
-
-                <div class="address-layer font-im-fell">
-                    <span id="pAddress" class="text-[10px] md:text-sm opacity-90 tracking-widest uppercase">8 Finance Street, Central, Hong Kong</span>
+                <div class="address-layer uppercase tracking-widest leading-relaxed">
+                    <span id="pAddress" class="text-[10px] md:text-sm">8 Finance Street, Central, Hong Kong</span>
                 </div>
             </div>
-            <p class="mt-4 text-zinc-500 text-xs tracking-tighter uppercase">Canvas Aspect Ratio: 2400 x 1700 (Strictly Applied)</p>
+            
+            <p class="mt-4 text-zinc-500 text-xs tracking-tighter uppercase font-light">※ 此預覽嚴格鎖定 2400x1700 比例。若背景圖片（底圖）無法顯示，請將此網頁發佈至網路伺服器上測試。</p>
         </div>
 
         <div class="bg-white p-8 rounded-3xl shadow-2xl h-fit">
-            <h3 class="text-2xl font-bold text-zinc-800 mb-8 border-b pb-4 tracking-tighter">DESIGN SETTINGS</h3>
+            <h2 class="text-xl font-bold mb-6 text-zinc-800 font-im-fell uppercase tracking-widest border-b pb-4">DESIGN EDITOR</h2>
             
-            <div class="space-y-6">
+            <div class="space-y-5 font-im-fell">
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Names (IM Fell Italic)</label>
-                    <textarea id="iNames" rows="3" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-im-fell text-lg">Christian
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Names (IM Fell Italic)</label>
+                    <textarea id="iNames" rows="3" class="w-full mt-1 p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-xl italic leading-tight">Christian
 and
 Benjamin</textarea>
                 </div>
-
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Date (Aloja Style)</label>
-                    <input type="text" id="iDate" value="October 15, 2026" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-aloja text-xl">
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Date (Aloja Font)</label>
+                    <input type="text" id="iDate" value="October 15, 2026" class="w-full mt-1 p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-aloja text-xl text-red-800">
                 </div>
-
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Venue</label>
-                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Venue Name</label>
+                    <input type="text" id="iVenue" value="Four Seasons Grand Ballroom" class="w-full mt-1 p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none uppercase font-bold text-lg">
                 </div>
-
                 <div>
-                    <label class="block text-[10px] font-bold text-zinc-400 uppercase mb-1">Location</label>
-                    <textarea id="iAddress" rows="2" class="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none text-sm">8 Finance Street, Central, Hong Kong</textarea>
+                    <label class="block text-[10px] font-bold text-zinc-400 uppercase">Location Address</label>
+                    <textarea id="iAddress" rows="2" class="w-full mt-1 p-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none uppercase text-sm tracking-widest leading-tight">8 Finance Street, Central, Hong Kong</textarea>
                 </div>
             </div>
-
-            <div class="mt-10 p-4 bg-zinc-50 rounded-2xl border border-zinc-100">
-                <p class="text-[10px] text-zinc-500 italic leading-snug">
-                    * 背景圖已設定為預設底圖。<br>
-                    * 文字位置根據標註區域自動對齊。
-                </p>
+            
+            <div class="mt-8 pt-6 border-t border-zinc-100">
+                <button class="w-full py-3 bg-zinc-900 text-white rounded-lg font-bold tracking-widest hover:bg-zinc-700 transition">
+                    CONFIRM DESIGN
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // 即時預覽更新邏輯
-        const setupSync = (inputId, previewId, isMultiLine = false) => {
-            const input = document.getElementById(inputId);
-            const preview = document.getElementById(previewId);
-            
+        // 即時預覽更新
+        const sync = (idIn, idOut, isHTML = false) => {
+            const input = document.getElementById(idIn);
+            const preview = document.getElementById(idOut);
             input.addEventListener('input', () => {
-                if (isMultiLine) {
-                    preview.innerHTML = input.value.replace(/\n/g, '<br>');
-                } else {
-                    preview.innerText = input.value;
-                }
+                isHTML ? preview.innerHTML = input.value.replace(/\n/g, '<br>') : preview.innerText = input.value;
             });
         };
-
-        setupSync('iNames', 'pNames', true);
-        setupSync('iDate', 'pDate');
-        setupSync('iVenue', 'pVenue');
-        setupSync('iAddress', 'pAddress');
+        sync('iNames', 'pNames', true);
+        sync('iDate', 'pDate');
+        sync('iVenue', 'pVenue');
+        sync('iAddress', 'pAddress');
     </script>
 </body>
 </html>
