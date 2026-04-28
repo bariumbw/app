@@ -9,7 +9,7 @@
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
     
     <style>
-        /* 核心畫布設定 */
+        /* 核心修改：使用容器查詢單位 (cqw) 確保手機與電腦比例完全一致 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
@@ -21,6 +21,7 @@
             background-position: center;
             overflow: hidden;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            container-type: inline-size; /* 啟用容器查詢 */
         }
 
         /* 字體定義 */
@@ -29,7 +30,7 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 姓名區域獨立排版 */
+        /* 姓名區域獨立排版 - 改用 cqw 確保等比例縮放 */
         .bride-layer {
             position: absolute;
             top: 20%; 
@@ -39,7 +40,7 @@
             z-index: 10;
             display: flex;
             justify-content: center;
-            transform: translateX(-11px);
+            transform: translateX(-1.2cqw); /* 相對比例位移 */
         }
 
         .groom-layer {
@@ -51,7 +52,7 @@
             z-index: 10;
             display: flex;
             justify-content: center;
-            transform: translateX(56px);
+            transform: translateX(6.2cqw); /* 相對比例位移 */
         }
 
         .name-wrap {
@@ -60,27 +61,55 @@
         }
 
         #pBride, #pGroom {
-            font-size: 45px;
+            font-size: 5cqw; /* 改用容器寬度單位 */
             line-height: 1;
             white-space: nowrap;
             display: inline-block;
         }
 
-        /* 日期地址定位 */
-        .date-layer { position: absolute; top: 64%; left: 9%; width: 32%; text-align: center; color: #FFFFFF; }
-        .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; }
-        .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; }
+        /* 日期地址定位 - 全部改用 cqw 確保手機比例不跑掉 */
+        .date-layer { 
+            position: absolute; 
+            top: 64%; 
+            left: 9%; 
+            width: 32%; 
+            text-align: center; 
+            color: #FFFFFF; 
+            font-size: 2cqw;
+            letter-spacing: 0.25em;
+        }
+        .venue-layer { 
+            position: absolute; 
+            top: 72%; 
+            left: 5.5%; 
+            width: 39%; 
+            text-align: center; 
+            color: #FFFFFF; 
+            text-transform: uppercase; 
+            font-size: 1.6cqw;
+        }
+        .address-layer { 
+            position: absolute; 
+            top: 77%; 
+            left: 2%; 
+            width: 46%; 
+            text-align: center; 
+            color: #FFFFFF; 
+            text-transform: uppercase; 
+            font-size: 1.6cqw;
+            line-height: 1.2;
+        }
 
         /* 產品詳情面板 */
         .info-panel {
             position: absolute;
             top: 7%;
             right: 3%;
-            width: 360px;
-            height: 500px;
+            width: 40cqw; /* 改用相對寬度 */
+            height: 55cqw;
             background: rgba(255,255,255,0.15);
-            padding: 20px;
-            border-radius: 20px;
+            padding: 2cqw;
+            border-radius: 2cqw;
             display: none;
             z-index: 20;
             backdrop-filter: blur(7px);
@@ -94,6 +123,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             word-break: break-all;
+            font-size: 1.2cqw;
         }
 
         .custom-scroll::-webkit-scrollbar { width: 6px; }
@@ -105,7 +135,7 @@
     <div class="max-w-7xl w-full grid grid-cols-1 xl:grid-cols-[1fr,400px] gap-10">
         
         <div class="flex flex-col items-center relative">
-            <div class="preview-canvas">
+            <div class="preview-canvas" id="mainCanvas">
                 <div class="voucher-layer"><img id="pVoucher" src="" class="hidden"></div>
                 
                 <div class="bride-layer font-aniyah">
@@ -117,19 +147,19 @@
                 </div>
 
                 <div class="date-layer font-aloja">
-                    <span id="pDate" class="text-lg md:text-[18px] uppercase tracking-[0.25em]">October 15, 2026</span>
+                    <span id="pDate" class="uppercase">October 15, 2026</span>
                 </div>
                 <div class="venue-layer font-impact">
-                    <span id="pVenue" class="text-[10px] md:text-[15px]">Four Seasons Grand Ballroom</span>
+                    <span id="pVenue">Four Seasons Grand Ballroom</span>
                 </div>
-                <div class="address-layer font-impact tracking-widest leading-snug">
-                    <span id="pAddress" class="text-[10px] md:text-[15px] opacity-90">8 Finance Street, Central, Hong Kong</span>
+                <div class="address-layer font-impact">
+                    <span id="pAddress" class="opacity-90">8 Finance Street, Central, Hong Kong</span>
                 </div>
                 
                 <div id="pDetailPanel" class="info-panel shadow-2xl border border-zinc-200">
                     <img id="pDetailBrandImg" src="" class="w-full h-12 object-contain mb-3">
-                    <h4 id="pDetailProdName" class="font-bold text-[18px] text-orange-500 mb-2 leading-tight"></h4>
-                    <p id="pDetailTC" class="text-[11px] text-zinc-400 leading-tight"></p>
+                    <h4 id="pDetailProdName" class="font-bold text-orange-500 mb-2 leading-tight"></h4>
+                    <p id="pDetailTC" class="text-zinc-400 leading-tight"></p>
                 </div>
             </div>
         </div>
@@ -195,25 +225,32 @@
     </div>
 
     <script>
+        // 核心修改：autoScale 現在基於 cqw 容器寬度計算，確保手機版不會字體過大
         function autoScaleText(element) {
             const parent = element.parentElement;
-            let fontSize = 45; 
-            element.style.fontSize = fontSize + 'px';
-            while (element.scrollWidth > parent.offsetWidth && fontSize > 10) {
-                fontSize--;
-                element.style.fontSize = fontSize + 'px';
+            let fontSizeInCqw = 5; // 初始字體大小 (5cqw)
+            element.style.fontSize = fontSizeInCqw + 'cqw';
+
+            // 只要文字寬度超過容器寬度，就縮小 cqw 數值
+            while (element.scrollWidth > parent.offsetWidth && fontSizeInCqw > 1) {
+                fontSizeInCqw -= 0.1;
+                element.style.fontSize = fontSizeInCqw + 'cqw';
             }
         }
 
-        const brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || [];
-        const productsDB = JSON.parse(localStorage.getItem('wedding_products')) || [];
+        // 品牌資料處理邏輯
+        let brandsDB = JSON.parse(localStorage.getItem('wedding_brands')) || [];
+        let productsDB = JSON.parse(localStorage.getItem('wedding_products')) || [];
+
+        // 重要提示：localStorage 無法跨瀏覽器分享。
+        // 若要讓「所有人」看到，未來需將此處改為 fetch API 讀取伺服器資料。
 
         function init() {
             const grid = document.getElementById('brandGrid');
             grid.innerHTML = '';
             
             if(brandsDB.length === 0) {
-                grid.innerHTML = '<p class="col-span-4 text-center text-[10px] text-zinc-400 py-4 italic border-2 border-dashed rounded-xl">請先前往後台登記品牌</p>';
+                grid.innerHTML = '<p class="col-span-4 text-center text-[10px] text-zinc-400 py-4 italic border-2 border-dashed rounded-xl">請前往後台登記品牌以供所有人瀏覽</p>';
                 return;
             }
 
@@ -228,7 +265,7 @@
             setTimeout(() => {
                 autoScaleText(document.getElementById('pBride'));
                 autoScaleText(document.getElementById('pGroom'));
-                sync(); // 初始化同步日期顯示格式
+                sync(); 
             }, 100);
         }
 
@@ -266,7 +303,6 @@
             bride.innerText = document.getElementById('iBride').value;
             groom.innerText = document.getElementById('iGroom').value;
 
-            // 日期格式化邏輯：將 2026-10-15 轉為 October 15, 2026
             const dateVal = document.getElementById('iDate').value;
             if (dateVal) {
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
