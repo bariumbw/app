@@ -65,9 +65,9 @@
             position: absolute;
             top: 10%;
             right: 3%;
-            width: 42%;
-            background: rgba(255,255,255,0205);
-            padding: 40px;
+            width: 45%;
+            background: rgba(255,255,255,0.15);
+            padding: 60px;
             border-radius: 40px;
             display: none;
             z-index: 20;
@@ -188,7 +188,7 @@
 
             brandsDB.forEach(brand => {
                 const btn = document.createElement('button');
-                btn.className = "aspect-square border-2 border-zinc-50 bg-zinc-100 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
+                btn.className = "aspect-square border-2 border-zinc-50 bg-bg-zinc-200 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
                 btn.onclick = () => showProducts(brand.name, brand.img);
                 btn.innerHTML = `<img src="${brand.img}" class="max-h-full max-w-full object-contain" alt="${brand.name}">`;
                 grid.appendChild(btn);
