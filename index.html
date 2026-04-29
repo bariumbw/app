@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 品牌全資料完整版</title>
+    <title>囍帖預覽器 - 完整品牌產品版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -43,7 +43,6 @@
         }
         .name-wrap { width: 80%; text-align: center; }
 
-        /* 名字大小設定 */
         #pBride, #pGroom { 
             font-size: 4.5cqw; 
             line-height: 1; 
@@ -51,11 +50,8 @@
             display: inline-block; 
         }
 
-        /* 電腦版名字尺寸固定為 40px */
         @media (min-width: 1280px) {
-            #pBride, #pGroom { 
-                font-size: 40px; 
-            }
+            #pBride, #pGroom { font-size: 40px; }
         }
 
         /* 日期地址區域 */
@@ -63,49 +59,62 @@
         .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; }
         .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
 
-        /* 產品詳情面板 */
+        /* 產品詳情面板 - 比例分配 40/20/30/10 */
         .info-panel {
             position: absolute; top: 5%; right: 3%; width: 40cqw; height: 64cqw;
-            background: rgba(255,255,255,0.12); padding: 2.2cqw; border-radius: 2cqw;
+            background: rgba(255,255,255,0.12); padding: 1.5cqw; border-radius: 2cqw;
             z-index: 20; backdrop-filter: blur(8px);
             display: flex; flex-direction: column;
             border: 1px solid rgba(255,255,255,0.1);
+            gap: 0;
         }
 
-        /* 初始隱藏內容 */
-        .panel-content-hidden {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        #pDetailTCContainer {
-            flex: 1;
+        /* 1. 品牌圖片佔 40% */
+        .brand-logo-wrap {
+            flex: 0 0 40%;
+            display: flex; align-items: center; justify-content: center;
             overflow: hidden;
-            width: 100%;
         }
+        #pDetailBrandImg { max-width: 90%; max-height: 85%; object-fit: contain; }
 
+        /* 2. 產品名稱佔 20% */
+        .prod-name-wrap {
+            flex: 0 0 20%;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+        }
+        #pDetailProdName { font-weight: bold; color: #f97316; line-height: 1.1; font-size: 2.2cqw; }
+
+        /* 3. T&C 佔 30% */
+        .tc-wrap {
+            flex: 0 0 30%;
+            overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center;
+        }
         #pDetailTC {
             color: rgba(255,255,255,0.8);
-            line-height: 1.2;
+            line-height: 1.1;
             word-break: break-all;
             white-space: pre-wrap;
             text-align: left;
+            width: 100%;
         }
 
-        /* 條碼區域 */
-        .barcode-area {
-            margin-top: 0.75cqw;
-            padding-top: 0.75cqw;
+        /* 4. Barcode 區域佔 10% */
+        .barcode-wrap {
+            flex: 0 0 10%;
             border-top: 1px solid rgba(255,255,255,0.15);
-            text-align: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         .barcode-img {
-            width: 60%; height: 3cqw;
+            width: 70%; height: 2cqw;
             background: linear-gradient(90deg, #000 5%, transparent 5%, transparent 8%, #000 8%, #000 12%, transparent 12%, #000 15%, #000 16%, transparent 16%, #000 20%, transparent 20%, transparent 25%, #000 25%, #000 28%, transparent 28%, #000 35%, #000 37%, transparent 37%, #000 45%, transparent 45%, transparent 48%, #000 48%, #000 55%, transparent 55%, #000 60%, #000 62%, transparent 62%, #000 70%, transparent 70%, transparent 75%, #000 75%, #000 85%, transparent 85%, #000 90%, #000 95%, transparent 95%);
-            background-color: #fff; margin: 0 auto; border-radius: 1px;
+            background-color: #fff; border-radius: 1px;
         }
-        .barcode-num { color: #fff; font-size: 0.8cqw; font-family: monospace; margin-top: 0.25cqw; letter-spacing: 0.15em; }
-        .expiry-date { color: rgba(255,255,255,0.7); font-size: 0.8cqw; margin-top: 0.2cqw; font-family: sans-serif; letter-spacing: 0.05em; }
+        .barcode-num { color: #fff; font-size: 0.7cqw; font-family: monospace; letter-spacing: 0.1em; margin-top: 0.1cqw; }
+        .expiry-date { color: rgba(255,255,255,0.7); font-size: 0.7cqw; font-family: sans-serif; }
+
+        .panel-content-hidden { opacity: 0; transition: opacity 0.3s ease; }
 
         @media (min-width: 1280px) {
             .control-panel-scroll { max-height: 90vh; overflow-y: auto; }
@@ -127,15 +136,19 @@
                 <div class="address-layer font-impact"><span id="pAddress" class="opacity-90">8 Finance Street, Central, Hong Kong</span></div>
                 
                 <div id="pDetailPanel" class="info-panel shadow-2xl">
-                    <img id="pDetailBrandImg" src="" class="w-full h-10 object-contain mb-2 panel-content-hidden">
-                    <h4 id="pDetailProdName" class="font-bold text-orange-500 mb-1 leading-tight text-[1.8cqw] panel-content-hidden"></h4>
-                    <div id="pDetailTCContainer" class="panel-content-hidden">
+                    <div class="brand-logo-wrap panel-content-hidden">
+                        <img id="pDetailBrandImg" src="">
+                    </div>
+                    <div class="prod-name-wrap panel-content-hidden">
+                        <h4 id="pDetailProdName"></h4>
+                    </div>
+                    <div class="tc-wrap panel-content-hidden">
                         <p id="pDetailTC"></p>
                     </div>
-                    <div id="pBarcodeSection" class="barcode-area panel-content-hidden">
+                    <div class="barcode-wrap panel-content-hidden">
                         <div class="barcode-img"></div>
                         <div class="barcode-num">8888888888</div>
-                        <div class="expiry-date">Expiry Date : DD/MM/YYYY</div>
+                        <div class="expiry-date">Expiry Date : 31/12/2026</div>
                     </div>
                 </div>
             </div>
@@ -176,120 +189,104 @@
     </div>
 
     <script>
-        // 1. 品牌定義
+        // 品牌數據
         const allBrands = [
+            { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
+            { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" },
             { name: "Lady M", img: "https://img.shoplineapp.com/media/image_clips/5b7a801b8f90480017e4ca83/original.png?1534754834" },
             { name: "東海堂", img: "https://www.aromebakery.com.hk/arome/images/logo_v2.png" },
             { name: "華御結", img: "https://www.pacificplace.com.hk/-/media/images/pacificplace2/starstreet/hana-musubi/hana-musubi_logo_apr2022_1.ashx?rev=973c0e9ef342404e845ed5a7f85bd14b&hash=9d532561b9d0e798e9ffc0f878c54d79" },
-            { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" },
-            { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
             { name: "奇華餅家", img: "https://media.langhamplace.com.hk/cms/store/ENcscXXFp.png" }
         ];
 
-        // 2. 完整 T&C 內容庫
-        const ladyMTC = `voucher Terms & Conditions:
-The certificate can only be used to redeem takeaway cakes and drinks at Lady M Hong Kong
-The certificate can only be used in Hong Kong
-The certificate is not applicable for any whole cake pre-order, merchandize or dine-in order
-The certificate must be presented upon purchase
-The certificate cannot be used in conjunction with other promotions
-The certificate is only valid when stamped by Lady M Hong Kong
-The certificate is non-refundable or non-exchangeable for cash
-The redemption item is subject to availability
-Damaged, altered or expired certificate will not be accepted
-Lady M Hong Kong reserves the right to amend the above terms without prior notice
-Lady M Hong Kong reserves the right of all final decisions in case of any dispute`;
-
-        const aromeTC = `東海堂條款及細則：
-憑此券可於有效期內在東海堂有限公司（“東海堂”）旗下位於香港特別行政區境內之東海堂餅店換領總值HK$50之禮餅（以折扣前零售價計算）
-此券不適用於電話、手機程式或網上購物
-此券只適用於換領禮餅，不適用於換領任何東海堂餅店寄賣之物品、所有飲品及所有其他產品
-請於付款前出示此券
-此券不能兌換現金或現金券
-此券行使後將不獲發還
-行使此券不獲現金或任何形式之找贖
-行使此券不獲發任何會員積分
-此券如有過期、遺失、塗污或損毀，即作廢無效，恕不補發
-此券只可行使一次，影印本無效
-此券不可與其他推廣優惠一併使用。此券不允許作任何形式之轉售
-如作任何商業或推廣用途，必須事先得到東海堂書面同意
-東海堂保留權利修改本條條款及細則而不作另行通知
-如有任何爭議，東海堂保留最終決定權。本條款及細則以中文版本為準，如與英文之譯有本任何分歧，一概以中文版本為準`;
-
-        const hanaTC = `使用細則及條款 ：
-此券適用於華御結各分店(SOGO分店除外）。此券不得兌換現金、轉讓，並恕不作退款或現金找贖。此券不適用於購買套餐，及不可與其他優惠同時使用。此券之影印本無效。此券如經塗改、損壞、模糊及逾期，即屬作廢。華御結保留更改此券使用條款之權利及任何爭議之最終決定權。`;
-
-        const godivaTC50 = `使用條款:
-此GODIVA電子禮券有效期由購買日起計數，最少11個月
-此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。
-此電子禮券只可使用一次並以GODIVA的系統記錄為準。
-影印本及螢幕截圖恕不接納。
-此電子禮券不適用於電話、傳真或網上購物。
-此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金
-此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。
-如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。
-分店地址︰https://www.godiva.com.hk/boutiques.html`;
-
-        const godivaTC100 = `使用條款:
-此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。
-此電子禮券只可使用一次並以GODIVA的系統記錄為準。
-影印本及螢幕截圖恕不接納。
-此電子禮券不適用於電話、傳真或網上購物。
-此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金
-此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。
-如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。
-分店地址︰https://www.godiva.com.hk/boutiques.html`;
-
-        const agnesbTC = `e-voucher Terms & Conditions:
-The e-voucher entitles the holder a cash value of spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.
-The e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.
-The e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.
-The e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.
-Agnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.
-In case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties.`;
-
-        const keeWahTC = `條款及細則：
-•此券不能兑換現金或作現金找贖，
-•此券不能與其他推廣優惠同時使用。
-•此券只限使用一次，影印本恕不接受。
-•此券不適用於奇華餅家與其他機構或公司合作之產品。
-•此券不適用於海外月餅咕或月餅會供款。
-•此券只適用於奇華餅家香港各分店(香港國際機場分店除外）。
-•如有任何爭議，「奇華餅家有限公司』將保留最終決定權。`;
-
-        const keeWahLongFungTC = `條款及細則：
-龍鳳對餅咭可兌換龍鳳對餅嫁喜禮餅1盒*
-或可照價換取任何奇華餅家產品 以正價計算。
-【禮券 / 實體產品：產品以禮券形式交付，而並非實體產品，顧客需憑券到所屬商戶門市換取券上產品。】
-所有嫁喜禮券均適用於奇華餅家的任何正價產品。
-禮卡背後所列印之條款如下：
-• 此券如於澳門、台灣或美國分店使用，其換領須依據香港龍鳳對餅之價值為準。
-• 請提前兩星期到本公司分店預訂，以便為閣下安排。
-• 此券不能兑換現金及不設任何形式之找贖。
-• 此券不能與其他推廣優惠同時使用。
-• 此券不適用於奇華餅家與其他機構或公司合作之產品。
-• 此券不適用於購買或兑換任何奇華禮券、嫁喜餅券及月餅券或作月餅會供款。
-• 此券不適用於香港國際機場及中國分店。
-• 如有任何爭議，「奇華餅家有限公司」，將保留最終決定權。`;
-
-        // 3. 產品清單
+        // 完整產品數據 (16個)
         const defaultProducts = [
-            { brandName: "Lady M", product: "$80 禮券", tc: ladyMTC },
-            { brandName: "Lady M", product: "$150 禮券", tc: ladyMTC },
-            { brandName: "東海堂", product: "HK$25 禮券", tc: aromeTC },
-            { brandName: "東海堂", product: "HK$50 禮券", tc: aromeTC },
-            { brandName: "華御結", product: "HK$25 禮券", tc: hanaTC },
-            { brandName: "華御結", product: "HK$50 禮券", tc: hanaTC },
-            { brandName: "Godiva", product: "HK$50 禮券", tc: godivaTC50 },
-            { brandName: "Godiva", product: "HK$100 禮券", tc: godivaTC100 },
-            { brandName: "agnès b.", product: "$50 心意禮券", tc: agnesbTC.replace('cash value of spending', 'cash value of HK$50 spending') },
-            { brandName: "agnès b.", product: "$100 心意禮券", tc: agnesbTC.replace('cash value of spending', 'cash value of HK$100 spending') },
-            { brandName: "奇華餅家", product: "HK$50 禮券", tc: keeWahTC },
-            { brandName: "奇華餅家", product: "金盈喜餅咭", tc: keeWahTC },
-            { brandName: "奇華餅家", product: "金雅喜餅咭", tc: keeWahTC },
-            { brandName: "奇華餅家", product: "金緣喜餅咭", tc: keeWahTC },
-            { brandName: "奇華餅家", product: "金御喜餅咭", tc: keeWahTC },
-            { brandName: "奇華餅家", product: "龍鳳對餅咭", tc: keeWahLongFungTC }
+            // agnès b.
+            { 
+                brandName: "agnès b.", 
+                product: "$50 心意禮券", 
+                tc: `e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$50 spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.\nThe e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.\nThe e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.\nThe e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.\nAgnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.\nIn case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties.`
+            },
+            { 
+                brandName: "agnès b.", 
+                product: "$100 心意禮券", 
+                tc: `e-voucher Terms & Conditions:\nThe e-voucher entitles the holder a cash value of HK$100 spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.\nThe e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.\nThe e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.\nThe e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.\nAgnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.\nIn case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties.`
+            },
+            // Godiva
+            { 
+                brandName: "Godiva", 
+                product: "HK$50 禮券", 
+                tc: `使用條款:\n此GODIVA電子禮券有效期由購買日起計數，最少11個月\n此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。\n此電子禮券只可使用一次並以GODIVA的系統記錄為準。\n影印本及螢幕截圖恕不接納。\n此電子禮券不適用於電話、傳真或網上購物。\n此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金\n此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。\n如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。\n分店地址︰https://www.godiva.com.hk/boutiques.html`
+            },
+            { 
+                brandName: "Godiva", 
+                product: "HK$100 禮券", 
+                tc: `使用條款:\n此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。\n此電子禮券只可使用一次並以GODIVA的系統記錄為準。\n影印本及螢幕截圖恕不接納。\n此電子禮券不適用於電話、傳真或網上購物。\n此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金\n此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。\n如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。\n分店地址︰https://www.godiva.com.hk/boutiques.html`
+            },
+            // Lady M
+            { 
+                brandName: "Lady M", 
+                product: "$80 禮券", 
+                tc: `voucher Terms & Conditions:\nThe certificate can only be used to redeem takeaway cakes and drinks at Lady M Hong Kong\nThe certificate can only be used in Hong Kong\nThe certificate is not applicable for any whole cake pre-order, merchandize or dine-in order\nThe certificate must be presented upon purchase\nThe certificate cannot be used in conjunction with other promotions\nThe certificate is only valid when stamped by Lady M Hong Kong\nThe certificate is non-refundable or non-exchangeable for cash\nThe redemption item is subject to availability\nDamaged, altered or expired certificate will not be accepted\nLady M Hong Kong reserves the right to amend the above terms without prior notice\nLady M Hong Kong reserves the right of all final decisions in case of any dispute`
+            },
+            { 
+                brandName: "Lady M", 
+                product: "$150 禮券", 
+                tc: `voucher Terms & Conditions:\nThe certificate can only be used to redeem takeaway cakes and drinks at Lady M Hong Kong\nThe certificate can only be used in Hong Kong\nThe certificate is not applicable for any whole cake pre-order, merchandize or dine-in order\nThe certificate must be presented upon purchase\nThe certificate cannot be used in conjunction with other promotions\nThe certificate is only valid when stamped by Lady M Hong Kong\nThe certificate is non-refundable or non-exchangeable for cash\nThe redemption item is subject to availability\nDamaged, altered or expired certificate will not be accepted\nLady M Hong Kong reserves the right to amend the above terms without prior notice\nLady M Hong Kong reserves the right of all final decisions in case of any dispute`
+            },
+            // 華御結
+            { 
+                brandName: "華御結", 
+                product: "HK$25 禮券", 
+                tc: `使用細則及條款 ：\n此券適用於華御結各分店(SOGO分店除外）。此券不得兌換現金、轉讓，並恕不作退款或現金找贖。此券不適用於購買套餐，及不可與其他優惠同時使用。此券之影印本無效。此券如經塗改、損壞、模糊及逾期，即屬作廢。華御結保留更改此券使用條款之權利及任何爭議之最終決定權。`
+            },
+            { 
+                brandName: "華御結", 
+                product: "HK$50 禮券", 
+                tc: `使用細則及條款 ：\n此券適用於華御結各分店(SOGO分店除外）。此券不得兌換現金、轉讓，並恕不作退款或現金找贖。此券不適用於購買套餐，及不可與其他優惠同時使用。此券之影印本無效。此券如經塗改、損壞、模糊及逾期，即屬作廢。華御結保留更改此券使用條款之權利及任何爭議之最終決定權。`
+            },
+            // 東海堂
+            { 
+                brandName: "東海堂", 
+                product: "HK$25 禮券", 
+                tc: `東海堂條款及細則：\n憑此券可於有效期內在東海堂有限公司（“東海堂”）旗下位於香港特別行政區境內之東海堂餅店換領總值HK$25之禮餅（以折扣前零售價計算）\n此券不適用於電話、手機程式或網上購物\n此券只適用於換領禮餅，不適用於換領任何東海堂餅店寄賣之物品、所有飲品及所有其他產品\n請於付款前出示此券\n此券不能兌換現金或現金券\n此券行使後將不獲發還\n行使此券不獲現金或任何形式之找贖\n行使此券不獲發任何會員積分\n此券如有過期、遺失、塗污或損毀，即作廢無效，恕不補發\n此券只可行使一次，影印本無效\n此券不可與其他推廣優惠一併使用。此券不允許作任何形式之轉售\n如作任何商業或推廣用途，必須事先得到東海堂書面同意\n東海堂保留權利修改本條款及細則而不作另行通知\n如有任何爭議，東海堂保留最終決定權。`
+            },
+            { 
+                brandName: "東海堂", 
+                product: "HK$50 禮券", 
+                tc: `東海堂條款及細則：\n憑此券可於有效期內在東海堂有限公司（“東海堂”）旗下位於香港特別行政區境內之東海堂餅店換領總值HK$50之禮餅（以折扣前零售價計算）\n此券不適用於電話、手機程式或網上購物\n此券只適用於換領禮餅，不適用於換領任何東海堂餅店寄賣之物品、所有飲品及所有其他產品\n請於付款前出示此券\n此券不能兌換現金或現金券\n此券行使後將不獲發還\n行使此券不獲現金或任何形式之找贖\n行使此券不獲發任何會員積分\n此券如有過期、遺失、塗污或損毀，即作廢無效，恕不補發\n此券只可行使一次，影印本無效\n此券不可與其他推廣優惠一併使用。此券不允許作任何形式之轉售\n如作任何商業或推廣用途，必須事先得到東海堂書面同意\n東海堂保留權利修改本條款及細則而不作另行通知\n如有任何爭議，東海堂保留最終決定權。`
+            },
+            // 奇華餅家
+            { 
+                brandName: "奇華餅家", 
+                product: "HK$50 禮券", 
+                tc: `條款及細則：\n•此券不能兑換現金或作現金找贖，\n•此券不能與其他推廣優惠同時使用。\n•此券只限使用一次，影印本恕不接受。\n•此券不適用於奇華餅家與其他機構或公司合作之產品。\n•此券不適用於海外月餅咕或月餅會供款。\n•此券只適用於奇華餅家香港各分店(香港國際機場分店除外）。\n•如有任何爭議，「奇華餅家有限公司』將保留最終決定權。`
+            },
+            { 
+                brandName: "奇華餅家", 
+                product: "金盈喜餅咭", 
+                tc: `條款及細則：\n•此券不能兑換現金或作現金找贖，\n•此券不能與其他推廣優惠同時使用。\n•此券只限使用一次，影印本恕不接受。\n•此券不適用於奇華餅家與其他機構或公司合作之產品。\n•此券不適用於海外月餅咕或月餅會供款。\n•此券只適用於奇華餅家香港各分店(香港國際機場分店除外）。\n•如有任何爭議，「奇華餅家有限公司』將保留最終決定權。`
+            },
+            { 
+                brandName: "奇華餅家", 
+                product: "金雅喜餅咭", 
+                tc: `條款及細則：\n•此券不能兑換現金或作現金找贖，\n•此券不能與其他推廣優惠同時使用。\n•此券只限使用一次，影印本恕不接受。\n•此券不適用於奇華餅家與其他機構或公司合作之產品。\n•此券不適用於海外月餅咕或月餅會供款。\n•此券只適用於奇華餅家香港各分店(香港國際機場分店除外）。\n•如有任何爭議，「奇華餅家有限公司』將保留最終決定權。`
+            },
+            { 
+                brandName: "奇華餅家", 
+                product: "金緣喜餅咭", 
+                tc: `條款及細則：\n•此券不能兑換現金或作現金找贖，\n•此券不能與其他推廣優惠同時使用。\n•此券只限使用一次，影印本恕不接受。\n•此券不適用於奇華餅家與其他機構或公司合作之產品。\n•此券不適用於海外月餅咕或月餅會供款。\n•此券只適用於奇華餅家香港各分店(香港國際機場分店除外）。\n•如有任何爭議，「奇華餅家有限公司』將保留最終決定權。`
+            },
+            { 
+                brandName: "奇華餅家", 
+                product: "金御喜餅咭", 
+                tc: `條款及細則：\n•此券不能兑換現金或作現金找贖，\n•此券不能與其他推廣優惠同時使用。\n•此券只限使用一次，影印本恕不接受。\n•此券不適用於奇華餅家與其他機構或公司合作之產品。\n•此券不適用於海外月餅咕或月餅會供款。\n•此券只適用於奇華餅家香港各分店(香港國際機場分店除外）。\n•如有任何爭議，「奇華餅家有限公司』將保留最終決定權。`
+            },
+            { 
+                brandName: "奇華餅家", 
+                product: "龍鳳對餅咭", 
+                tc: `條款及細則：\n龍鳳對餅咭可兌換龍鳳對餅嫁喜禮餅1盒* 或可照價換取任何奇華餅家產品。 \n• 此券如於澳門、台灣或美國分店使用，其換領須依據香港龍鳳對餅之價值為準。\n• 請提前兩星期到本公司分店預訂。\n• 此券不能兑換現金及不設找贖。\n• 此券不能與其他優惠同時使用。\n• 此券不適用於香港國際機場及中國分店。\n• 如有任何爭議，「奇華餅家有限公司」，將保留最終決定權。`
+            }
         ];
 
         function mainSwitch(target) {
@@ -316,7 +313,6 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             grid.innerHTML = '';
             allBrands.forEach(brand => {
                 const btn = document.createElement('button');
-                // 已更新為 bg-zinc-300
                 btn.className = "aspect-square border-2 border-zinc-200 bg-zinc-300 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
                 btn.onclick = () => showProducts(brand.name, brand.img);
                 btn.innerHTML = `<img src="${brand.img}" class="max-h-full max-w-full object-contain">`;
@@ -346,14 +342,14 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             document.getElementById('pDetailProdName').innerText = name;
             const tcEl = document.getElementById('pDetailTC');
             tcEl.innerText = tc;
-            setTimeout(() => { autoScaleText(tcEl, 1.2, 0.4); }, 10);
+            setTimeout(() => { autoScaleText(tcEl, 1.1, 0.4); }, 10);
         }
 
-        function autoScaleText(element, maxFontSize = 1.2, minFontSize = 0.4) {
+        function autoScaleText(element, maxFontSize, minFontSize) {
             const parent = element.parentElement;
             let fontSizeCqw = maxFontSize;
             element.style.fontSize = fontSizeCqw + 'cqw';
-            while ((element.scrollHeight > parent.offsetHeight || element.scrollWidth > parent.offsetWidth) && fontSizeCqw > minFontSize) {
+            while (element.scrollHeight > parent.offsetHeight && fontSizeCqw > minFontSize) {
                 fontSizeCqw -= 0.05;
                 element.style.fontSize = fontSizeCqw + 'cqw';
             }
@@ -372,8 +368,7 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
         };
 
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.addEventListener('input', sync);
+            document.getElementById(id).addEventListener('input', sync);
         });
 
         window.onload = sync;
