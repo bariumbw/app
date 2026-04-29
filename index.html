@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BESPOKE 囍帖預覽器</title>
+    <title>囍帖預覽器 - 中咖色文字版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
     
     <style>
-        /* 核心畫布設定 - 加入版本號強制刷新圖片 */
+        /* 核心畫布設定 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            /* 加上 ?v=20260429_v2 強制瀏覽器重新載入新圖 */
-            background-image: url('DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=20260429_v2'); 
+            background-image: url('DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=20260429_v3'); 
             background-color: #FFFDD0; 
             background-size: cover;
             background-position: center;
@@ -30,14 +29,14 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 文字圖層 */
-        .bride-layer { position: absolute; top: 20%; left: 0; width: 50%; color: #FFFFFF; z-index: 10; display: flex; justify-content: center; transform: translateX(-1.2cqw); }
-        .groom-layer { position: absolute; top: 41.5%; left: 0; width: 50%; color: #FFFFFF; z-index: 10; display: flex; justify-content: center; transform: translateX(6.2cqw); }
+        /* 文字圖層 - 所有字體改為中咖色 #8B4513 */
+        .bride-layer { position: absolute; top: 20%; left: 0; width: 50%; color: #8B4513; z-index: 10; display: flex; justify-content: center; transform: translateX(-1.2cqw); }
+        .groom-layer { position: absolute; top: 41.5%; left: 0; width: 50%; color: #8B4513; z-index: 10; display: flex; justify-content: center; transform: translateX(6.2cqw); }
         .name-wrap { width: 80%; text-align: center; }
         #pBride, #pGroom { font-size: 4.5cqw; line-height: 1; white-space: nowrap; display: inline-block; }
-        .date-layer { position: absolute; top: 64%; left: 9%; width: 32%; text-align: center; color: #FFFFFF; font-size: 2cqw; letter-spacing: 0.25em; }
-        .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; }
-        .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
+        .date-layer { position: absolute; top: 64%; left: 9%; width: 32%; text-align: center; color: #8B4513; font-size: 2cqw; letter-spacing: 0.25em; }
+        .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #8B4513; text-transform: uppercase; font-size: 1.6cqw; }
+        .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #8B4513; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
 
         /* 產品詳情面板 */
         .info-panel {
@@ -50,17 +49,17 @@
         .brand-logo-wrap { flex: 0 0 40%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #pDetailBrandImg { max-width: 90%; max-height: 85%; object-fit: contain; }
 
-        /* 產品名稱顏色：橙色 */
+        /* 產品名稱顏色維持：橙色 */
         .prod-name-wrap { flex: 0 0 20%; display: flex; align-items: center; justify-content: center; text-align: center; }
         #pDetailProdName { font-weight: bold; color: #F97316; line-height: 1.1; font-size: 4.2cqw; text-shadow: 0 2px 5px rgba(0,0,0,0.4); }
 
         .tc-wrap { flex: 0 0 30%; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
-        #pDetailTC { color: rgba(255,255,255,0.8); line-height: 1.1; word-break: break-all; white-space: pre-wrap; text-align: left; width: 100%; }
+        #pDetailTC { color: #8B4513; opacity: 0.8; line-height: 1.1; word-break: break-all; white-space: pre-wrap; text-align: left; width: 100%; }
 
-        .barcode-wrap { flex: 0 0 10%; border-top: 1px solid rgba(255,255,255,0.15); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .barcode-wrap { flex: 0 0 10%; border-top: 1px solid rgba(139, 69, 19, 0.15); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .barcode-img { width: 70%; height: 2cqw; background: linear-gradient(90deg, #000 5%, transparent 5%, transparent 8%, #000 8%, #000 12%, transparent 12%, #000 15%, #000 16%, transparent 16%, #000 20%, transparent 20%, transparent 25%, #000 25%, #000 28%, transparent 28%, #000 35%, #000 37%, transparent 37%, #000 45%, transparent 45%, transparent 48%, #000 48%, #000 55%, transparent 55%, #000 60%, #000 62%, transparent 62%, #000 70%, transparent 70%, transparent 75%, #000 75%, #000 85%, transparent 85%, #000 90%, #000 95%, transparent 95%); background-color: #fff; border-radius: 1px; }
-        .barcode-num { color: #fff; font-size: 0.7cqw; font-family: monospace; letter-spacing: 0.1em; margin-top: 0.1cqw; }
-        .expiry-date { color: rgba(255,255,255,0.7); font-size: 0.7cqw; font-family: sans-serif; }
+        .barcode-num { color: #8B4513; font-size: 0.7cqw; font-family: monospace; letter-spacing: 0.1em; margin-top: 0.1cqw; }
+        .expiry-date { color: #8B4513; opacity: 0.7; font-size: 0.7cqw; font-family: sans-serif; }
 
         .panel-content-hidden { opacity: 0; transition: opacity 0.3s ease; }
 
