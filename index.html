@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 完整數據與奶油色背景版</title>
+    <title>BESPOKE 囍帖預覽器</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
     
     <style>
-        /* 核心畫布設定 - 背景改為奶油色 */
+        /* 核心畫布設定 - 加入版本號強制刷新圖片 */
         .preview-canvas {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 2400 / 1700;
             position: relative;
-            background-image: url('DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=202604291240'); 
+            /* 加上 ?v=20260429_v2 強制瀏覽器重新載入新圖 */
+            background-image: url('DESIGN%20PREVIEW%20%E5%9C%96.jpg?v=20260429_v2'); 
             background-color: #FFFDD0; 
             background-size: cover;
             background-position: center;
