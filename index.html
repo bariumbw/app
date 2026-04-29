@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 品牌完整 T&C 版</title>
+    <title>囍帖預覽器 - 完整資料版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -43,7 +43,7 @@
         }
         .name-wrap { width: 80%; text-align: center; }
 
-        /* 名字大小分開設定 */
+        /* 名字大小設定 */
         #pBride, #pGroom { 
             font-size: 4.5cqw; 
             line-height: 1; 
@@ -51,19 +51,19 @@
             display: inline-block; 
         }
 
-        /* 電腦版 (從 60px 調整至 40px) */
+        /* 電腦版名字尺寸下修至 40px */
         @media (min-width: 1280px) {
             #pBride, #pGroom { 
                 font-size: 40px; 
             }
         }
 
-        /* 日期地址 */
+        /* 日期地址區域 */
         .date-layer { position: absolute; top: 64%; left: 9%; width: 32%; text-align: center; color: #FFFFFF; font-size: 2cqw; letter-spacing: 0.25em; }
         .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; }
         .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
 
-        /* 產品詳情面板 - 預設僅顯示磨砂框架 */
+        /* 產品詳情面板 - 磨砂框架 */
         .info-panel {
             position: absolute; top: 5%; right: 3%; width: 40cqw; height: 64cqw;
             background: rgba(255,255,255,0.12); padding: 2.2cqw; border-radius: 2cqw;
@@ -72,6 +72,7 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
+        /* 初始隱藏內容邏輯 */
         .panel-content-hidden {
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
@@ -106,7 +107,6 @@
         .barcode-num { color: #fff; font-size: 0.8cqw; font-family: monospace; margin-top: 0.25cqw; letter-spacing: 0.15em; }
         .expiry-date { color: rgba(255,255,255,0.7); font-size: 0.8cqw; margin-top: 0.2cqw; font-family: sans-serif; letter-spacing: 0.05em; }
 
-        /* 控制面板響應式滾動 */
         @media (min-width: 1280px) {
             .control-panel-scroll { max-height: 90vh; overflow-y: auto; }
             .control-panel-scroll::-webkit-scrollbar { width: 6px; }
@@ -122,6 +122,7 @@
             <div class="preview-canvas">
                 <div class="bride-layer font-aniyah"><div class="name-wrap"><h1 id="pBride">Christian</h1></div></div>
                 <div class="groom-layer font-aniyah"><div class="name-wrap"><h1 id="pGroom">Benjamin</h1></div></div>
+                
                 <div class="date-layer font-aloja"><span id="pDate" class="uppercase">October 15, 2026</span></div>
                 <div class="venue-layer font-impact"><span id="pVenue">Four Seasons Grand Ballroom</span></div>
                 <div class="address-layer font-impact"><span id="pAddress" class="opacity-90">8 Finance Street, Central, Hong Kong</span></div>
@@ -176,15 +177,17 @@
     </div>
 
     <script>
-        // 1. 品牌定義
+        // 1. 完整品牌資料庫
         const allBrands = [
             { name: "Lady M", img: "https://img.shoplineapp.com/media/image_clips/5b7a801b8f90480017e4ca83/original.png?1534754834" },
             { name: "東海堂", img: "https://www.aromebakery.com.hk/arome/images/logo_v2.png" },
             { name: "華御結", img: "https://www.pacificplace.com.hk/-/media/images/pacificplace2/starstreet/hana-musubi/hana-musubi_logo_apr2022_1.ashx?rev=973c0e9ef342404e845ed5a7f85bd14b&hash=9d532561b9d0e798e9ffc0f878c54d79" },
+            { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" },
+            { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
             { name: "奇華餅家", img: "https://media.langhamplace.com.hk/cms/store/ENcscXXFp.png" }
         ];
 
-        // 2. 條款內容庫 (完整文字)
+        // 2. 條款內容庫 (完整不可縮短)
         const ladyMTC = `voucher Terms & Conditions:
 The certificate can only be used to redeem takeaway cakes and drinks at Lady M Hong Kong
 The certificate can only be used in Hong Kong
@@ -198,9 +201,6 @@ Damaged, altered or expired certificate will not be accepted
 Lady M Hong Kong reserves the right to amend the above terms without prior notice
 Lady M Hong Kong reserves the right of all final decisions in case of any dispute`;
 
-        const hanaTC = `使用細則及條款 ：
-此券適用於華御結各分店(SOGO分店除外）。此券不得兌換現金、轉讓，並恕不作退款或現金找贖。此券不適用於購買套餐，及不可與其他優惠同時使用。此券之影印本無效。此券如經塗改、損壞、模糊及逾期，即屬作廢。華御結保留更改此券使用條款之權利及任何爭議之最終決定權。`;
-
         const aromeTC = `東海堂條款及細則：
 憑此券可於有效期內在東海堂有限公司（“東海堂”）旗下位於香港特別行政區境內之東海堂餅店換領總值HK$50之禮餅（以折扣前零售價計算）
 此券不適用於電話、手機程式或網上購物
@@ -208,7 +208,7 @@ Lady M Hong Kong reserves the right of all final decisions in case of any disput
 請於付款前出示此券
 此券不能兌換現金或現金券
 此券行使後將不獲發還
-行使此券不獲現金或任何形式之找贖
+行使此券不獲現金 or 任何形式之找贖
 行使此券不獲發任何會員積分
 此券如有過期、遺失、塗污或損毀，即作廢無效，恕不補發
 此券只可行使一次，影印本無效
@@ -216,6 +216,9 @@ Lady M Hong Kong reserves the right of all final decisions in case of any disput
 如作任何商業或推廣用途，必須事先得到東海堂書面同意
 東海堂保留權利修改本條款及細則而不作另行通知
 如有任何爭議，東海堂保留最終決定權。本條款及細則以中文版本為準，如與英文之譯有本任何分歧，一概以中文版本為準`;
+
+        const hanaTC = `使用細則及條款 ：
+此券適用於華御結各分店(SOGO分店除外）。此券不得兌換現金、轉讓，並恕不作退款或現金找贖。此券不適用於購買套餐，及不可與其他優惠同時使用。此券之影印本無效。此券如經塗改、損壞、模糊及逾期，即屬作廢。華御結保留更改此券使用條款之權利及任何爭議之最終決定權。`;
 
         const keeWahTC = `條款及細則：
 •此券不能兑換現金或作現金找贖，
@@ -226,7 +229,7 @@ Lady M Hong Kong reserves the right of all final decisions in case of any disput
 •此券只適用於奇華餅家香港各分店(香港國際機場分店除外）。
 •如有任何爭議，「奇華餅家有限公司』將保留最終決定權。`;
 
-        const keeWahLongFungTC = `條款及細則：
+        const longFungTC = `條款及細則：
 龍鳳對餅咭可兌換龍鳳對餅嫁喜禮餅1盒*
 或可照價換取任何奇華餅家產品 以正價計算。
 【禮券 / 實體產品：產品以禮券形式交付，而並非實體產品，顧客需憑券到所屬商戶門市換取券上產品。】
@@ -241,23 +244,25 @@ Lady M Hong Kong reserves the right of all final decisions in case of any disput
 • 此券不適用於香港國際機場及中國分店。
 • 如有任何爭議，「奇華餅家有限公司」，將保留最終決定權。`;
 
-        // 3. 產品清單
+        // 3. 完整產品清單
         const defaultProducts = [
             { brandName: "Lady M", product: "$80 禮券", tc: ladyMTC },
             { brandName: "Lady M", product: "$150 禮券", tc: ladyMTC },
-            { brandName: "華御結", product: "HK$25 禮券", tc: hanaTC },
-            { brandName: "華御結", product: "HK$50 禮券", tc: hanaTC },
             { brandName: "東海堂", product: "HK$25 禮券", tc: aromeTC },
             { brandName: "東海堂", product: "HK$50 禮券", tc: aromeTC },
+            { brandName: "華御結", product: "HK$25 禮券", tc: hanaTC },
+            { brandName: "華御結", product: "HK$50 禮券", tc: hanaTC },
+            { brandName: "Godiva", product: "HK$50 禮券", tc: "Godiva 條款：本券只適用於香港指定 Godiva 門市。不設找贖，不能兌換現金。如有任何爭議，Godiva 擁有最終決定權。" },
+            { brandName: "agnès b.", product: "$50 心意禮券", tc: "agnès b. 條款：本券適用於香港指定 agnès b. CAFÉ 或門市。不可與其他優惠同時使用。如有任何爭議，agnès b. 擁有最終決定權。" },
             { brandName: "奇華餅家", product: "HK$50 禮券", tc: keeWahTC },
             { brandName: "奇華餅家", product: "金盈喜餅咭", tc: keeWahTC },
             { brandName: "奇華餅家", product: "金雅喜餅咭", tc: keeWahTC },
             { brandName: "奇華餅家", product: "金緣喜餅咭", tc: keeWahTC },
             { brandName: "奇華餅家", product: "金御喜餅咭", tc: keeWahTC },
-            { brandName: "奇華餅家", product: "龍鳳對餅咭", tc: keeWahLongFungTC }
+            { brandName: "奇華餅家", product: "龍鳳對餅咭", tc: longFungTC }
         ];
 
-        // 4. UI 邏輯
+        // 分頁切換
         function mainSwitch(target) {
             const editorSec = document.getElementById('section-editor');
             const brandsSec = document.getElementById('section-brands');
@@ -277,6 +282,7 @@ Lady M Hong Kong reserves the right of all final decisions in case of any disput
             }
         }
 
+        // 渲染品牌
         function renderBrands() {
             const grid = document.getElementById('brandGrid');
             grid.innerHTML = '';
@@ -289,6 +295,7 @@ Lady M Hong Kong reserves the right of all final decisions in case of any disput
             });
         }
 
+        // 顯示產品列表
         function showProducts(bName, bImg) {
             const section = document.getElementById('productSection');
             const grid = document.getElementById('productGrid');
@@ -305,18 +312,21 @@ Lady M Hong Kong reserves the right of all final decisions in case of any disput
             });
         }
 
+        // 套用選擇並顯示內容
         function applySelection(img, name, tc) {
-            // 顯示所有隱藏內容
+            // 讓隱藏的元件顯現
             document.querySelectorAll('.panel-content-hidden').forEach(el => el.style.opacity = '1');
+            
             document.getElementById('pDetailBrandImg').src = img;
             document.getElementById('pDetailProdName').innerText = name;
             const tcEl = document.getElementById('pDetailTC');
             tcEl.innerText = tc;
             
-            // 自動縮放文字
+            // 自動縮放 T&C 字體以適應容器
             setTimeout(() => { autoScaleText(tcEl, 1.2, 0.4); }, 10);
         }
 
+        // T&C 自動縮放字體函數
         function autoScaleText(element, maxFontSize = 1.2, minFontSize = 0.4) {
             const parent = element.parentElement;
             let fontSizeCqw = maxFontSize;
@@ -327,6 +337,7 @@ Lady M Hong Kong reserves the right of all final decisions in case of any disput
             }
         }
 
+        // 同步輸入
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
