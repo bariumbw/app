@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 中尺寸優化版</title>
+    <title>囍帖預覽器 - 比例優化版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -45,7 +45,7 @@
 
         /* --- 名字大小分開設定 --- */
         
-        /* 1. 手機版預設 (小尺寸) */
+        /* 1. 手機版預設 */
         #pBride, #pGroom { 
             font-size: 4.5cqw; 
             line-height: 1; 
@@ -53,10 +53,10 @@
             display: inline-block; 
         }
 
-        /* 2. 電腦版專用 (改為中尺寸) - 當寬度超過 1280px 時生效 */
+        /* 2. 電腦版專用 (下修至 40px) */
         @media (min-width: 1280px) {
             #pBride, #pGroom { 
-                font-size: 60px; 
+                font-size: 40px; 
             }
         }
 
@@ -67,7 +67,7 @@
         .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; }
         .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
 
-        /* 產品詳情面板 - 預設僅顯示背景框架 */
+        /* 產品詳情面板 */
         .info-panel {
             position: absolute; top: 5%; right: 3%; width: 40cqw; height: 64cqw;
             background: rgba(255,255,255,0.12); padding: 2.2cqw; border-radius: 2cqw;
@@ -76,7 +76,6 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* 內容元件預設隱藏 (Opacity 0) */
         .panel-content-hidden {
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
@@ -131,6 +130,13 @@
             margin-top: 0.25cqw;
             letter-spacing: 0.15em;
         }
+        .expiry-date {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8cqw;
+            margin-top: 0.2cqw;
+            font-family: sans-serif;
+            letter-spacing: 0.05em;
+        }
 
         /* 響應式控制面板佈局 */
         @media (min-width: 1280px) {
@@ -166,6 +172,7 @@
                     <div id="pBarcodeSection" class="barcode-area panel-content-hidden">
                         <div class="barcode-img"></div>
                         <div class="barcode-num">8888888888</div>
+                        <div class="expiry-date">Expiry Date : DD/MM/YYYY</div>
                     </div>
                 </div>
             </div>
@@ -296,7 +303,6 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
         }
 
         function applySelection(img, name, tc) {
-            // 顯示所有原本隱藏的內容元件
             document.querySelectorAll('.panel-content-hidden').forEach(el => {
                 el.style.opacity = '1';
             });
