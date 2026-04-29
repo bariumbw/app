@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 比例優化版</title>
+    <title>囍帖預覽器 - 品牌完整版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -43,9 +43,7 @@
         }
         .name-wrap { width: 80%; text-align: center; }
 
-        /* --- 名字大小分開設定 --- */
-        
-        /* 1. 手機版預設 */
+        /* 名字大小分開設定 */
         #pBride, #pGroom { 
             font-size: 4.5cqw; 
             line-height: 1; 
@@ -53,21 +51,18 @@
             display: inline-block; 
         }
 
-        /* 2. 電腦版專用 (下修至 40px) */
         @media (min-width: 1280px) {
             #pBride, #pGroom { 
                 font-size: 40px; 
             }
         }
 
-        /* ----------------------- */
-
         /* 日期地址 */
         .date-layer { position: absolute; top: 64%; left: 9%; width: 32%; text-align: center; color: #FFFFFF; font-size: 2cqw; letter-spacing: 0.25em; }
         .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; }
         .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
 
-        /* 產品詳情面板 */
+        /* 產品詳情面板 - 預設顯示磨砂框架 */
         .info-panel {
             position: absolute; top: 5%; right: 3%; width: 40cqw; height: 64cqw;
             background: rgba(255,255,255,0.12); padding: 2.2cqw; border-radius: 2cqw;
@@ -103,51 +98,18 @@
             text-align: center;
         }
         .barcode-img {
-            width: 60%;
-            height: 3cqw;
-            background: linear-gradient(90deg, 
-                #000 5%, transparent 5%, transparent 8%, 
-                #000 8%, #000 12%, transparent 12%, 
-                #000 15%, #000 16%, transparent 16%, 
-                #000 20%, transparent 20%, transparent 25%,
-                #000 25%, #000 28%, transparent 28%,
-                #000 35%, #000 37%, transparent 37%,
-                #000 45%, transparent 45%, transparent 48%,
-                #000 48%, #000 55%, transparent 55%,
-                #000 60%, #000 62%, transparent 62%,
-                #000 70%, transparent 70%, transparent 75%,
-                #000 75%, #000 85%, transparent 85%,
-                #000 90%, #000 95%, transparent 95%
-            );
-            background-color: #fff;
-            margin: 0 auto;
-            border-radius: 1px;
+            width: 60%; height: 3cqw;
+            background: linear-gradient(90deg, #000 5%, transparent 5%, transparent 8%, #000 8%, #000 12%, transparent 12%, #000 15%, #000 16%, transparent 16%, #000 20%, transparent 20%, transparent 25%, #000 25%, #000 28%, transparent 28%, #000 35%, #000 37%, transparent 37%, #000 45%, transparent 45%, transparent 48%, #000 48%, #000 55%, transparent 55%, #000 60%, #000 62%, transparent 62%, #000 70%, transparent 70%, transparent 75%, #000 75%, #000 85%, transparent 85%, #000 90%, #000 95%, transparent 95%);
+            background-color: #fff; margin: 0 auto; border-radius: 1px;
         }
-        .barcode-num {
-            color: #fff;
-            font-size: 0.8cqw;
-            font-family: monospace;
-            margin-top: 0.25cqw;
-            letter-spacing: 0.15em;
-        }
-        .expiry-date {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.8cqw;
-            margin-top: 0.2cqw;
-            font-family: sans-serif;
-            letter-spacing: 0.05em;
-        }
+        .barcode-num { color: #fff; font-size: 0.8cqw; font-family: monospace; margin-top: 0.25cqw; letter-spacing: 0.15em; }
+        .expiry-date { color: rgba(255,255,255,0.7); font-size: 0.8cqw; margin-top: 0.2cqw; font-family: sans-serif; letter-spacing: 0.05em; }
 
-        /* 響應式控制面板佈局 */
+        /* 響應式控制面板 */
         @media (min-width: 1280px) {
             .control-panel-scroll { max-height: 90vh; overflow-y: auto; }
             .control-panel-scroll::-webkit-scrollbar { width: 6px; }
             .control-panel-scroll::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
-        }
-        @media (max-width: 1279px) {
-            .control-panel-scroll { max-height: none !important; overflow-y: visible !important; }
-            .control-panel-scroll::-webkit-scrollbar { display: none; }
-            .control-panel-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         }
     </style>
 </head>
@@ -179,18 +141,12 @@
         </div>
 
         <div class="bg-zinc-50 rounded-[2rem] shadow-2xl h-fit border border-zinc-100 overflow-hidden flex flex-col">
-            
             <div class="flex gap-0 bg-zinc-100 border-b">
-                <button onclick="mainSwitch('editor')" id="main-tab-editor" class="flex-1 py-5 text-xs font-bold transition-all bg-white text-zinc-900 border-r">
-                    01 設計編輯器
-                </button>
-                <button onclick="mainSwitch('brands')" id="main-tab-brands" class="flex-1 py-5 text-xs font-bold transition-all text-zinc-400 hover:text-zinc-900">
-                    02 禮券品牌
-                </button>
+                <button onclick="mainSwitch('editor')" id="main-tab-editor" class="flex-1 py-5 text-xs font-bold transition-all bg-white text-zinc-900 border-r">01 設計編輯器</button>
+                <button onclick="mainSwitch('brands')" id="main-tab-brands" class="flex-1 py-5 text-xs font-bold transition-all text-zinc-400 hover:text-zinc-900">02 禮券品牌</button>
             </div>
 
             <div class="control-panel-scroll p-8">
-                
                 <section id="section-editor" class="block">
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-3">
@@ -213,42 +169,47 @@
 
                 <div class="mt-10">
                     <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg hover:bg-zinc-800 transition-all mb-4">確認並保存設計</button>
-                    <a href="admin.html" class="block text-center text-zinc-400 text-[10px] font-bold uppercase tracking-tighter hover:text-zinc-900 transition-colors">員工後台入口</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const agnesBTC = `e-voucher Terms & Conditions:
-The e-voucher entitles the holder a cash value of HK$50 spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.
-The e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.
-The e-voucher must be presented and can only be used once and will be collected upon redemption, after which it will become invalid. No replacement will be issued if the e-voucher is lost or damaged.
-The e-voucher is non-transferable, non-resellable, and cannot be cancelled, or exchanged for cash, discounts, credit, or other products or services, and it cannot be used in conjunction with any other vouchers, discounts, privilege cards and other promotional offers.
-Agnès b. HK Limited reserves the right to amend and withdraw any terms and conditions or terminate this offer without prior notice.
-In case of any disputes relating to the e-voucher, the decision of Agnès b. HK Limited shall remain final and binding on all relevant parties.`;
-
-        const godivaTC = `使用條款:
-此GODIVA電子禮券有效期由購買日起計數，最少11個月
-此禮券持有人可在本券有效期內於任何香港GODIVA專門店 (機場、免稅店、祟光銅鑼灣百貨公司及期間限定店除外) 換取同等價值貨品，逾期無效。
-此電子禮券只可使用一次並以GODIVA的系統記錄為準。
-影印本及螢幕截圖恕不接納。
-此電子禮券不適用於電話、傳真或網上購物。
-此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金
-此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。
-如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。
-分店地址︰https://www.godiva.com.hk/boutiques.html`;
-
+        // 品牌資料庫
         const allBrands = [
+            { name: "Lady M", img: "https://img.shoplineapp.com/media/image_clips/5b7a801b8f90480017e4ca83/original.png?1534754834" },
+            { name: "東海堂", img: "https://www.aromebakery.com.hk/arome/images/logo_v2.png" },
+            { name: "華御結", img: "https://www.pacificplace.com.hk/-/media/images/pacificplace2/starstreet/hana-musubi/hana-musubi_logo_apr2022_1.ashx?rev=973c0e9ef342404e845ed5a7f85bd14b&hash=9d532561b9d0e798e9ffc0f878c54d79" },
+            { name: "奇華餅家", img: "https://media.langhamplace.com.hk/cms/store/ENcscXXFp.png" },
             { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
             { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" }
         ];
 
+        // T&C 內容
+        const ladyMTC = `voucher Terms & Conditions:\nThe certificate can only be used to redeem takeaway cakes and drinks at Lady M Hong Kong\nThe certificate can only be used in Hong Kong\nThe certificate is not applicable for any whole cake pre-order, merchandize or dine-in order\nThe certificate must be presented upon purchase\nThe certificate cannot be used in conjunction with other promotions\nThe certificate is only valid when stamped by Lady M Hong Kong\nThe certificate is non-refundable or non-exchangeable for cash\nThe redemption item is subject to availability\nDamaged, altered or expired certificate will not be accepted\nLady M Hong Kong reserves the right to amend the above terms without prior notice\nLady M Hong Kong reserves the right of all final decisions in case of any dispute`;
+
+        const aromeTC = `東海堂條款及細則：\n憑此券可於有效期內在東海堂有限公司（“東海堂”）旗下位於香港特別行政區境內之東海堂餅店換領總值HK$50之禮餅（以折扣前零售價計算）\n此券不適用於電話、手機程式或網上購物\n此券只適用於換領禮餅，不適用於換領任何東海堂餅店寄賣之物品、所有飲品及所有其他產品\n請於付款前出示此券\n此券不能兌換現金或現金券\n此券行使後將不獲發還\n行使此券不獲現金或任何形式之找贖\n行使此券不獲發任何會員積分\n此券如有過期、遺失、塗污或損毀，即作廢無效，恕不補發\n此券只可行使一次，影印本無效\n此券不可與其他推廣優惠一併使用。此券不允許作任何形式之轉售\n如作任何商業或推廣用途，必須事先得到東海堂書面同意\n東海堂保留權利修改本條款及細則而不作另行通知\n如有任何爭議，東海堂保留最終決定權。`;
+
+        const hanaTC = `使用細則及條款 ：\n此券適用於華御結各分店(SOGO分店除外）。此券不得兌換現金、轉讓，並恕不作退款或現金找贖。此券不適用於購買套餐，及不可與其他優惠同時使用。此券之影印本無效。此券如經塗改、損壞、模糊及逾期，即屬作廢。華御結保留更改此券使用條款之權利及任何爭議之最終決定權。`;
+
+        const keeWahTC = `條款及細則：\n•此券不能兑換現金或作現金找贖，\n•此券不能與其他推廣優惠同時使用。\n•此券只限使用一次，影印本恕不接受。\n•此券不適用於奇華餅家與其他機構或公司合作之產品。\n•此券不適用於海外月餅或月餅會供款。\n•此券只適用於奇華餅家香港各分店(香港國際機場分店除外）。\n•如有任何爭議，「奇華餅家有限公司』將保留最終決定權。`;
+
+        // 產品資料庫
         const defaultProducts = [
-            { brandName: "agnès b.", product: "$50 心意禮券", tc: agnesBTC },
-            { brandName: "agnès b.", product: "$100 心意禮券", tc: agnesBTC.replace("HK$50", "HK$100") },
-            { brandName: "Godiva", product: "HK$50 禮券", tc: godivaTC },
-            { brandName: "Godiva", product: "HK$100 禮券", tc: godivaTC }
+            { brandName: "Lady M", product: "$80 禮券", tc: ladyMTC },
+            { brandName: "Lady M", product: "$150 禮券", tc: ladyMTC },
+            { brandName: "華御結", product: "HK$25 禮券", tc: hanaTC },
+            { brandName: "華御結", product: "HK$50 禮券", tc: hanaTC },
+            { brandName: "東海堂", product: "HK$25 禮券", tc: aromeTC },
+            { brandName: "東海堂", product: "HK$50 禮券", tc: aromeTC },
+            { brandName: "奇華餅家", product: "HK$50 禮券", tc: keeWahTC },
+            { brandName: "奇華餅家", product: "金盈喜餅咭", tc: keeWahTC },
+            { brandName: "奇華餅家", product: "金雅喜餅咭", tc: keeWahTC },
+            { brandName: "奇華餅家", product: "金緣喜餅咭", tc: keeWahTC },
+            { brandName: "奇華餅家", product: "金御喜餅咭", tc: keeWahTC },
+            { brandName: "奇華餅家", product: "龍鳳對餅咭", tc: `龍鳳對餅咭可兌換龍鳳對餅嫁喜禮餅1盒\n或可照價換取任何奇華餅家產品。` },
+            { brandName: "agnès b.", product: "$50 心意禮券", tc: "agnès b. Terms & Conditions..." },
+            { brandName: "Godiva", product: "HK$50 禮券", tc: "Godiva Terms & Conditions..." }
         ];
 
         function mainSwitch(target) {
@@ -273,11 +234,9 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
         function renderBrands() {
             const grid = document.getElementById('brandGrid');
             grid.innerHTML = '';
-            const customBrands = JSON.parse(localStorage.getItem('wedding_brands')) || [];
-            const displayList = [...allBrands, ...customBrands];
-            displayList.forEach(brand => {
+            allBrands.forEach(brand => {
                 const btn = document.createElement('button');
-                btn.className = "aspect-square border-2 border-zinc-50 bg-zinc-200 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
+                btn.className = "aspect-square border-2 border-zinc-100 bg-white p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
                 btn.onclick = () => showProducts(brand.name, brand.img);
                 btn.innerHTML = `<img src="${brand.img}" class="max-h-full max-w-full object-contain">`;
                 grid.appendChild(btn);
@@ -291,11 +250,9 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             section.classList.remove('hidden');
             title.innerText = `${bName} 產品選擇`;
             grid.innerHTML = '';
-            const customProducts = JSON.parse(localStorage.getItem('wedding_products')) || [];
-            const allProds = [...defaultProducts, ...customProducts];
-            allProds.filter(p => p.brandName === bName).forEach(p => {
+            defaultProducts.filter(p => p.brandName === bName).forEach(p => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-3 border border-zinc-100 rounded-xl hover:bg-zinc-900 hover:text-white text-xs font-bold transition-all shadow-sm";
+                btn.className = "w-full text-left p-3 border border-zinc-100 rounded-xl hover:bg-zinc-900 hover:text-white text-xs font-bold transition-all shadow-sm mb-1";
                 btn.innerText = p.product;
                 btn.onclick = () => applySelection(bImg, p.product, p.tc);
                 grid.appendChild(btn);
@@ -303,18 +260,19 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
         }
 
         function applySelection(img, name, tc) {
-            document.querySelectorAll('.panel-content-hidden').forEach(el => {
-                el.style.opacity = '1';
-            });
+            // 觸發顯示所有內容元件
+            document.querySelectorAll('.panel-content-hidden').forEach(el => el.style.opacity = '1');
             
             document.getElementById('pDetailBrandImg').src = img;
             document.getElementById('pDetailProdName').innerText = name;
             const tcEl = document.getElementById('pDetailTC');
             tcEl.innerText = tc;
+            
+            // 自動縮放字體以適應容器
             setTimeout(() => { autoScaleText(tcEl, 1.2, 0.4); }, 10);
         }
 
-        function autoScaleText(element, maxFontSize = 5, minFontSize = 1) {
+        function autoScaleText(element, maxFontSize = 1.2, minFontSize = 0.4) {
             const parent = element.parentElement;
             let fontSizeCqw = maxFontSize;
             element.style.fontSize = fontSizeCqw + 'cqw';
