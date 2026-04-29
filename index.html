@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 獨立字體版</title>
+    <title>囍帖預覽器 - 中尺寸優化版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -53,10 +53,10 @@
             display: inline-block; 
         }
 
-        /* 2. 電腦版專用 (大尺寸) - 當寬度超過 1280px 時生效 */
+        /* 2. 電腦版專用 (改為中尺寸) - 當寬度超過 1280px 時生效 */
         @media (min-width: 1280px) {
             #pBride, #pGroom { 
-                font-size: 80px; 
+                font-size: 60px; 
             }
         }
 
@@ -67,12 +67,19 @@
         .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; }
         .address-layer { position: absolute; top: 77%; left: 2%; width: 46%; text-align: center; color: #FFFFFF; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
 
-        /* 產品詳情面板 */
+        /* 產品詳情面板 - 預設僅顯示背景框架 */
         .info-panel {
             position: absolute; top: 5%; right: 3%; width: 40cqw; height: 64cqw;
-            background: rgba(255,255,255,0.15); padding: 2.2cqw; border-radius: 2cqw;
-            display: none; z-index: 20; backdrop-filter: blur(7px);
+            background: rgba(255,255,255,0.12); padding: 2.2cqw; border-radius: 2cqw;
+            z-index: 20; backdrop-filter: blur(8px);
             display: flex; flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* 內容元件預設隱藏 (Opacity 0) */
+        .panel-content-hidden {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
 
         #pDetailTCContainer {
@@ -89,11 +96,11 @@
             text-align: left;
         }
 
-        /* 條碼樣式 - 縮小 1/2 */
+        /* 條碼樣式 */
         .barcode-area {
             margin-top: 0.75cqw;
             padding-top: 0.75cqw;
-            border-top: 1px solid rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(255,255,255,0.15);
             text-align: center;
         }
         .barcode-img {
@@ -150,11 +157,13 @@
                 <div class="venue-layer font-impact"><span id="pVenue">Four Seasons Grand Ballroom</span></div>
                 <div class="address-layer font-impact"><span id="pAddress" class="opacity-90">8 Finance Street, Central, Hong Kong</span></div>
                 
-                <div id="pDetailPanel" class="info-panel shadow-2xl border border-zinc-200">
-                    <img id="pDetailBrandImg" src="" class="w-full h-10 object-contain mb-2">
-                    <h4 id="pDetailProdName" class="font-bold text-orange-500 mb-1 leading-tight text-[1.8cqw]"></h4>
-                    <div id="pDetailTCContainer"><p id="pDetailTC"></p></div>
-                    <div class="barcode-area">
+                <div id="pDetailPanel" class="info-panel shadow-2xl">
+                    <img id="pDetailBrandImg" src="" class="w-full h-10 object-contain mb-2 panel-content-hidden">
+                    <h4 id="pDetailProdName" class="font-bold text-orange-500 mb-1 leading-tight text-[1.8cqw] panel-content-hidden"></h4>
+                    <div id="pDetailTCContainer" class="panel-content-hidden">
+                        <p id="pDetailTC"></p>
+                    </div>
+                    <div id="pBarcodeSection" class="barcode-area panel-content-hidden">
                         <div class="barcode-img"></div>
                         <div class="barcode-num">8888888888</div>
                     </div>
@@ -218,7 +227,7 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
 此電子禮券只可使用一次並以GODIVA的系統記錄為準。
 影印本及螢幕截圖恕不接納。
 此電子禮券不適用於電話、傳真或網上購物。
-此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金過以此電子禮券兌換金
+此電子禮券 (或其部分面值) 不能用以套取現金。持有人不得折回現金或以此電子禮券兌換金
 此電子禮券不可與GODIVA VIP咭或其他推廣優惠一併使用。
 如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。
 分店地址︰https://www.godiva.com.hk/boutiques.html`;
@@ -287,8 +296,11 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
         }
 
         function applySelection(img, name, tc) {
-            const panel = document.getElementById('pDetailPanel');
-            panel.style.display = 'flex';
+            // 顯示所有原本隱藏的內容元件
+            document.querySelectorAll('.panel-content-hidden').forEach(el => {
+                el.style.opacity = '1';
+            });
+            
             document.getElementById('pDetailBrandImg').src = img;
             document.getElementById('pDetailProdName').innerText = name;
             const tcEl = document.getElementById('pDetailTC');
