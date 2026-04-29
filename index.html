@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>囍帖預覽器 - 分頁簡化版</title>
+    <title>囍帖預覽器 - 強化姓名版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
@@ -30,7 +30,7 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 姓名區域 */
+        /* 姓名區域 - 修正字體大小邏輯 */
         .bride-layer {
             position: absolute;
             top: 20%; left: 0; width: 50%; color: #FFFFFF; z-index: 10;
@@ -42,7 +42,14 @@
             display: flex; justify-content: center; transform: translateX(6.2cqw);
         }
         .name-wrap { width: 80%; text-align: center; }
-        #pBride, #pGroom { font-size: 5cqw; line-height: 1; white-space: nowrap; display: inline-block; }
+        
+        /* 使用 clamp 確保電腦版夠大，手機版有底線 */
+        #pBride, #pGroom { 
+            font-size: clamp(32px, 5.5cqw, 80px); 
+            line-height: 1; 
+            white-space: nowrap; 
+            display: inline-block; 
+        }
 
         /* 日期地址 */
         .date-layer { position: absolute; top: 64%; left: 9%; width: 32%; text-align: center; color: #FFFFFF; font-size: 2cqw; letter-spacing: 0.25em; }
@@ -107,7 +114,7 @@
             letter-spacing: 0.15em;
         }
 
-        /* 響應式佈局邏輯 */
+        /* 響應式佈局 */
         @media (min-width: 1280px) {
             .control-panel-scroll { max-height: 90vh; overflow-y: auto; }
             .control-panel-scroll::-webkit-scrollbar { width: 6px; }
@@ -171,7 +178,6 @@
 
                 <section id="section-brands" class="hidden">
                     <div id="brandGrid" class="grid grid-cols-4 gap-2 mb-8"></div>
-
                     <div id="productSection" class="hidden animate-fade-in border-t pt-6">
                         <h3 id="selectedBrandTitle" class="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-3 pb-1">產品列表</h3>
                         <div id="productGrid" class="grid grid-cols-1 gap-2"></div>
@@ -179,19 +185,14 @@
                 </section>
 
                 <div class="mt-10">
-                    <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg hover:bg-zinc-800 transition-all mb-4">
-                        確認並保存設計
-                    </button>
-                    <a href="admin.html" class="block text-center text-zinc-400 text-[10px] font-bold uppercase tracking-tighter hover:text-zinc-900 transition-colors">
-                        員工後台入口
-                    </a>
+                    <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg hover:bg-zinc-800 transition-all mb-4">確認並保存設計</button>
+                    <a href="admin.html" class="block text-center text-zinc-400 text-[10px] font-bold uppercase tracking-tighter hover:text-zinc-900 transition-colors">員工後台入口</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 條款資料庫
         const agnesBTC = `e-voucher Terms & Conditions:
 The e-voucher entitles the holder a cash value of HK$50 spending in any of agnès b. / SPORT b. / agnès b. CAFÉ / agnès b. FLEURISTE / agnès b. DÉLICES shops (except SOGO & Horizon Outlet Store) in Hong Kong. For the corresponding shop address, please refer to https://www.agnesb.com.hk/storeLocator.
 The e-voucher can only be used on or before the expiry date as shown on the e-voucher. Request for extension of validity of this e-voucher will not be entertained. Any unused amount of this e-voucher will be forfeited.
@@ -211,13 +212,11 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
 如對此電子禮券有任何爭議，Godiva Chocolatier (Asia) Limited保留最終決定權。
 分店地址︰https://www.godiva.com.hk/boutiques.html`;
 
-        // 所有品牌混合列表
         const allBrands = [
             { name: "agnès b.", img: "https://agnesb-hk-static.baozun.com/abtw/1-2-0/static/img/logo_agnesb_white.6afb164.png" },
             { name: "Godiva", img: "https://www.godiva.com.tw/img/godiva_logo3.png" }
         ];
 
-        // 預設產品
         const defaultProducts = [
             { brandName: "agnès b.", product: "$50 心意禮券", tc: agnesBTC },
             { brandName: "agnès b.", product: "$100 心意禮券", tc: agnesBTC.replace("HK$50", "HK$100") },
@@ -225,13 +224,11 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             { brandName: "Godiva", product: "HK$100 禮券", tc: godivaTC }
         ];
 
-        // 主要分頁切換邏輯
         function mainSwitch(target) {
             const editorSec = document.getElementById('section-editor');
             const brandsSec = document.getElementById('section-brands');
             const tabEditor = document.getElementById('main-tab-editor');
             const tabBrands = document.getElementById('main-tab-brands');
-
             if (target === 'editor') {
                 editorSec.classList.replace('hidden', 'block');
                 brandsSec.classList.replace('block', 'hidden');
@@ -242,24 +239,15 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
                 editorSec.classList.replace('block', 'hidden');
                 tabBrands.className = "flex-1 py-5 text-xs font-bold transition-all bg-white text-zinc-900 border-l";
                 tabEditor.className = "flex-1 py-5 text-xs font-bold transition-all text-zinc-400 hover:text-zinc-900";
-                renderBrands(); // 切換時即刻渲染
+                renderBrands();
             }
         }
 
-        // 渲染品牌（合併官方與自定義）
         function renderBrands() {
             const grid = document.getElementById('brandGrid');
             grid.innerHTML = '';
-            
-            // 合併本地儲存的自定義品牌
             const customBrands = JSON.parse(localStorage.getItem('wedding_brands')) || [];
             const displayList = [...allBrands, ...customBrands];
-
-            if (displayList.length === 0) {
-                grid.innerHTML = '<p class="col-span-4 text-[9px] text-zinc-400 text-center py-4 italic">暫無品牌資料</p>';
-                return;
-            }
-
             displayList.forEach(brand => {
                 const btn = document.createElement('button');
                 btn.className = "aspect-square border-2 border-zinc-50 bg-zinc-200 p-2 hover:border-zinc-900 rounded-xl transition-all flex items-center justify-center overflow-hidden shadow-sm";
@@ -276,10 +264,8 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             section.classList.remove('hidden');
             title.innerText = `${bName} 產品選擇`;
             grid.innerHTML = '';
-            
             const customProducts = JSON.parse(localStorage.getItem('wedding_products')) || [];
             const allProds = [...defaultProducts, ...customProducts];
-            
             allProds.filter(p => p.brandName === bName).forEach(p => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-3 border border-zinc-100 rounded-xl hover:bg-zinc-900 hover:text-white text-xs font-bold transition-all shadow-sm";
@@ -299,7 +285,6 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             setTimeout(() => { autoScaleText(tcEl, 1.2, 0.4); }, 10);
         }
 
-        // 文字自動縮放
         function autoScaleText(element, maxFontSize = 5, minFontSize = 1) {
             const parent = element.parentElement;
             let fontSizeCqw = maxFontSize;
@@ -310,7 +295,6 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             }
         }
 
-        // 同步輸入資料
         const sync = () => {
             document.getElementById('pBride').innerText = document.getElementById('iBride').value;
             document.getElementById('pGroom').innerText = document.getElementById('iGroom').value;
@@ -321,17 +305,13 @@ In case of any disputes relating to the e-voucher, the decision of Agnès b. HK 
             }
             document.getElementById('pVenue').innerText = document.getElementById('iVenue').value;
             document.getElementById('pAddress').innerText = document.getElementById('iAddress').value;
-            autoScaleText(document.getElementById('pBride'), 5, 1);
-            autoScaleText(document.getElementById('pGroom'), 5, 1);
         };
 
         ['iBride', 'iGroom', 'iDate', 'iVenue', 'iAddress'].forEach(id => {
             document.getElementById(id).addEventListener('input', sync);
         });
 
-        window.onload = () => {
-            sync();
-        };
+        window.onload = sync;
     </script>
 </body>
 </html>
