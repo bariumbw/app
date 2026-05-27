@@ -39,7 +39,7 @@
         /* 根據圖片修改的新日期區塊樣式（使用經典襯線字體 Georgia, Times New Roman） */
         .date-container-new {
             position: absolute;
-            top: 59.5%;
+            top: 52.5%; /* 向上調整，避免與下方的宴客場地重疊 */
             left: 4.5%;
             width: 41%;
             display: flex;
@@ -52,12 +52,13 @@
         /* 弧形星期專用 SVG 容器 */
         .date-row-top-svg {
             width: 100%;
-            height: 4.5cqw;
-            margin-bottom: -0.5cqw;
+            height: 5.5cqw;
+            margin-bottom: -0.2cqw;
+            overflow: visible;
         }
         .date-row-top-svg text {
             fill: #8B4513;
-            font-size: 3.5px; /* SVG 內部相對尺寸 */
+            font-size: 3.8px; /* SVG 內部相對尺寸 */
             letter-spacing: 0.18em;
             text-transform: uppercase;
         }
@@ -135,8 +136,8 @@
                 <div class="groom-layer font-aniyah"><div class="name-wrap"><h1 id="pGroom">Benjamin</h1></div></div>
                 
                 <div class="date-container-new">
-                    <svg class="date-row-top-svg" viewBox="0 0 100 12">
-                        <path id="curve" d="M 10,11 A 45,45 0 0,1 90,11" fill="transparent" />
+                    <svg class="date-row-top-svg" viewBox="0 0 100 20">
+                        <path id="curve" d="M 10,18 A 43,43 0 0,1 90,18" fill="transparent" />
                         <text>
                             <textPath href="#curve" startOffset="50%" text-anchor="middle" id="pDayOfWeek"></textPath>
                         </text>
@@ -241,7 +242,7 @@
             { brandName: "奇華餅家", product: "金雅喜餅咭", tc: `條款及細則：\n•此券不能...` },
             { brandName: "奇華餅家", product: "金緣喜餅咭", tc: `條款及細則：\n•此券不能...` },
             { brandName: "奇華餅家", product: "金御喜餅咭", tc: `條款及細則：\n•此券不能...` },
-            { brandName: "奇華餅家", product: "龍鳳對餅咭", tc: `條款及細則：\n龍鳳對餅咭可兌換龍鳳對餅嫁喜禮餅1盒*\n或可照價換取任何奇華餅家產品 以正價計算。\n【禮券 / 實體產品：產品以禮券形式交付，而並非實體產品，顧客需憑券到所屬商戶門市換取券上產品。】\n所有嫁喜禮券均適用於奇華餅家的任何正價產品。\n禮卡背後所列印之條款如下：\n• 此券如於澳門、台灣或美國分店使用，其換領須依據香港龍鳳對餅之價值為準。\n• 請提前兩星期到本公司分店預訂，以便為閣下安排。\n• 此券不能兑換現金及不設任何形式之找贖。\n• 此券不能與其他推廣優惠同時使用。\n• 此券不適用於奇華餅家與其他機構或公司合作之產品。\n• 此券不適用於購買或兑換任何奇華禮券、嫁喜餅券及月餅券或作月餅會供款。\n• 此券不適用於香港國際機場及中國分店。\n• 如有任何爭議，「奇華餅家有限公司」，將保留最終決定權。` }
+            { brandName: "奇華餅家", product: "龍鳳對餅咭", tc: `條款及細則：\n龍鳳對餅咭可兌換龍鳳對餅嫁喜禮餅1盒*\n或可照價換取任何奇華餅家產品 以正價計算。\n【禮券 / 實體產品：產品以禮券形式交付，而並非實體產品，顧客需憑券到所屬商戶門市換取券上產品。】\n所有嫁喜禮券均適用於奇華餅家的任何正價產品。\n禮卡背後所列印之條款如下：\n• 此券如於澳門、台灣或美國分店使用，其換領須依據香港龍鳳對餅之價值為準。\n• 請提前兩星期到本公司分店預訂，以便為閣下安排。\n• 此券不能兑換現金及不設任何形式之找贖。\n• 此券不能與其他推廣優惠同時使用。\n• 此券不適用於奇華餅家與其他機構或公司合作之產品。\n• 此券不適用於購買或兑換任何奇華禮券、嫁喜餅券及月餅券 or 作月餅會供款。\n• 此券不適用於香港國際機場及中國分店。\n• 如有任何爭議，「奇華餅家有限公司」，將保留最終決定權。` }
         ];
 
         // 背景切換功能（修正為相對路徑，並保留緩存版本號）
