@@ -140,7 +140,7 @@
         #pDetailBrandImg { max-width: 60%; max-height: 85%; object-fit: contain; }
 
         .qrcode-section { flex: 0 0 20%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .qrcode-img { width: 8cqw; height: 8cqw; background: #000; }
+        .qrcode-img { width: 8cqw; height: 8cqw; background: #000; display: flex; align-items: center; justify-content: center; }
         .expiry-date { color: #8B4513; opacity: 0.7; font-size: 0.7cqw; font-family: sans-serif; margin-top: 0.2cqw; }
 
         .prod-name-wrap { flex: 0 0 10%; display: flex; align-items: center; justify-content: center; text-align: center; }
@@ -203,7 +203,7 @@
                         <img id="pDetailBrandImg" src="">
                     </div>
                     <div class="qrcode-section panel-content-hidden">
-                        <div class="qrcode-img"></div>
+                        <div id="qrcode" class="qrcode-img"></div>
                         <div class="expiry-date">Expiry Date : 31/12/2026</div>
                     </div>
                     <div class="prod-name-wrap panel-content-hidden">
@@ -265,6 +265,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         const allBrands = [
             { name: "agnès b.", img: "https://upload.wikimedia.org/wikipedia/commons/9/97/Agn%C3%A8s_b._logo.png" },
@@ -294,6 +295,18 @@
             { brandName: "奇華餅家", product: "金御喜禮券", tc: "•此電子禮券不能兑換現金或作現金找贖。\n•此電子禮券不能與其他推廣優惠同時使用。\n•此電子禮券只限使用一次。\n•此電子禮券不適用於奇華餅家與其他機構或公司合作之產品。\n•此電子禮券不適用於海外月餅咭或月餅會供款。\n•此電子禮券只適用於奇華餅家香港各分店(香港國際機場分店除外）。\n•如有任何爭議，「奇華餅家有限公司」將保留最終決定權。" },
             { brandName: "奇華餅家", product: "龍鳳對餅咭", tc: "•此電子禮券不能兑換現金或作現金找贖。\n•此電子禮券不能與其他推廣優惠同時使用。\n•此電子禮券只限使用一次。\n•此電子禮券不適用於奇華餅家與其他機構或公司合作之產品。\n•此電子禮券不適用於海外月餅咭或月餅會供款。\n•此電子禮券只適用於奇華餅家香港各分店(香港國際機場分店除外）。\n•如有任何爭議，「奇華餅家有限公司」將保留最終決定權。" }
         ];
+
+        let qrcode;
+        function initQR() {
+            qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: "https://www.bespoke-mall.com/weddingcard-evoucher.html",
+                width: 128,
+                height: 128,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
 
         function changeBG(type) {
             const canvas = document.getElementById('previewCanvas');
@@ -421,6 +434,7 @@
         window.onload = () => {
             sync();
             autoScaleVenue();
+            initQR();
         };
     </script>
 </body>
