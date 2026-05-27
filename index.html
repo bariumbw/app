@@ -95,7 +95,7 @@
             text-transform: uppercase;
         }
 
-        /* 宴客場地：調整至 top: 75%，字體大小調整至 2.5cqw (加粗) - Lora 字體 */
+        /* 宴客場地：調整至 top: 75%，字體大小調整至 2.2cqw (加粗)，並設定不換行與自動縮小容器 */
         .venue-layer { 
             position: absolute; 
             top: 75%; 
@@ -104,10 +104,20 @@
             text-align: center; 
             color: #8B4513; 
             text-transform: uppercase; 
-            font-size: 2.5cqw; 
+            font-size: 2.2cqw; 
             font-weight: 700;
             font-family: 'Lora', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
         }
+        #pVenue {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
         /* 詳細地址：調整至 top: 79%，字體大小調整至 1.3cqw - Lora 字體 */
         .address-layer { 
             position: absolute; 
@@ -351,11 +361,26 @@
             setTimeout(() => { autoScaleText(tcEl, 1.1, 0.4); }, 10);
         }
 
+        // 用於處理面版文字的自動縮小
         function autoScaleText(element, maxFontSize, minFontSize) {
             const parent = element.parentElement;
             let fontSizeCqw = maxFontSize;
             element.style.fontSize = fontSizeCqw + 'cqw';
             while (element.scrollHeight > parent.offsetHeight && fontSizeCqw > minFontSize) {
+                fontSizeCqw -= 0.05;
+                element.style.fontSize = fontSizeCqw + 'cqw';
+            }
+        }
+
+        // 新增：專供「宴客場地」防止換行的自動縮小機制
+        function autoScaleVenue() {
+            const element = document.getElementById('pVenue');
+            const parent = element.parentElement;
+            let fontSizeCqw = 2.2; // 預設的 2.2cqw
+            element.style.fontSize = fontSizeCqw + 'cqw';
+            
+            // 如果文字內容超出容器寬度，就循環微調縮小字體，直到完全收納在單行內
+            while (element.offsetWidth > parent.offsetWidth && fontSizeCqw > 0.8) {
                 fontSizeCqw -= 0.05;
                 element.style.fontSize = fontSizeCqw + 'cqw';
             }
@@ -384,7 +409,11 @@
                 document.getElementById('pDay').innerText = day;
                 document.getElementById('pYear').innerText = year;
             }
-            if (venueInput) document.getElementById('pVenue').innerText = venueInput.value;
+            if (venueInput) {
+                document.getElementById('pVenue').innerText = venueInput.value;
+                // 每次輸入更新時自動觸發縮減機制
+                autoScaleVenue();
+            }
             if (addressInput) document.getElementById('pAddress').innerText = addressInput.value;
         };
 
@@ -393,7 +422,10 @@
             if (el) el.addEventListener('input', sync);
         });
 
-        window.onload = sync;
+        window.onload = () => {
+            sync();
+            autoScaleVenue();
+        };
     </script>
 </body>
 </html>
