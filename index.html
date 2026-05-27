@@ -231,12 +231,13 @@
                     <div class="space-y-4">
                         <div class="mb-6">
                             <label class="block text-[9px] font-bold text-zinc-400 uppercase mb-2">背景款式選擇</label>
-                            <div class="grid grid-cols-5 gap-2">
-                                <button onclick="changeBG('10')" class="bg-option active p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="10">A</button>
-                                <button onclick="changeBG('B')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="B">B</button>
-                                <button onclick="changeBG('C')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="C">C</button>
-                                <button onclick="changeBG('D')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="D">D</button>
-                                <button onclick="changeBG('E')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="E">E</button>
+                            <div class="grid grid-cols-6 gap-2">
+                                <button onclick="changeBG('10', 'A')" class="bg-option active p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="10">A</button>
+                                <button onclick="changeBG('11', 'B')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="11">B</button>
+                                <button onclick="changeBG('12', 'C')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="12">C</button>
+                                <button onclick="changeBG('13', 'D')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="13">D</button>
+                                <button onclick="changeBG('14', 'E')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="14">E</button>
+                                <button onclick="changeBG('15', 'F')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="15">F</button>
                             </div>
                         </div>
 
@@ -308,13 +309,13 @@
             });
         }
 
-        function changeBG(type) {
+        function changeBG(filename, label) {
             const canvas = document.getElementById('previewCanvas');
-            canvas.style.backgroundImage = `url('./bg${type}.jpg?v=20260429_v4')`;
+            canvas.style.backgroundImage = `url('./bg${filename}.jpg?v=20260429_v4')`;
             
             document.querySelectorAll('.bg-option').forEach(btn => {
                 btn.classList.remove('active');
-                if(btn.getAttribute('data-bg') === type) {
+                if(btn.getAttribute('data-bg') === filename) {
                     btn.classList.add('active');
                 }
             });
