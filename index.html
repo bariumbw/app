@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BESPOKE 囍帖預覽器</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@1&family=Patrick+Hand&family=Allison&family=Imperial+Script&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/aniyah-personal-use" rel="stylesheet">
     
     <style>
@@ -21,7 +21,6 @@
             overflow: hidden;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             container-type: inline-size;
-            /* 預設背景款式 A 修正為 bg10.jpg 並保留緩存版本號 */
             background-image: url('./bg10.jpg?v=20260429_v4'); 
         }
 
@@ -30,23 +29,23 @@
         .font-impact { font-family: 'Impact', 'Arial Black', sans-serif; }
         .font-aniyah { font-family: 'Aniyah Personal Use', 'Allison', 'Imperial Script', cursive; }
 
-        /* 文字圖層 - 中咖色 #8B4513 */
+        /* 文字圖層 */
         .bride-layer { position: absolute; top: 24%; left: 0; width: 50%; color: #8B4513; z-index: 10; display: flex; justify-content: center; transform: translateX(-3.2cqw); }
         .groom-layer { position: absolute; top: 43.5%; left: 0; width: 50%; color: #8B4513; z-index: 10; display: flex; justify-content: center; transform: translateX(8.2cqw); }
         .name-wrap { width: 80%; text-align: center; }
         #pBride, #pGroom { font-size: 4.5cqw; line-height: 1; white-space: nowrap; display: inline-block; }
         
-        /* 根據圖片修改的新日期區塊樣式（使用經典襯線字體 Georgia, Times New Roman） */
+        /* 日期區塊（月、日、年）- 改用 Lora 字體 */
         .date-container-new {
             position: absolute;
-            top: 60%; /* 回復到原定視覺位置，使月、日、年完美平衡 */
+            top: 60%; 
             left: 4.5%;
             width: 41%;
             display: flex;
             flex-direction: column;
             align-items: center;
             color: #8B4513;
-            font-family: 'Georgia', 'Times New Roman', Times, serif;
+            font-family: 'Lora', serif;
         }
 
         .date-row-bottom {
@@ -68,20 +67,18 @@
             padding: 0 2cqw;
         }
 
-        /* 絕對只移動星期：精準向下移動到 INVITE YOU TO THEIR WEDDING ON 下方 20mm */
+        /* 星期位置調整至 top: 80% - 使用 Lora 字體 */
         .week-container-under {
             position: absolute;
-            top: 73.5%; /* 精準向下平移至內文下方 20mm 處 */
+            top: 80%; 
             left: 4.5%;
             width: 41%;
             display: flex;
             flex-direction: column;
             align-items: center;
             color: #8B4513;
-            font-family: 'Georgia', 'Times New Roman', Times, serif;
         }
         
-        /* 弧形星期專用 SVG 容器 */
         .date-row-top-svg {
             width: 100%;
             height: auto;
@@ -89,13 +86,15 @@
         }
         .date-row-top-svg text {
             fill: #8B4513;
+            font-family: 'Lora', serif;
             font-size: 6px; 
             letter-spacing: 0.28em;
             text-transform: uppercase;
         }
 
-        .venue-layer { position: absolute; top: 76.5%; left: 5.5%; width: 39%; text-align: center; color: #8B4513; text-transform: uppercase; font-size: 1.6cqw; }
-        .address-layer { position: absolute; top: 81.5%; left: 2%; width: 46%; text-align: center; color: #8B4513; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
+        /* 宴客場地與地址位置 - 精準修正為指定百分比 */
+        .venue-layer { position: absolute; top: 75%; left: 5.5%; width: 39%; text-align: center; color: #8B4513; text-transform: uppercase; font-size: 1.6cqw; }
+        .address-layer { position: absolute; top: 79%; left: 2%; width: 46%; text-align: center; color: #8B4513; text-transform: uppercase; font-size: 1.6cqw; line-height: 1.2; }
 
         /* 產品詳情面板 */
         .info-panel {
@@ -108,7 +107,6 @@
         .brand-logo-wrap { flex: 0 0 40%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #pDetailBrandImg { max-width: 90%; max-height: 85%; object-fit: contain; }
 
-        /* 產品名稱顏色：橙色 */
         .prod-name-wrap { flex: 0 0 20%; display: flex; align-items: center; justify-content: center; text-align: center; }
         #pDetailProdName { font-weight: bold; color: #8B4513; line-height: 1.1; font-size: 4.2cqw; text-shadow: 0 2px 5px rgba(0,0,0,0.4); }
 
@@ -128,7 +126,6 @@
             .control-panel-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         }
 
-        /* 背景選擇器樣式 */
         .bg-option {
             cursor: pointer;
             border: 2px solid transparent;
@@ -260,7 +257,6 @@
             { brandName: "奇華餅家", product: "龍鳳對餅咭", tc: `條款及細則：\n龍鳳對餅咭可兌換龍鳳對餅嫁喜禮餅1盒*\n或可照價換取任何奇華餅家產品 以正價計算。\n【禮券 / 實體產品：產品以禮券形式交付，而並非實體產品，顧客需憑券到所屬商戶門市換取券上產品。】\n所有嫁喜禮券均適用於奇華餅家的任何正價產品。\n禮卡背後所列印之條款如下：\n• 此券如於澳門、台灣或美國分店使用，其換領須依據香港龍鳳對餅之價值為準。\n• 請提前兩星期到本公司分店預訂，以便為閣下安排。\n• 此券不能兑換現金及不設 any 形式之找贖。\n• 此券不能與其他推廣優惠同時使用。\n• 此券不適用於奇華餅家與其他機構或公司合作之產品。\n• 此券不適用於購買或兑換任何奇華禮券、嫁喜餅券及月餅券 or 作月餅會供款。\n• 此券不適用於香港國際機場及中國分店。\n• 如有任何爭議，「奇華餅家有限公司」，將保留最終決定權。` }
         ];
 
-        // 背景切換功能（修正為相對路徑，並保留緩存版本號）
         function changeBG(type) {
             const canvas = document.getElementById('previewCanvas');
             canvas.style.backgroundImage = `url('./bg${type}.jpg?v=20260429_v4')`;
@@ -349,7 +345,6 @@
             if (brideInput) document.getElementById('pBride').innerText = brideInput.value;
             if (groomInput) document.getElementById('pGroom').innerText = groomInput.value;
             
-            /* 日期同步解析邏輯 */
             if (dateInput && dateInput.value) {
                 const dateObj = new Date(dateInput.value);
                 
