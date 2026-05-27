@@ -39,7 +39,39 @@
         /* 根據圖片修改的新日期區塊樣式（使用經典襯線字體 Georgia, Times New Roman） */
         .date-container-new {
             position: absolute;
-            top: 53%; /* 精準定位在月、日、年正上方，絕不與下方宴客場地重疊 */
+            top: 56%; /* 調整位置，騰出上方空間 */
+            left: 4.5%;
+            width: 41%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8B4513;
+            font-family: 'Georgia', 'Times New Roman', Times, serif;
+        }
+
+        .date-row-bottom {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+        }
+        .date-side {
+            font-size: 2.8cqw;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+        .date-main {
+            font-size: 7.2cqw;
+            font-weight: 500;
+            line-height: 1;
+            padding: 0 2cqw;
+        }
+
+        /* 新增：將星期移至 INVITE YOU TO THEIR WEDDING ON 下方的獨立容器 */
+        .week-container-under {
+            position: absolute;
+            top: 67.5%; /* 精準定位在 INVITE 內文下方 */
             left: 4.5%;
             width: 41%;
             display: flex;
@@ -57,29 +89,9 @@
         }
         .date-row-top-svg text {
             fill: #8B4513;
-            font-size: 6px; /* 完美還原 Canva 的字體大小比例 */
+            font-size: 6px; 
             letter-spacing: 0.28em;
             text-transform: uppercase;
-        }
-
-        .date-row-bottom {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            width: 100%;
-            text-align: center;
-            margin-top: -1.2cqw; /* 讓下方的月、日、年數字緊貼在星期弧線的下方 */
-        }
-        .date-side {
-            font-size: 2.8cqw;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-        }
-        .date-main {
-            font-size: 7.2cqw;
-            font-weight: 500;
-            line-height: 1;
-            padding: 0 2cqw;
         }
 
         .venue-layer { position: absolute; top: 72%; left: 5.5%; width: 39%; text-align: center; color: #8B4513; text-transform: uppercase; font-size: 1.6cqw; }
@@ -136,17 +148,20 @@
                 <div class="groom-layer font-aniyah"><div class="name-wrap"><h1 id="pGroom">Benjamin</h1></div></div>
                 
                 <div class="date-container-new">
+                    <div class="date-row-bottom">
+                        <div id="pMonth" class="date-side"></div>
+                        <div id="pDay" class="date-main"></div>
+                        <div id="pYear" class="date-side"></div>
+                    </div>
+                </div>
+
+                <div class="week-container-under">
                     <svg class="date-row-top-svg" viewBox="0 0 150 35">
                         <path id="curve" d="M 5,26 A 55,55 0 0,1 145,26" fill="transparent" />
                         <text>
                             <textPath href="#curve" startOffset="50%" text-anchor="middle" id="pDayOfWeek" dominant-baseline="alphabetic"></textPath>
                         </text>
                     </svg>
-                    <div class="date-row-bottom">
-                        <div id="pMonth" class="date-side"></div>
-                        <div id="pDay" class="date-main"></div>
-                        <div id="pYear" class="date-side"></div>
-                    </div>
                 </div>
                 
                 <div class="venue-layer font-impact"><span id="pVenue">Four Seasons Grand Ballroom</span></div>
