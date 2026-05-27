@@ -140,7 +140,7 @@
         #pDetailBrandImg { max-width: 60%; max-height: 85%; object-fit: contain; }
 
         .qrcode-section { flex: 0 0 20%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .qrcode-img { width: 8cqw; height: 8cqw; }
+        .qrcode-img { width: 8cqw; height: 8cqw; background: #000; }
         .expiry-date { color: #8B4513; opacity: 0.7; font-size: 0.7cqw; font-family: sans-serif; margin-top: 0.2cqw; }
 
         .prod-name-wrap { flex: 0 0 10%; display: flex; align-items: center; justify-content: center; text-align: center; }
@@ -149,8 +149,9 @@
         .tc-wrap { flex: 0 0 35%; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
         #pDetailTC { color: #8B4513; opacity: 0.8; line-height: 1.1; word-break: break-all; white-space: pre-wrap; text-align: left; width: 100%; }
 
+        /* 修改後的 footer-logos：平行排列並限制寬度為 6/4 (即 66.6% 的 1/2 約 33%) */
         .footer-logos { flex: 0 0 11%; border-top: 1px solid rgba(139, 69, 19, 0.15); display: flex; justify-content: space-around; align-items: center; }
-        .footer-logos img { height: 70%; object-fit: contain; width: 45%; }
+        .footer-logos img { height: 70%; object-fit: contain; width: 33.33%; }
 
         .panel-content-hidden { opacity: 0; transition: opacity 0.3s ease; }
 
@@ -203,7 +204,7 @@
                         <img id="pDetailBrandImg" src="">
                     </div>
                     <div class="qrcode-section panel-content-hidden">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.bespoke-mall.com/weddingcard-evoucher.html" class="qrcode-img">
+                        <div class="qrcode-img"></div>
                         <div class="expiry-date">Expiry Date : 31/12/2026</div>
                     </div>
                     <div class="prod-name-wrap panel-content-hidden">
