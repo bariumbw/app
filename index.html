@@ -95,7 +95,7 @@
             text-transform: uppercase;
         }
 
-        /* 宴客場地：調整至 top: 75%，字體大小調整至 2.2cqw (加粗)，並設定不換行與自動縮小容器 */
+        /* 宴客場地 */
         .venue-layer { 
             position: absolute; 
             top: 75%; 
@@ -118,7 +118,7 @@
             white-space: nowrap;
         }
 
-        /* 詳細地址：調整至 top: 79%，字體大小調整至 1.3cqw - Lora 字體 */
+        /* 詳細地址 */
         .address-layer { 
             position: absolute; 
             top: 79%; 
@@ -143,14 +143,15 @@
         .brand-logo-wrap { flex: 0 0 24%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #pDetailBrandImg { max-width: 60%; max-height: 85%; object-fit: contain; }
 
+        .qrcode-wrap { flex: 0 0 20%; border-top: 1px solid rgba(139, 69, 19, 0.15); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .qrcode-img { width: 8cqw; height: 8cqw; background: #fff; margin-bottom: 0.2cqw; }
+        
         .prod-name-wrap { flex: 0 0 20%; display: flex; align-items: center; justify-content: center; text-align: center; }
         #pDetailProdName { font-weight: bold; color: #8B4513; line-height: 1.1; font-size: 4.2cqw; text-shadow: 0 2px 5px rgba(0,0,0,0.4); }
 
         .tc-wrap { flex: 0 0 36%; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
         #pDetailTC { color: #8B4513; opacity: 0.8; line-height: 1.1; word-break: break-all; white-space: pre-wrap; text-align: left; width: 100%; }
 
-        .qrcode-wrap { flex: 0 0 20%; border-top: 1px solid rgba(139, 69, 19, 0.15); display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .qrcode-img { width: 12cqw; height: 12cqw; background: #fff; margin-bottom: 0.5cqw; }
         .expiry-date { color: #8B4513; opacity: 0.7; font-size: 0.7cqw; font-family: sans-serif; }
 
         .panel-content-hidden { opacity: 0; transition: opacity 0.3s ease; }
@@ -161,11 +162,7 @@
             .control-panel-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         }
 
-        .bg-option {
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s;
-        }
+        .bg-option { cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
         .bg-option:hover { border-color: #8B4513; }
         .bg-option.active { border-color: #8B4513; background-color: white; }
     </style>
@@ -177,7 +174,7 @@
         <div class="flex flex-col items-center relative">
             <div id="previewCanvas" class="preview-canvas">
                 <div class="bride-layer font-aniyah"><div class="name-wrap"><h1 id="pBride">Rosesalina</h1></div></div>
-                <div class="groom-layer font-aniyah"><div class="name-wrap"><h1 id="pBenjamin">Benjamin</h1></div></div>
+                <div class="groom-layer font-aniyah"><div class="name-wrap"><h1 id="pGroom">Benjamin</h1></div></div>
                 
                 <div class="date-container-new">
                     <div class="date-row-bottom">
@@ -203,15 +200,15 @@
                     <div class="brand-logo-wrap panel-content-hidden">
                         <img id="pDetailBrandImg" src="">
                     </div>
+                    <div class="qrcode-wrap panel-content-hidden">
+                        <div class="qrcode-img"></div>
+                        <div class="expiry-date">Expiry Date : 31/12/2026</div>
+                    </div>
                     <div class="prod-name-wrap panel-content-hidden">
                         <h4 id="pDetailProdName"></h4>
                     </div>
                     <div class="tc-wrap panel-content-hidden">
                         <p id="pDetailTC"></p>
-                    </div>
-                    <div class="qrcode-wrap panel-content-hidden">
-                        <div class="qrcode-img"></div>
-                        <div class="expiry-date">Expiry Date : 31/12/2026</div>
                     </div>
                 </div>
             </div>
@@ -236,7 +233,6 @@
                                 <button onclick="changeBG('E')" class="bg-option p-2 rounded-lg bg-zinc-200 text-xs font-bold" data-bg="E">E</button>
                             </div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新娘名字</label><input type="text" id="iBride" value="Rosesalina" class="w-full p-3 bg-white border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact shadow-sm"></div>
                             <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">新郎名字</label><input type="text" id="iGroom" value="Benjamin" class="w-full p-3 bg-white border rounded-xl outline-none focus:border-zinc-900 text-lg font-impact shadow-sm"></div>
@@ -246,7 +242,6 @@
                         <div><label class="block text-[9px] font-bold text-zinc-400 uppercase mb-1">詳細地址</label><textarea id="iAddress" rows="2" class="w-full p-3 bg-white border rounded-xl outline-none focus:border-zinc-900 uppercase text-[10px] font-impact shadow-sm">8 Finance Street, Central, Hong Kong</textarea></div>
                     </div>
                 </section>
-
                 <section id="section-brands" class="hidden">
                     <div id="brandGrid" class="grid grid-cols-4 gap-2 mb-8"></div>
                     <div id="productSection" class="hidden animate-fade-in border-t pt-6 border-zinc-300">
@@ -254,7 +249,6 @@
                         <div id="productGrid" class="grid grid-cols-1 gap-2"></div>
                     </div>
                 </section>
-
                 <div class="mt-10">
                     <button class="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg hover:bg-zinc-800 transition-all mb-4">確認並保存設計</button>
                 </div>
@@ -294,12 +288,9 @@
         function changeBG(type) {
             const canvas = document.getElementById('previewCanvas');
             canvas.style.backgroundImage = `url('./bg${type}.jpg?v=20260429_v4')`;
-            
             document.querySelectorAll('.bg-option').forEach(btn => {
                 btn.classList.remove('active');
-                if(btn.getAttribute('data-bg') === type) {
-                    btn.classList.add('active');
-                }
+                if(btn.getAttribute('data-bg') === type) btn.classList.add('active');
             });
         }
 
@@ -388,8 +379,7 @@
             const addressInput = document.getElementById('iAddress');
 
             if (brideInput) document.getElementById('pBride').innerText = brideInput.value;
-            if (groomInput) document.getElementById('pBenjamin').innerText = groomInput.value;
-            
+            if (groomInput) document.getElementById('pGroom').innerText = groomInput.value;
             if (dateInput && dateInput.value) {
                 const dateObj = new Date(dateInput.value);
                 const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
